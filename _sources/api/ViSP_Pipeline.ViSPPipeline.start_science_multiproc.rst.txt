@@ -1,6 +1,0 @@
-start_science_multiproc
-=======================
-
-.. currentmodule:: ViSP_Pipeline.ViSPPipeline
-
-.. autofunction:: start_science_multiproc

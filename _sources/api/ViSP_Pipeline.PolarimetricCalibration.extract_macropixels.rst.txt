@@ -1,6 +1,0 @@
-extract_macropixels
-===================
-
-.. currentmodule:: ViSP_Pipeline.PolarimetricCalibration
-
-.. autofunction:: extract_macropixels

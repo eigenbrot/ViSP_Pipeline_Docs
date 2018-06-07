@@ -1,6 +1,0 @@
-generate_science_calibration
-============================
-
-.. currentmodule:: ViSP_Pipeline.ScienceCalibration
-
-.. autofunction:: generate_science_calibration

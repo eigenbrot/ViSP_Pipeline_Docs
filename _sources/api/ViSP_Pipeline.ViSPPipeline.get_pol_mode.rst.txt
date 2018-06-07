@@ -1,6 +1,0 @@
-get_pol_mode
-============
-
-.. currentmodule:: ViSP_Pipeline.ViSPPipeline
-
-.. autofunction:: get_pol_mode

@@ -1,6 +1,0 @@
-find_number_of_CS_steps
-=======================
-
-.. currentmodule:: ViSP_Pipeline.ViSPPolCalPipeline
-
-.. autofunction:: find_number_of_CS_steps

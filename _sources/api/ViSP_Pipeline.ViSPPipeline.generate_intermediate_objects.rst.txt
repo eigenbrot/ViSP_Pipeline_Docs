@@ -1,6 +1,0 @@
-generate_intermediate_objects
-=============================
-
-.. currentmodule:: ViSP_Pipeline.ViSPPipeline
-
-.. autofunction:: generate_intermediate_objects

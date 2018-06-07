@@ -1,6 +1,0 @@
-gain_correction
-===============
-
-.. currentmodule:: ViSP_Pipeline.generic
-
-.. autofunction:: gain_correction

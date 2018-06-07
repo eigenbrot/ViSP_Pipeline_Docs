@@ -1,6 +1,0 @@
-convert_config_to_int
-=====================
-
-.. currentmodule:: ViSP_Pipeline.ViSPPipeline
-
-.. autofunction:: convert_config_to_int

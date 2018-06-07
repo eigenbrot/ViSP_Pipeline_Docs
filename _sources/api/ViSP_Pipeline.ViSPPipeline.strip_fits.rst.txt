@@ -1,6 +1,0 @@
-strip_fits
-==========
-
-.. currentmodule:: ViSP_Pipeline.ViSPPipeline
-
-.. autofunction:: strip_fits

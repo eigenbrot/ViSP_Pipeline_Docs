@@ -1,6 +1,0 @@
-average_FitsData
-================
-
-.. currentmodule:: ViSP_Pipeline.generic
-
-.. autofunction:: average_FitsData

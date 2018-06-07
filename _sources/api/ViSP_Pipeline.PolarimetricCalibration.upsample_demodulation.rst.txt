@@ -1,6 +1,0 @@
-upsample_demodulation
-=====================
-
-.. currentmodule:: ViSP_Pipeline.PolarimetricCalibration
-
-.. autofunction:: upsample_demodulation

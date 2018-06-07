@@ -1,6 +1,0 @@
-generate_polarization_calibration
-=================================
-
-.. currentmodule:: ViSP_Pipeline.PolarimetricCalibration
-
-.. autofunction:: generate_polarization_calibration
