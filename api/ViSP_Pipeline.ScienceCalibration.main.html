@@ -1,0 +1,266 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>main &#8212; ViSP_Pipeline v0.4.0</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,600,700" type="text/css" />
+    <link rel="stylesheet" href="../_static/dkist.css" type="text/css" />
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="shortcut icon" href="../_static/favico.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="polarimetric_demodulation" href="ViSP_Pipeline.ScienceCalibration.polarimetric_demodulation.html" />
+    <link rel="prev" title="get_demodulation_matrix" href="ViSP_Pipeline.ScienceCalibration.get_demodulation_matrix.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="col-md-3 navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="http://nso.edu"><img src="../_static/img/NSOlogo.gif">
+        </a>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav hidden">
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">ViSP Pipeline Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config_file.html">Configuration File Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../walkthrough.html">Data Reduction Walkthrough</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../API.html">Reference/API</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">main</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="ViSP_Pipeline.ScienceCalibration.get_demodulation_matrix.html" title="Previous Chapter: get_demodulation_matrix"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; get_demodulat...</span>
+    </a>
+  </li>
+  <li>
+    <a href="ViSP_Pipeline.ScienceCalibration.polarimetric_demodulation.html" title="Next Chapter: polarimetric_demodulation"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">polarimetric_... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+          </ul>
+          
+            <ul class="nav navbar-nav navbar-left">
+              <li><a href="http://dkist.nso.edu/">DKIST</a></li>
+              <li><a href="http://docs.cadair.com/devdocs">DC Developer Guide</a></li>
+              <li><a href="http://docs.cadair.com/datarate">DKIST Data Rate</a></li>
+              <li><a href="http://docs.cadair.com/datamodel">DKIST Data Model</a></li>
+            </ul>
+          
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+
+    <div class="col-md-3"><div id="side-logo" >
+            <a href="http://dkist.nso.edu">
+                <img src="../_static/img/DKISTLogo-Medium.jpg">
+            </a>
+        </div><div id="sidebar" class="bs-sidenav" role="complementary">
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">ViSP Pipeline Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config_file.html">Configuration File Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../walkthrough.html">Data Reduction Walkthrough</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../API.html">Reference/API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ViSPPipeline">ViSP_Pipeline.ViSPPipeline Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ViSPPolCalPipeline">ViSP_Pipeline.ViSPPolCalPipeline Module</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ScienceCalibration">ViSP_Pipeline.ScienceCalibration Module</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../API.html#id2">Functions</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ScienceCalibration.average_beams.html">average_beams</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ScienceCalibration.average_polarimetric_beams.html">average_polarimetric_beams</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ScienceCalibration.generate_science_calibration.html">generate_science_calibration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ScienceCalibration.geometric_correction.html">geometric_correction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ScienceCalibration.get_demodulation_matrix.html">get_demodulation_matrix</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">main</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ScienceCalibration.polarimetric_demodulation.html">polarimetric_demodulation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ScienceCalibration.setup_telescope_model.html">setup_telescope_model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ScienceCalibration.verify_useful_dark.html">verify_useful_dark</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ScienceCalibration.verify_useful_demodulation.html">verify_useful_demodulation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ScienceCalibration.verify_useful_gain.html">verify_useful_gain</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ScienceCalibration.verify_useful_geometric.html">verify_useful_geometric</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.PolarimetricCalibration">ViSP_Pipeline.PolarimetricCalibration Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.Data">ViSP_Pipeline.Data Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.generic">ViSP_Pipeline.generic Module</a></li>
+</ul>
+</li>
+</ul>
+
+            
+        </div>
+    </div>
+
+    <div class="col-md-9 content">
+      
+  <div class="section" id="main">
+<h1>main<a class="headerlink" href="#main" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="ViSP_Pipeline.ScienceCalibration.main">
+<code class="descclassname">ViSP_Pipeline.ScienceCalibration.</code><code class="descname">main</code><span class="sig-paren">(</span><em>data_dir</em>, <em>dataset_ID</em>, <em>slit_pos</em>, <em>outpre</em>, <em>dark_cal=None</em>, <em>solar_gain_cal=None</em>, <em>geometric_cal=None</em>, <em>demodulation=None</em>, <em>telescope_db=None</em>, <em>lock=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/ScienceCalibration.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.ScienceCalibration.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run raw data through the Science Calibration pipeline.</p>
+<p>If no intermediate Calibration objects are provided then the pipeline simply averages the (potentially
+distorted!) beams. This is probably not what you want.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>data_dir</strong> : str</p>
+<blockquote>
+<div><p>Path to the directory containing raw data files</p>
+</div></blockquote>
+<p><strong>dataset_ID</strong> : str</p>
+<blockquote>
+<div><p>The object or data set to use. This argument allows you to refine the selection of data from <code class="xref py py-obj docutils literal notranslate"><span class="pre">data_dir</span></code>. Only
+data whose ‘ID_004’ matches this value will be loaded. Pass a blank string (‘’) to just load all data.</p>
+</div></blockquote>
+<p><strong>slit_pos</strong> : int</p>
+<blockquote>
+<div><p>The slit (i.e. spatial) position to load. Files are matched to this parameter with the VISP_CSS header keyword</p>
+</div></blockquote>
+<p><strong>outpre</strong> : str</p>
+<blockquote>
+<div><p>Prefix of the location to save processed data. Can include the full path. The processed data will be saved as
+outpre.fits and associated uncertainties (if provided) will be saved as outpre_err.fits.</p>
+</div></blockquote>
+<p><strong>dark_cal</strong> : Data.FitsData</p>
+<blockquote>
+<div><p>A Dark Calibration object. Probably the result of DarkCalibration.main().</p>
+</div></blockquote>
+<p><strong>solar_gain_cal</strong> : Data.FitsData</p>
+<blockquote>
+<div><p>A Solar Gain Calibration object. Probably the result of SolarGainCalibration.main().</p>
+</div></blockquote>
+<p><strong>geometric_cal</strong> : Data.FitsData</p>
+<blockquote>
+<div><p>A Geometric Calibration object. Probably produced by SolarGainCalibration.main().</p>
+</div></blockquote>
+<p><strong>demodulation</strong> : Data.DemodulationData</p>
+<blockquote>
+<div><p>Object containing an array of shape (X, Y, 4, M) containing the demodulation matrix for each (x, y) pixel.
+This is probably the output of PolarimetricCalibration.upsample_demodulation.</p>
+</div></blockquote>
+<p><strong>telescope_db</strong> : str</p>
+<blockquote>
+<div><p>Path to the database of telescope properties (x,        au).</p>
+</div></blockquote>
+<p><strong>lock</strong> : multiprocessing.synchronize.locl</p>
+<blockquote>
+<div><p>If  provided, this lock will be used when reading information from the dark and gain calibration objects. This
+avoids some weirdness in astropy’s FITS containers when accessing the same data at the same time.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Data.FitsData</p>
+<blockquote>
+<div><p>Level 1 ViSP Science Data with all of the provided Calibrations applied</p>
+</div></blockquote>
+<p>Data.FitsData</p>
+<blockquote class="last">
+<div><p>If uncertainty on the input data is provided, the uncertainty associated with the Level 1 Science Data product.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <div class="left-footer">
+         &copy; 2018, Arthur Eigenbrot
+       <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png" /></a>
+    </div>
+   
+    <div class="right-footer">
+      Last updated on 07 Jun 2018.
+    </div>
+    <div class="centre-footer">
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.4
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

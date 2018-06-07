@@ -1,0 +1,6 @@
+extract_map
+===========
+
+.. currentmodule:: ViSP_Pipeline.generic
+
+.. autofunction:: extract_map

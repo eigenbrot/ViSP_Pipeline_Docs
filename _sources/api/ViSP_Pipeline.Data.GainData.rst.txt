@@ -1,0 +1,17 @@
+GainData
+========
+
+.. currentmodule:: ViSP_Pipeline.Data
+
+.. autoclass:: GainData
+   :show-inheritance:
+
+   .. rubric:: Attributes Summary
+
+   .. autosummary::
+
+      ~GainData.task
+
+   .. rubric:: Attributes Documentation
+
+   .. autoattribute:: task

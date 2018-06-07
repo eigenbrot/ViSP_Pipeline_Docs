@@ -1,0 +1,34 @@
+Reference/API
+=============
+
+.. automodapi:: ViSP_Pipeline.ViSPPipeline
+   :headings: #^
+   :skip: tag
+   :skip: glob
+   :skip: command_line
+
+.. automodapi:: ViSP_Pipeline.ViSPPolCalPipeline
+   :headings: #^
+   :skip: tag
+   :skip: glob
+   :skip: command_line
+
+.. automodapi:: ViSP_Pipeline.ScienceCalibration
+   :headings: #^
+   :skip: tag
+
+.. automodapi:: ViSP_Pipeline.PolarimetricCalibration
+   :headings: #^
+   :skip: tag
+
+.. automodapi:: ViSP_Pipeline.Data
+   :headings: #^
+   :no-inheritance-diagram:
+   :skip: tag
+   :skip: glob
+
+.. automodapi:: ViSP_Pipeline.generic
+   :headings: #^
+   :no-inheritance-diagram:
+   :skip: tag
+   :skip: glob

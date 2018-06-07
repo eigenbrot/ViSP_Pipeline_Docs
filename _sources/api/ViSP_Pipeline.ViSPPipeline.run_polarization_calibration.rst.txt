@@ -1,0 +1,6 @@
+run_polarization_calibration
+============================
+
+.. currentmodule:: ViSP_Pipeline.ViSPPipeline
+
+.. autofunction:: run_polarization_calibration

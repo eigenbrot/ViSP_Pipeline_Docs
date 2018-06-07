@@ -1,0 +1,6 @@
+run_PAC_demod
+=============
+
+.. currentmodule:: ViSP_Pipeline.ViSPPipeline
+
+.. autofunction:: run_PAC_demod

@@ -1,0 +1,6 @@
+average_beams
+=============
+
+.. currentmodule:: ViSP_Pipeline.ScienceCalibration
+
+.. autofunction:: average_beams

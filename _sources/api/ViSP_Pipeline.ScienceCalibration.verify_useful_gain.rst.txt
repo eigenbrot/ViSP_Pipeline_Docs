@@ -1,0 +1,6 @@
+verify_useful_gain
+==================
+
+.. currentmodule:: ViSP_Pipeline.ScienceCalibration
+
+.. autofunction:: verify_useful_gain

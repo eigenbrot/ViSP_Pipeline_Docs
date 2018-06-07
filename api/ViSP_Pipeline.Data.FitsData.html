@@ -1,0 +1,599 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>FitsData &#8212; ViSP_Pipeline v0.4.0</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,600,700" type="text/css" />
+    <link rel="stylesheet" href="../_static/dkist.css" type="text/css" />
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="shortcut icon" href="../_static/favico.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="GainData" href="ViSP_Pipeline.Data.GainData.html" />
+    <link rel="prev" title="DemodulationData" href="ViSP_Pipeline.Data.DemodulationData.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="col-md-3 navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="http://nso.edu"><img src="../_static/img/NSOlogo.gif">
+        </a>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav hidden">
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">ViSP Pipeline Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config_file.html">Configuration File Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../walkthrough.html">Data Reduction Walkthrough</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../API.html">Reference/API</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">FitsData</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="ViSP_Pipeline.Data.DemodulationData.html" title="Previous Chapter: DemodulationData"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; DemodulationData</span>
+    </a>
+  </li>
+  <li>
+    <a href="ViSP_Pipeline.Data.GainData.html" title="Next Chapter: GainData"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">GainData &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+          </ul>
+          
+            <ul class="nav navbar-nav navbar-left">
+              <li><a href="http://dkist.nso.edu/">DKIST</a></li>
+              <li><a href="http://docs.cadair.com/devdocs">DC Developer Guide</a></li>
+              <li><a href="http://docs.cadair.com/datarate">DKIST Data Rate</a></li>
+              <li><a href="http://docs.cadair.com/datamodel">DKIST Data Model</a></li>
+            </ul>
+          
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+
+    <div class="col-md-3"><div id="side-logo" >
+            <a href="http://dkist.nso.edu">
+                <img src="../_static/img/DKISTLogo-Medium.jpg">
+            </a>
+        </div><div id="sidebar" class="bs-sidenav" role="complementary">
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">ViSP Pipeline Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config_file.html">Configuration File Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../walkthrough.html">Data Reduction Walkthrough</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../API.html">Reference/API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ViSPPipeline">ViSP_Pipeline.ViSPPipeline Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ViSPPolCalPipeline">ViSP_Pipeline.ViSPPolCalPipeline Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ScienceCalibration">ViSP_Pipeline.ScienceCalibration Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.PolarimetricCalibration">ViSP_Pipeline.PolarimetricCalibration Module</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.Data">ViSP_Pipeline.Data Module</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../API.html#classes">Classes</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.Data.AlignmentData.html">AlignmentData</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.Data.CalibrationCurveData.html">CalibrationCurveData</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.Data.DarkData.html">DarkData</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.Data.DemodulationData.html">DemodulationData</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">FitsData</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.Data.GainData.html">GainData</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.Data.SlitPositionData.html">SlitPositionData</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.generic">ViSP_Pipeline.generic Module</a></li>
+</ul>
+</li>
+</ul>
+
+            
+        </div>
+    </div>
+
+    <div class="col-md-9 content">
+      
+  <div class="section" id="fitsdata">
+<h1>FitsData<a class="headerlink" href="#fitsdata" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="ViSP_Pipeline.Data.FitsData">
+<em class="property">class </em><code class="descclassname">ViSP_Pipeline.Data.</code><code class="descname">FitsData</code><span class="sig-paren">(</span><em>fitsfile=None</em>, <em>memmap=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#FitsData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.FitsData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>FitsData is a basically a wrapper for astropy.io.fits, with some extra methods and properties to aid the
+reduction of DKIST data.</p>
+<p>At its heart, this class is just a list of astropy.io.fits HDU objects. If creating an object from an array
+(instead of reading from a file) the convention of a data-less Primary HDU is enforced.</p>
+<p>astropy.io.fits is used to store data and metadata because of its use of memmap to reduce the load on RAM when
+accessing data arrays. If construction an object from an array a temporary FITS file will be created to make use
+of this feature. Note that this temp file will be deleted when the created object is no longer used. To
+permanently save the data use the .write_out() method.</p>
+<p>Initialize an empty object and maybe load a FITS file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>fitsfile</strong> : str</p>
+<blockquote>
+<div><p>If supplied, the path to a FITS file that will be loaded into the object.</p>
+</div></blockquote>
+<p><strong>memmap</strong> : bool or None</p>
+<blockquote class="last">
+<div><p>Whether to use astropy.io.fits’ memmap functionality. Set to None to let astropy figure it out for you.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes Summary</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#ViSP_Pipeline.Data.FitsData.data_hdus" title="ViSP_Pipeline.Data.FitsData.data_hdus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">data_hdus</span></code></a></td>
+<td>A convenience property to quickly get only the HDUs that have data in them</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#ViSP_Pipeline.Data.FitsData.headers" title="ViSP_Pipeline.Data.FitsData.headers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">headers</span></code></a></td>
+<td>A very nice convenience property to quickly access a list of the header objects</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods Summary</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#ViSP_Pipeline.Data.FitsData.convert_to_float32" title="ViSP_Pipeline.Data.FitsData.convert_to_float32"><code class="xref py py-obj docutils literal notranslate"><span class="pre">convert_to_float32</span></code></a>([nomem,&nbsp;overwrite])</td>
+<td>Convert all of the data to numpy.float32</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#ViSP_Pipeline.Data.FitsData.find_data_keyword_idx" title="ViSP_Pipeline.Data.FitsData.find_data_keyword_idx"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_data_keyword_idx</span></code></a>(keyword,&nbsp;value)</td>
+<td>Return the index of just the ImageHDUs that have a specific header keyword value</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#ViSP_Pipeline.Data.FitsData.find_keyword_idx" title="ViSP_Pipeline.Data.FitsData.find_keyword_idx"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_keyword_idx</span></code></a>(keyword,&nbsp;value)</td>
+<td>Return the index of the HDUs (including the PrimaryHDU) that have a specific header keyword value</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#ViSP_Pipeline.Data.FitsData.flush" title="ViSP_Pipeline.Data.FitsData.flush"><code class="xref py py-obj docutils literal notranslate"><span class="pre">flush</span></code></a>()</td>
+<td>Flush the current data from memory and reload memmap from the disk</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#ViSP_Pipeline.Data.FitsData.get_stacked_data" title="ViSP_Pipeline.Data.FitsData.get_stacked_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_stacked_data</span></code></a>()</td>
+<td>Return a ndarray stack containing data from all ImageHDU’s</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#ViSP_Pipeline.Data.FitsData.init_with_ndarray" title="ViSP_Pipeline.Data.FitsData.init_with_ndarray"><code class="xref py py-obj docutils literal notranslate"><span class="pre">init_with_ndarray</span></code></a>(array[,&nbsp;outputfile,&nbsp;overwrite])</td>
+<td>Load data from a numpy.ndarray and construct an astropy.io.fits HDU list</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#ViSP_Pipeline.Data.FitsData.load_from_directory" title="ViSP_Pipeline.Data.FitsData.load_from_directory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_from_directory</span></code></a>(directory[,&nbsp;searchstr,&nbsp;…])</td>
+<td>Load a series of FITS files from a directory.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#ViSP_Pipeline.Data.FitsData.load_from_file" title="ViSP_Pipeline.Data.FitsData.load_from_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_from_file</span></code></a>(fitsfile[,&nbsp;memmap])</td>
+<td>Load data/metadata from a FITS file and make the resulting HDU list accessable to the rest of the class</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#ViSP_Pipeline.Data.FitsData.load_polarimetric_fitsData" title="ViSP_Pipeline.Data.FitsData.load_polarimetric_fitsData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_polarimetric_fitsData</span></code></a>(directory[,&nbsp;…])</td>
+<td>Load a single Stokes component from all files in a directory.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#ViSP_Pipeline.Data.FitsData.update_header" title="ViSP_Pipeline.Data.FitsData.update_header"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_header</span></code></a>(keyword,&nbsp;value[,&nbsp;hdu,&nbsp;overwrite])</td>
+<td>Update one of the header objects with a keyword, value pair.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#ViSP_Pipeline.Data.FitsData.write_out" title="ViSP_Pipeline.Data.FitsData.write_out"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_out</span></code></a>(filename[,&nbsp;overwrite])</td>
+<td>Save the current object to a FITS file</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes Documentation</p>
+<dl class="attribute">
+<dt id="ViSP_Pipeline.Data.FitsData.data_hdus">
+<code class="descname">data_hdus</code><a class="headerlink" href="#ViSP_Pipeline.Data.FitsData.data_hdus" title="Permalink to this definition">¶</a></dt>
+<dd><p>A convenience property to quickly get only the HDUs that have data in them</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ViSP_Pipeline.Data.FitsData.headers">
+<code class="descname">headers</code><a class="headerlink" href="#ViSP_Pipeline.Data.FitsData.headers" title="Permalink to this definition">¶</a></dt>
+<dd><p>A very nice convenience property to quickly access a list of the header objects</p>
+</dd></dl>
+
+<p class="rubric">Methods Documentation</p>
+<dl class="method">
+<dt id="ViSP_Pipeline.Data.FitsData.convert_to_float32">
+<code class="descname">convert_to_float32</code><span class="sig-paren">(</span><em>nomem=True</em>, <em>overwrite=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#FitsData.convert_to_float32"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.FitsData.convert_to_float32" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert all of the data to numpy.float32</p>
+<p>In the default form this results in a new file with a “_flt32” suffix, which is the read into this object to
+keep the data out of memory.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>nomem</strong> : bool</p>
+<blockquote>
+<div><p>If True the converted data arrays are deleted from memory and  then saved and reloaded from disk using
+memmap. If False then no new file is written and the converted data live only in memory (unless
+explicately saved with a call to .write_out()).</p>
+</div></blockquote>
+<p><strong>overwrite</strong> : bool</p>
+<blockquote class="last">
+<div><p>If True the output file containing the converted data will overwrite any previous file made by this
+method. Importantly, this method will NEVER overwrite the original FITS file.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ViSP_Pipeline.Data.FitsData.find_data_keyword_idx">
+<code class="descname">find_data_keyword_idx</code><span class="sig-paren">(</span><em>keyword</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#FitsData.find_data_keyword_idx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.FitsData.find_data_keyword_idx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the index of just the ImageHDUs that have a specific header keyword value</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>keyword</strong> : str</p>
+<blockquote>
+<div><p>The header keyword to search for</p>
+</div></blockquote>
+<p><strong>value</strong> : str, int, float</p>
+<blockquote>
+<div><p>The value of the keyword to match</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">numpy.ndarray</p>
+<blockquote class="last">
+<div><p>A 1d list of the indices that where data_hdus[idx].header[KEYWORD] == value</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ViSP_Pipeline.Data.FitsData.find_keyword_idx">
+<code class="descname">find_keyword_idx</code><span class="sig-paren">(</span><em>keyword</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#FitsData.find_keyword_idx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.FitsData.find_keyword_idx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the index of the HDUs (including the PrimaryHDU) that have a specific header keyword value</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>keyword</strong> : str</p>
+<blockquote>
+<div><p>The header keyword to search for</p>
+</div></blockquote>
+<p><strong>value</strong> : str, int, float</p>
+<blockquote>
+<div><p>The value of the keyword to match</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">numpy.ndarray</p>
+<blockquote class="last">
+<div><p>A 1d list of the indices that where headers[idx][KEYWORD] == value</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ViSP_Pipeline.Data.FitsData.flush">
+<code class="descname">flush</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#FitsData.flush"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.FitsData.flush" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flush the current data from memory and reload memmap from the disk</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ViSP_Pipeline.Data.FitsData.get_stacked_data">
+<code class="descname">get_stacked_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#FitsData.get_stacked_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.FitsData.get_stacked_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a ndarray stack containing data from all ImageHDU’s</p>
+<p>If there are a lot of ImageHDU’s the resulting array might be very large. Watch out!</p>
+<p>If the dimensionality of the data in the individual ImageHDU’s is not the same bad things will happen.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">numpy.ndarray</p>
+<blockquote class="last">
+<div><p>A 3D array where the last dimension corresponds to the number of ImageHUD’s in the current object.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ViSP_Pipeline.Data.FitsData.init_with_ndarray">
+<code class="descname">init_with_ndarray</code><span class="sig-paren">(</span><em>array</em>, <em>outputfile=None</em>, <em>overwrite=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#FitsData.init_with_ndarray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.FitsData.init_with_ndarray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load data from a numpy.ndarray and construct an astropy.io.fits HDU list</p>
+<p>To provide a uniform data type for all DKIST instruments the follow conventions are enforced:</p>
+<ol class="arabic simple">
+<li>The PrimaryHDU can (and should) have relevant header information</li>
+<li>The PrimaryHDU will have no data</li>
+<li>ImageHDU’s must have data with 2 dimensions</li>
+</ol>
+<p>A consequence of point 3 is that an extra, third dimension in the input array will be distributed across
+multiple ImageHDU’s. Input arrays of dimensionality &gt; 3 are not currently supported.</p>
+<p>If an output file is not specified then a temporary FITS file will be created to take advantage of
+astropy.io.fits’ memmap ability. In this case the FitsData object will be completely lost when it is no
+longer needed. To save the object use the .write_out() method prior to deletion.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>array</strong> : numpy.ndarray</p>
+<blockquote>
+<div><p>Array to be loaded into the FitsData object. Must have 2 or 3 dimensions</p>
+</div></blockquote>
+<p><strong>outputfile</strong> : str</p>
+<blockquote>
+<div><p>If specified, a FITS file will be saved to this path and then reloaded. If None then a temporary file
+will be created.</p>
+</div></blockquote>
+<p><strong>overwrite</strong> : bool</p>
+<blockquote class="last">
+<div><p>If True the outputfile specified will be overwritten.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ViSP_Pipeline.Data.FitsData.load_from_directory">
+<code class="descname">load_from_directory</code><span class="sig-paren">(</span><em>directory</em>, <em>searchstr='*.fits'</em>, <em>max_open=500</em>, <em>datahdu=1</em>, <em>memmap=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#FitsData.load_from_directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.FitsData.load_from_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a series of FITS files from a directory.</p>
+<p>Each separate file will become a single HDU in this object’s data_hdus. A blank PrimaryHDU is provided.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>directory</strong> : str</p>
+<blockquote>
+<div><p>The path to the directory to look in</p>
+</div></blockquote>
+<p><strong>searchstr</strong> : str</p>
+<blockquote>
+<div><p>A string used to narrow down the files loaded. For example, to search for all .fits files starting with
+“image_1”, the search string would be “image_1*.fits”.</p>
+</div></blockquote>
+<p><strong>max_open</strong> : int</p>
+<blockquote>
+<div><p>The maximum number of open files to keep. Some systems will cause massive errors if too many files are
+open at a time. If loading from a directory with a lot of files, this method will flush() after max_open
+have been loaded.</p>
+</div></blockquote>
+<p><strong>datahdu</strong> : int</p>
+<blockquote>
+<div><p>Only a single HDU will be loaded from each file in the directory. This parameter defines the HDU to be read.</p>
+</div></blockquote>
+<p><strong>memmap</strong> : boolean or None</p>
+<blockquote class="last">
+<div><p>Use astropy.io.fits’ memmap functionality? If None then astropy will make this choice for you.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ViSP_Pipeline.Data.FitsData.load_from_file">
+<code class="descname">load_from_file</code><span class="sig-paren">(</span><em>fitsfile</em>, <em>memmap=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#FitsData.load_from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.FitsData.load_from_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load data/metadata from a FITS file and make the resulting HDU list accessable to the rest of the class</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>fitsfile</strong> : str</p>
+<blockquote>
+<div><p>Path to the FITS file to load. Should probably exist.</p>
+</div></blockquote>
+<p><strong>memmap</strong> : bool or None</p>
+<blockquote class="last">
+<div><p>Whether to use astropy.io.fits’ memmap functionality. Set to None to let astropy figure it out for you.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ViSP_Pipeline.Data.FitsData.load_polarimetric_fitsData">
+<code class="descname">load_polarimetric_fitsData</code><span class="sig-paren">(</span><em>directory</em>, <em>searchstr='*.fits'</em>, <em>stokes='I'</em>, <em>max_open=500</em>, <em>memmap=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#FitsData.load_polarimetric_fitsData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.FitsData.load_polarimetric_fitsData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a single Stokes component from all files in a directory.</p>
+<p>Each separate file will become a single HDU in this object’s data_hdus. A blank PrimaryHDU is provided.</p>
+<p>This basically exactly the same as <a class="reference internal" href="#ViSP_Pipeline.Data.FitsData.load_from_directory" title="ViSP_Pipeline.Data.FitsData.load_from_directory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_from_directory</span></code></a>, but with smart handling of the datahdu parameter.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>directory</strong> : str</p>
+<blockquote>
+<div><p>The path to the directory to look in</p>
+</div></blockquote>
+<p><strong>searchstr</strong> : str</p>
+<blockquote>
+<div><p>A string used to narrow down the files loaded. For example, to search for all .fits files starting with
+“image_1”, the search string would be “image_1*.fits”.</p>
+</div></blockquote>
+<p><strong>stokes</strong> : str</p>
+<blockquote>
+<div><p>One of [‘I’, ‘Q’, ‘U’,’ V’]. The Stokes parameter to load.</p>
+</div></blockquote>
+<p><strong>max_open</strong> : int</p>
+<blockquote>
+<div><p>The maximum number of open files to keep. Some systems will cause massive errors if too many files are
+open at a time. If loading from a directory with a lot of files, this method will flush() after max_open
+have been loaded.</p>
+</div></blockquote>
+<p><strong>memmap</strong> : boolean or None</p>
+<blockquote class="last">
+<div><p>Use astropy.io.fits’ memmap functionality? If None then astropy will make this choice for you.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ViSP_Pipeline.Data.FitsData.update_header">
+<code class="descname">update_header</code><span class="sig-paren">(</span><em>keyword</em>, <em>value</em>, <em>hdu=0</em>, <em>overwrite=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#FitsData.update_header"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.FitsData.update_header" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update one of the header objects with a keyword, value pair.</p>
+<p>I guess this method exists because, while you could just do .headers[keyword] = value, this prevents
+overwriting existing keywords. iono, use your best judgement.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>keyword</strong> : str</p>
+<blockquote>
+<div><p>The keyword to create/update</p>
+</div></blockquote>
+<p><strong>value</strong> : str</p>
+<blockquote>
+<div><p>The new keyword value</p>
+</div></blockquote>
+<p><strong>hdu</strong> : int</p>
+<blockquote>
+<div><p>The index of the header to update. 0 is the PrimaryHDU</p>
+</div></blockquote>
+<p><strong>overwrite</strong> : bool</p>
+<blockquote>
+<div><p>If False then the header value will not be updated if it already exists</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">None</p>
+<blockquote class="last">
+<div><p>The header is updated inplace</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ViSP_Pipeline.Data.FitsData.write_out">
+<code class="descname">write_out</code><span class="sig-paren">(</span><em>filename</em>, <em>overwrite=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#FitsData.write_out"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.FitsData.write_out" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the current object to a FITS file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>filename</strong> : str</p>
+<blockquote>
+<div><p>The location of the resulting FITS file</p>
+</div></blockquote>
+<p><strong>overwrite :</strong></p>
+<blockquote class="last">
+<div><p>If True, overwrite the filename if it exists. Otherwise complain about a pre-existing file.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <div class="left-footer">
+         &copy; 2018, Arthur Eigenbrot
+       <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png" /></a>
+    </div>
+   
+    <div class="right-footer">
+      Last updated on 07 Jun 2018.
+    </div>
+    <div class="centre-footer">
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.4
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,6 @@
+start_polcal_multiproc
+======================
+
+.. currentmodule:: ViSP_Pipeline.ViSPPolCalPipeline
+
+.. autofunction:: start_polcal_multiproc

@@ -1,0 +1,6 @@
+polarimetric_demodulation
+=========================
+
+.. currentmodule:: ViSP_Pipeline.ScienceCalibration
+
+.. autofunction:: polarimetric_demodulation

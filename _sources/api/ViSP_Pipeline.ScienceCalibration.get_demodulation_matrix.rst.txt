@@ -1,0 +1,6 @@
+get_demodulation_matrix
+=======================
+
+.. currentmodule:: ViSP_Pipeline.ScienceCalibration
+
+.. autofunction:: get_demodulation_matrix

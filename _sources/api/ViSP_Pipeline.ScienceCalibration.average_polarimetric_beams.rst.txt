@@ -1,0 +1,6 @@
+average_polarimetric_beams
+==========================
+
+.. currentmodule:: ViSP_Pipeline.ScienceCalibration
+
+.. autofunction:: average_polarimetric_beams

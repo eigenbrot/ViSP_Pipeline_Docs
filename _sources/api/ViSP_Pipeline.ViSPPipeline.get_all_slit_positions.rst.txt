@@ -1,0 +1,6 @@
+get_all_slit_positions
+======================
+
+.. currentmodule:: ViSP_Pipeline.ViSPPipeline
+
+.. autofunction:: get_all_slit_positions

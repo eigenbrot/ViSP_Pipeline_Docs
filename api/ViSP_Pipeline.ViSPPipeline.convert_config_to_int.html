@@ -1,0 +1,201 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>convert_config_to_int &#8212; ViSP_Pipeline v0.4.0</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,600,700" type="text/css" />
+    <link rel="stylesheet" href="../_static/dkist.css" type="text/css" />
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="shortcut icon" href="../_static/favico.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="gen_blank_config" href="ViSP_Pipeline.ViSPPipeline.gen_blank_config.html" />
+    <link rel="prev" title="Reference/API" href="../API.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="col-md-3 navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="http://nso.edu"><img src="../_static/img/NSOlogo.gif">
+        </a>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav hidden">
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">ViSP Pipeline Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config_file.html">Configuration File Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../walkthrough.html">Data Reduction Walkthrough</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../API.html">Reference/API</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">convert_config_to_int</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="../API.html" title="Previous Chapter: Reference/API"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Reference/API</span>
+    </a>
+  </li>
+  <li>
+    <a href="ViSP_Pipeline.ViSPPipeline.gen_blank_config.html" title="Next Chapter: gen_blank_config"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">gen_blank_config &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+          </ul>
+          
+            <ul class="nav navbar-nav navbar-left">
+              <li><a href="http://dkist.nso.edu/">DKIST</a></li>
+              <li><a href="http://docs.cadair.com/devdocs">DC Developer Guide</a></li>
+              <li><a href="http://docs.cadair.com/datarate">DKIST Data Rate</a></li>
+              <li><a href="http://docs.cadair.com/datamodel">DKIST Data Model</a></li>
+            </ul>
+          
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+
+    <div class="col-md-3"><div id="side-logo" >
+            <a href="http://dkist.nso.edu">
+                <img src="../_static/img/DKISTLogo-Medium.jpg">
+            </a>
+        </div><div id="sidebar" class="bs-sidenav" role="complementary">
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">ViSP Pipeline Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config_file.html">Configuration File Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../walkthrough.html">Data Reduction Walkthrough</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../API.html">Reference/API</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ViSPPipeline">ViSP_Pipeline.ViSPPipeline Module</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../API.html#functions">Functions</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">convert_config_to_int</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ViSPPipeline.gen_blank_config.html">gen_blank_config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ViSPPipeline.gen_errname.html">gen_errname</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ViSPPipeline.generate_intermediate_objects.html">generate_intermediate_objects</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ViSPPipeline.get_all_slit_positions.html">get_all_slit_positions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ViSPPipeline.get_pol_mode.html">get_pol_mode</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ViSPPipeline.main.html">main</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ViSPPipeline.run_PAC_demod.html">run_PAC_demod</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ViSPPipeline.run_polarization_calibration.html">run_polarization_calibration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ViSPPipeline.start_science_multiproc.html">start_science_multiproc</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ViSPPipeline.strip_fits.html">strip_fits</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ViSPPolCalPipeline">ViSP_Pipeline.ViSPPolCalPipeline Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ScienceCalibration">ViSP_Pipeline.ScienceCalibration Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.PolarimetricCalibration">ViSP_Pipeline.PolarimetricCalibration Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.Data">ViSP_Pipeline.Data Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.generic">ViSP_Pipeline.generic Module</a></li>
+</ul>
+</li>
+</ul>
+
+            
+        </div>
+    </div>
+
+    <div class="col-md-9 content">
+      
+  <div class="section" id="convert-config-to-int">
+<h1>convert_config_to_int<a class="headerlink" href="#convert-config-to-int" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="ViSP_Pipeline.ViSPPipeline.convert_config_to_int">
+<code class="descclassname">ViSP_Pipeline.ViSPPipeline.</code><code class="descname">convert_config_to_int</code><span class="sig-paren">(</span><em>configdict</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/ViSPPipeline.html#convert_config_to_int"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.ViSPPipeline.convert_config_to_int" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert configparser-style dictionary of arguments to integers, where appropriate</p>
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <div class="left-footer">
+         &copy; 2018, Arthur Eigenbrot
+       <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png" /></a>
+    </div>
+   
+    <div class="right-footer">
+      Last updated on 07 Jun 2018.
+    </div>
+    <div class="centre-footer">
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.4
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

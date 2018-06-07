@@ -1,0 +1,6 @@
+setup_telescope_model
+=====================
+
+.. currentmodule:: ViSP_Pipeline.ScienceCalibration
+
+.. autofunction:: setup_telescope_model
