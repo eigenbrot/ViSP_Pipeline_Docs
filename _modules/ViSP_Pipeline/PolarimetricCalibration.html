@@ -5,12 +5,12 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>ViSP_Pipeline.PolarimetricCalibration &#8212; ViSP_Pipeline v0.4.0</title>
+    <title>ViSP_Pipeline.PolarimetricCalibration &#8212; ViSP_Pipeline v0.7.0</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,600,700" type="text/css" />
     <link rel="stylesheet" href="../../_static/dkist.css" type="text/css" />
-    <script type="text/javascript" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
@@ -233,6 +233,45 @@
     <span class="k">return</span> <span class="n">binData_1</span><span class="p">,</span> <span class="n">binData_2</span><span class="p">,</span> <span class="n">binErr_1</span><span class="p">,</span> <span class="n">binErr_2</span></div>
 
 <div class="viewcode-block" id="generate_polarization_calibration"><a class="viewcode-back" href="../../api/ViSP_Pipeline.PolarimetricCalibration.generate_polarization_calibration.html#ViSP_Pipeline.PolarimetricCalibration.generate_polarization_calibration">[docs]</a><span class="k">def</span> <span class="nf">generate_polarization_calibration</span><span class="p">(</span><span class="n">binData_1</span><span class="p">,</span> <span class="n">binData_2</span><span class="p">,</span> <span class="n">outpre</span><span class="p">,</span> <span class="n">CS_step</span><span class="p">,</span> <span class="n">err_1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">err_2</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Write reduced PolCal to a sensible place.</span>
+
+<span class="sd">    The sensible place is DIR/beam[1|2]/VISP_CS_STEP.PAC.beam[1|2].fits where DIR and STEP are defined by inputs.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    binData_1 : Data.FitsData</span>
+<span class="sd">        PolCal ViSP data for beam 1. Each modulator state in a separate ImageHDU.</span>
+
+<span class="sd">    binData_2 : Data.FitsData</span>
+<span class="sd">        PolCal ViSP data for beam 2. Each modulator state in a separate ImageHDU.</span>
+
+<span class="sd">    outpre : str</span>
+<span class="sd">        Path to top level directory that contains the reduction products</span>
+
+<span class="sd">    CS_step : int</span>
+<span class="sd">        The number of the CS step represented by the input data</span>
+
+<span class="sd">    err_1 : Data.FitsData</span>
+<span class="sd">        Uncertainty associated with binData1</span>
+
+<span class="sd">    err_2 : Data.FitsData</span>
+<span class="sd">        Uncertainty associated with binData2</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Data.FitsData</span>
+<span class="sd">        Passthrough of binData1</span>
+
+<span class="sd">    Data.FitsData</span>
+<span class="sd">        Passthrough of binData2</span>
+
+<span class="sd">    Data.FitsData</span>
+<span class="sd">        Passthrough of err_1</span>
+
+<span class="sd">    Data.FitsData</span>
+<span class="sd">        Passthrough of err_2</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/beam1&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outpre</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/beam2&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outpre</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">obj</span><span class="p">,</span> <span class="n">post</span><span class="p">,</span> <span class="n">beamnum</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="n">binData_1</span><span class="p">,</span> <span class="n">binData_2</span><span class="p">,</span> <span class="n">err_1</span><span class="p">,</span> <span class="n">err_2</span><span class="p">],</span>
@@ -481,10 +520,10 @@
     </div>
    
     <div class="right-footer">
-      Last updated on 07 Jun 2018.
+      Last updated on 20 Jun 2018.
     </div>
     <div class="centre-footer">
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.4
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.5
     </div>
   </div>
 </footer>
