@@ -39,4 +39,5 @@ More information on the format/options of the configuration file can be found in
   self
   config_file
   walkthrough
+  data_warning
   API

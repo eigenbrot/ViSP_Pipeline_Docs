@@ -22,7 +22,7 @@
     <link rel="shortcut icon" href="_static/favico.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Reference/API" href="API.html" />
+    <link rel="next" title="A Word About Data, RAM, and Disk Space" href="data_warning.html" />
     <link rel="prev" title="Configuration File Format" href="config_file.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -60,6 +60,7 @@
 <li class="toctree-l1"><a class="reference internal" href="index.html">ViSP Pipeline Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="config_file.html">Configuration File Format</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Data Reduction Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_warning.html">A Word About Data, RAM, and Disk Space</a></li>
 <li class="toctree-l1"><a class="reference internal" href="API.html">Reference/API</a></li>
 </ul>
 </ul>
@@ -97,7 +98,7 @@
     </a>
   </li>
   <li>
-    <a href="API.html" title="Next Chapter: Reference/API"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Reference/API &raquo;</span>
+    <a href="data_warning.html" title="Next Chapter: A Word About Data, RAM, and Disk Space"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">A Word About ... &raquo;</span>
     </a>
   </li>
               
@@ -152,6 +153,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#full-spatial-cubes">Full Spatial Cubes</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="data_warning.html">A Word About Data, RAM, and Disk Space</a></li>
 <li class="toctree-l1"><a class="reference internal" href="API.html">Reference/API</a></li>
 </ul>
 
@@ -306,6 +308,11 @@ produce 3D data cubes for a given Stokes vector:</p>
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">np.swapaxes</span></code> call is necessary to format the data correctly for viewing with ds9.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Generating spatial maps and full cubes can be very resource intensive. If you are getting errors then check out
+<a class="reference internal" href="data_warning.html#data-warning"><span class="std std-ref">A Word About Data, RAM, and Disk Space</span></a>.</p>
+</div>
 </div>
 </div>
 
@@ -322,7 +329,7 @@ produce 3D data cubes for a given Stokes vector:</p>
     </div>
    
     <div class="right-footer">
-      Last updated on 20 Jun 2018.
+      Last updated on 21 Jun 2018.
     </div>
     <div class="centre-footer">
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.5
