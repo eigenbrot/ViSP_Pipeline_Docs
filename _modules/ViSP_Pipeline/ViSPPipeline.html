@@ -133,7 +133,9 @@
     <div class="col-md-9 content">
       
   <h1>Source code for ViSP_Pipeline.ViSPPipeline</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span></span><span class="kn">import</span> <span class="nn">ast</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">multiprocessing</span> <span class="k">as</span> <span class="nn">mp</span>
 <span class="kn">from</span> <span class="nn">glob</span> <span class="k">import</span> <span class="n">glob</span>
@@ -234,20 +236,39 @@
     <span class="k">except</span> <span class="n">configparser</span><span class="o">.</span><span class="n">NoOptionError</span><span class="p">:</span>
         <span class="k">pass</span>
 
+    <span class="c1"># Let&#39;s see if the user wants to reduce only a subset of images</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">single_pos</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;Main&#39;</span><span class="p">,</span> <span class="s1">&#39;slit_pos&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">single_pos</span> <span class="ow">in</span> <span class="n">slit_pos_list</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">:  only reducing slit position </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">single_pos</span><span class="p">))</span>
-            <span class="n">slit_pos_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">single_pos</span><span class="p">]</span>
+        <span class="n">sp_str</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;slit_pos&#39;</span><span class="p">]</span>
+
+        <span class="c1"># They can provide a slice/range with &#39;XXX:YYY&#39;</span>
+        <span class="n">slice_match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s1">&#39;([0-9]*):([0-9]*)&#39;</span><span class="p">,</span> <span class="n">sp_str</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">slice_match</span><span class="p">:</span>
+            <span class="n">pos_subset</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">slice_match</span><span class="o">.</span><span class="n">groups</span><span class="p">()[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">slice_match</span><span class="o">.</span><span class="n">groups</span><span class="p">()[</span><span class="mi">1</span><span class="p">])))</span>
+
+        <span class="c1"># If it&#39;s not a slice we&#39;ll try using ast.literal_eval to grab either an int or a list</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;slit position </span><span class="si">{}</span><span class="s1"> is not in input directory&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">single_pos</span><span class="p">))</span>
-    <span class="k">except</span> <span class="n">configparser</span><span class="o">.</span><span class="n">NoOptionError</span><span class="p">:</span>
+            <span class="n">pos_subset</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">sp_str</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">pos_subset</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">:</span>
+                <span class="n">pos_subset</span> <span class="o">=</span> <span class="p">[</span><span class="n">pos_subset</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">pos_subset</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">list</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;slit_pos must be either an int or list of ints&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Make sure that the subset actually exists in the full list of slit positions</span>
+        <span class="k">if</span> <span class="nb">all</span><span class="p">([</span><span class="n">i</span> <span class="ow">in</span> <span class="n">slit_pos_list</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">pos_subset</span><span class="p">]):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">:  only reducing slit positions </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">pos_subset</span><span class="p">))</span>
+            <span class="n">slit_pos_list</span> <span class="o">=</span> <span class="n">pos_subset</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;slit position </span><span class="si">{}</span><span class="s1"> is not in input directory&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pos_subset</span><span class="p">))</span>
+
+    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">:  running ScienceCalibration on all positions with </span><span class="si">{}</span><span class="s1"> threads&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">numthread</span><span class="p">))</span>
         <span class="k">pass</span>
 
     <span class="c1"># This loop sets up a list of mp processes. They have not been started.</span>
     <span class="n">jobs</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">sci_kwargs</span><span class="p">[</span><span class="s1">&#39;lock&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+    <span class="n">sci_kwargs</span><span class="p">[</span><span class="s1">&#39;dark_lock&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+    <span class="n">sci_kwargs</span><span class="p">[</span><span class="s1">&#39;gain_lock&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+    <span class="n">sci_kwargs</span><span class="p">[</span><span class="s1">&#39;geo_lock&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">spos</span> <span class="ow">in</span> <span class="n">slit_pos_list</span><span class="p">:</span>
         <span class="n">outpre</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:}</span><span class="s1">.</span><span class="si">{:04}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;output_prefix&#39;</span><span class="p">],</span> <span class="n">spos</span><span class="p">)</span>
         <span class="n">jobs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">ScienceCalibration</span><span class="o">.</span><span class="n">main</span><span class="p">,</span>
@@ -288,19 +309,28 @@
 <span class="sd">        The Science Calibration keyword arguments that contain the intermediate calibration objects.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="n">mkerr</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;Main&#39;</span><span class="p">,</span> <span class="s1">&#39;gen_noise_frames&#39;</span><span class="p">)</span>
+
     <span class="c1"># Dark</span>
     <span class="c1">######</span>
     <span class="n">filename</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;dark_cal&#39;</span><span class="p">]</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Could not find </span><span class="si">{}</span><span class="s1">, attempting to generate with DarkCalibration&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">filename</span><span class="p">))</span>
-        <span class="n">DarkCal</span><span class="p">,</span> <span class="n">DarkErr</span> <span class="o">=</span> <span class="n">DarkCalibration</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;DarkCalibration&#39;</span><span class="p">][</span><span class="s1">&#39;raw_dark_dir&#39;</span><span class="p">],</span> <span class="n">strip_fits</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+        <span class="n">DarkCal</span><span class="p">,</span> <span class="n">DarkErr</span> <span class="o">=</span> <span class="n">DarkCalibration</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;DarkCalibration&#39;</span><span class="p">][</span><span class="s1">&#39;raw_dark_dir&#39;</span><span class="p">],</span> <span class="n">strip_fits</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span>
+                                                <span class="n">gen_err</span><span class="o">=</span><span class="n">mkerr</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">DarkCal</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Loaded </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">filename</span><span class="p">))</span>
+
+        <span class="n">errname</span> <span class="o">=</span> <span class="n">gen_errname</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">DarkErr</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">(</span><span class="n">gen_errname</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+            <span class="n">DarkErr</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">(</span><span class="n">errname</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">:  and uncertainty </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">errname</span><span class="p">))</span>
         <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Could not find </span><span class="si">{}</span><span class="s1">. Setting error to None&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">gen_errname</span><span class="p">(</span><span class="n">filename</span><span class="p">)))</span>
+            <span class="k">if</span> <span class="n">mkerr</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s2">&quot;gen_noise_frames is True, but I can&#39;t find an uncertainty frame &quot;</span>
+                                        <span class="s2">&quot;associated with </span><span class="si">{}</span><span class="s2">. You probably need to re-generate all Cal objects&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Could not find </span><span class="si">{}</span><span class="s1">. Setting error to None&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">errname</span><span class="p">))</span>
             <span class="n">DarkErr</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="c1"># Lamp Gain</span>
@@ -310,14 +340,19 @@
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Could not find </span><span class="si">{}</span><span class="s1">, attempting to generate with LampGainCalibration&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">filename</span><span class="p">))</span>
         <span class="n">LampCal</span><span class="p">,</span> <span class="n">LampErr</span> <span class="o">=</span> <span class="n">LampGainCalibration</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;LampGainCalibration&#39;</span><span class="p">][</span><span class="s1">&#39;raw_lamp_gain_dir&#39;</span><span class="p">],</span>
                                                     <span class="n">strip_fits</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span>
-                                                    <span class="n">dark_cal</span><span class="o">=</span><span class="n">DarkCal</span><span class="p">,</span> <span class="n">dark_cal_err</span><span class="o">=</span><span class="n">DarkErr</span><span class="p">)</span>
+                                                    <span class="n">dark_cal</span><span class="o">=</span><span class="n">DarkCal</span><span class="p">,</span> <span class="n">dark_cal_err</span><span class="o">=</span><span class="n">DarkErr</span><span class="p">,</span> <span class="n">gen_err</span><span class="o">=</span><span class="n">mkerr</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">LampCal</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Loaded </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">filename</span><span class="p">))</span>
+        <span class="n">errname</span> <span class="o">=</span> <span class="n">gen_errname</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">LampErr</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">(</span><span class="n">gen_errname</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+            <span class="n">LampErr</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">(</span><span class="n">errname</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">:  and uncertainty </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">errname</span><span class="p">))</span>
         <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Could not find </span><span class="si">{}</span><span class="s1">. Setting error to None&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">gen_errname</span><span class="p">(</span><span class="n">filename</span><span class="p">)))</span>
+            <span class="k">if</span> <span class="n">mkerr</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s2">&quot;gen_noise_frames is True, but I can&#39;t find an uncertainty frame &quot;</span>
+                                        <span class="s2">&quot;associated with </span><span class="si">{}</span><span class="s2">. You probably need to re-generate all Cal objects&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Could not find </span><span class="si">{}</span><span class="s1">. Setting error to None&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">errname</span><span class="p">))</span>
             <span class="n">LampErr</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="c1"># Solar Gain / GeoCal</span>
@@ -330,20 +365,26 @@
         <span class="n">SolarCal</span><span class="p">,</span> <span class="n">SolarErr</span><span class="p">,</span> <span class="n">GeoCal</span> <span class="o">=</span> <span class="n">SolarGainCalibration</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;SolarGainCalibration&#39;</span><span class="p">][</span><span class="s1">&#39;raw_solar_gain_dir&#39;</span><span class="p">],</span>
                                                                <span class="n">strip_fits</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="n">geoname</span><span class="p">,</span> <span class="n">dark_cal</span><span class="o">=</span><span class="n">DarkCal</span><span class="p">,</span>
                                                                <span class="n">lamp_gain_cal</span><span class="o">=</span><span class="n">LampCal</span><span class="p">,</span> <span class="n">dark_cal_err</span><span class="o">=</span><span class="n">DarkErr</span><span class="p">,</span>
-                                                               <span class="n">lamp_cal_err</span><span class="o">=</span><span class="n">LampErr</span><span class="p">)</span>
+                                                               <span class="n">lamp_cal_err</span><span class="o">=</span><span class="n">LampErr</span><span class="p">,</span> <span class="n">gen_err</span><span class="o">=</span><span class="n">mkerr</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">GeoCal</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">(</span><span class="n">geoname</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Loaded </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">geoname</span><span class="p">))</span>
         <span class="n">SolarCal</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Loaded </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">filename</span><span class="p">))</span>
+        <span class="n">errname</span> <span class="o">=</span> <span class="n">gen_errname</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">SolarErr</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">(</span><span class="n">gen_errname</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+            <span class="n">SolarErr</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">(</span><span class="n">errname</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">:  and uncertainty </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">errname</span><span class="p">))</span>
         <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Could not find </span><span class="si">{}</span><span class="s1">. Setting error to None&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">gen_errname</span><span class="p">(</span><span class="n">filename</span><span class="p">)))</span>
+            <span class="k">if</span> <span class="n">mkerr</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s2">&quot;gen_noise_frames is True, but I can&#39;t find an uncertainty frame &quot;</span>
+                                        <span class="s2">&quot;associated with </span><span class="si">{}</span><span class="s2">. You probably need to re-generate all Cal objects&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Could not find </span><span class="si">{}</span><span class="s1">. Setting error to None&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">errname</span><span class="p">))</span>
             <span class="n">SolarErr</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="c1"># Construct the argument lists for the main pipeline</span>
-    <span class="n">sci_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;dark_cal&#39;</span><span class="p">:</span> <span class="n">DarkCal</span><span class="p">,</span> <span class="s1">&#39;solar_gain_cal&#39;</span><span class="p">:</span> <span class="n">SolarCal</span><span class="p">,</span> <span class="s1">&#39;geometric_cal&#39;</span><span class="p">:</span> <span class="n">GeoCal</span><span class="p">}</span>
+    <span class="n">sci_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;dark_cal&#39;</span><span class="p">:</span> <span class="n">DarkCal</span><span class="p">,</span> <span class="s1">&#39;solar_gain_cal&#39;</span><span class="p">:</span> <span class="n">SolarCal</span><span class="p">,</span> <span class="s1">&#39;geometric_cal&#39;</span><span class="p">:</span> <span class="n">GeoCal</span><span class="p">,</span>
+                  <span class="s1">&#39;dark_cal_err&#39;</span><span class="p">:</span> <span class="n">DarkErr</span><span class="p">,</span> <span class="s1">&#39;solar_gain_cal_err&#39;</span><span class="p">:</span> <span class="n">SolarErr</span><span class="p">,</span> <span class="s1">&#39;gen_err&#39;</span><span class="p">:</span> <span class="n">mkerr</span><span class="p">}</span>
 
     <span class="k">return</span> <span class="n">sci_kwargs</span></div>
 
@@ -371,12 +412,12 @@
         <span class="n">hdulist</span> <span class="o">=</span> <span class="n">pyfits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
         <span class="n">header</span> <span class="o">=</span> <span class="n">hdulist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">header</span><span class="p">[</span><span class="s1">&#39;VISP_PMD&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Full Stokes&#39;</span> <span class="ow">and</span> <span class="p">(</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;ID_004&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">dataset_ID</span> <span class="ow">or</span> <span class="n">dataset_ID</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">header</span><span class="p">[</span><span class="s1">&#39;VISP_PMD&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Full Stokes&#39;</span> <span class="ow">and</span> <span class="p">(</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;ID___004&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">dataset_ID</span> <span class="ow">or</span> <span class="n">dataset_ID</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">):</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Polarimetric data detected&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
                 <span class="n">pol</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="n">found</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="k">break</span>
-            <span class="k">elif</span> <span class="n">header</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;VISP_PMD&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Stokes-I&#39;</span> <span class="ow">and</span> <span class="p">(</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;ID_004&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">dataset_ID</span> <span class="ow">or</span> <span class="n">dataset_ID</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">):</span>
+            <span class="k">elif</span> <span class="n">header</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;VISP_PMD&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Stokes-I&#39;</span> <span class="ow">and</span> <span class="p">(</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;ID___004&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">dataset_ID</span> <span class="ow">or</span> <span class="n">dataset_ID</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">):</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Basic intensity data detected&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
                 <span class="n">found</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="k">break</span>
@@ -391,6 +432,7 @@
 <div class="viewcode-block" id="run_polarization_calibration"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ViSPPipeline.run_polarization_calibration.html#ViSP_Pipeline.ViSPPipeline.run_polarization_calibration">[docs]</a><span class="k">def</span> <span class="nf">run_polarization_calibration</span><span class="p">(</span><span class="n">raw_pol_dir</span><span class="p">,</span> <span class="n">raw_dark_dir</span><span class="p">,</span> <span class="n">raw_lamp_gain_dir</span><span class="p">,</span> <span class="n">raw_solar_gain_dir</span><span class="p">,</span>
                                  <span class="n">num_bins_x</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_bins_y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dark_cal</span><span class="o">=</span><span class="s1">&#39;DarkCal.fits&#39;</span><span class="p">,</span> <span class="n">lamp_gain_cal</span><span class="o">=</span><span class="s1">&#39;LampGainCal.fits&#39;</span><span class="p">,</span>
                                  <span class="n">solar_gain_cal</span><span class="o">=</span><span class="s1">&#39;SolarGainCal.fits&#39;</span><span class="p">,</span> <span class="n">geometric_cal</span><span class="o">=</span><span class="s1">&#39;GeoCal.fits&#39;</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                 <span class="n">gen_noise_frames</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                  <span class="o">**</span><span class="n">unused_kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generate a set of reduced, macropixel&#39;d ViSP data for use by the PACPipeline.</span>
@@ -433,6 +475,9 @@
 <span class="sd">    threads : int</span>
 <span class="sd">        Maximum number of cpus/threads to use during reduction</span>
 
+<span class="sd">    gen_noise_frames : bool</span>
+<span class="sd">        If True then uncertainty estimates will be generated for the reduced CS step data</span>
+
 <span class="sd">    unused_kwargs : dict</span>
 <span class="sd">        Keyword arguments that exist in the config file, but are not used by this function</span>
 
@@ -455,6 +500,7 @@
                          <span class="s1">&#39;lamp_gain_cal&#39;</span><span class="p">:</span> <span class="n">lampcal_file</span><span class="p">,</span>
                          <span class="s1">&#39;solar_gain_cal&#39;</span><span class="p">:</span> <span class="n">solarcal_file</span><span class="p">,</span>
                          <span class="s1">&#39;geometric_cal&#39;</span><span class="p">:</span> <span class="n">geocal_file</span><span class="p">,</span>
+                         <span class="s1">&#39;gen_noise_frames&#39;</span><span class="p">:</span> <span class="n">gen_noise_frames</span><span class="p">,</span>
                          <span class="s1">&#39;threads&#39;</span><span class="p">:</span> <span class="n">threads</span><span class="p">},</span>
                 <span class="s1">&#39;DarkCalibration&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;raw_dark&#39;</span><span class="p">:</span> <span class="n">raw_dark_dir</span><span class="p">},</span>
                 <span class="s1">&#39;LampGainCalibration&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;raw_lamp_gain&#39;</span><span class="p">:</span> <span class="n">raw_lamp_gain_dir</span><span class="p">},</span>
@@ -585,6 +631,7 @@
                       <span class="s1">&#39;lamp_gain_cal&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
                       <span class="s1">&#39;solar_gain_cal&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
                       <span class="s1">&#39;geometric_cal&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;gen_noise_frames&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
                       <span class="s1">&#39;threads&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
                       <span class="s1">&#39;&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
                       <span class="s2">&quot;; The raw files point to the location of the raw ViSP frames&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
@@ -595,6 +642,7 @@
                                          <span class="s1">&#39;raw_dark_dir&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
                                          <span class="s1">&#39;raw_lamp_gain_dir&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
                                          <span class="s1">&#39;raw_solar_gain_dir&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                                         <span class="s1">&#39;gen_noise_frames&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
                                          <span class="s1">&#39;telescope_db&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
                                          <span class="s1">&#39;num_bins_x&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
                                          <span class="s1">&#39;num_bins_y&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
@@ -641,10 +689,10 @@
     </div>
    
     <div class="right-footer">
-      Last updated on 21 Jun 2018.
+      Last updated on 03 Aug 2018.
     </div>
     <div class="centre-footer">
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.5
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6
     </div>
   </div>
 </footer>

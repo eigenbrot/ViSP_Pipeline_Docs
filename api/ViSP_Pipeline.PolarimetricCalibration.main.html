@@ -166,7 +166,7 @@
 <h1>main<a class="headerlink" href="#main" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="ViSP_Pipeline.PolarimetricCalibration.main">
-<code class="descclassname">ViSP_Pipeline.PolarimetricCalibration.</code><code class="descname">main</code><span class="sig-paren">(</span><em>pol_dir</em>, <em>CS_step</em>, <em>outpre</em>, <em>dark_cal=None</em>, <em>solar_gain_cal=None</em>, <em>geometric_cal=None</em>, <em>numpix_x=1</em>, <em>numpix_y=1</em>, <em>lock=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/PolarimetricCalibration.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.PolarimetricCalibration.main" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">ViSP_Pipeline.PolarimetricCalibration.</code><code class="descname">main</code><span class="sig-paren">(</span><em>pol_dir</em>, <em>CS_step</em>, <em>outpre</em>, <em>dark_cal=None</em>, <em>solar_gain_cal=None</em>, <em>geometric_cal=None</em>, <em>dark_cal_err=None</em>, <em>solar_gain_cal_err=None</em>, <em>gen_err=False</em>, <em>numpix_x=1</em>, <em>numpix_y=1</em>, <em>dark_lock=None</em>, <em>gain_lock=None</em>, <em>geo_lock=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/PolarimetricCalibration.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.PolarimetricCalibration.main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Take in raw data and produce data suitable for use by the PA&amp;C Pipeline.</p>
 <p>Dark, gain, and geometric effects are removed and the two beams are split into two separate objects/files. An
 arbitrary amount of binning of the final data is also possible. Binning the data results in faster PA&amp;C analysis,
@@ -209,10 +209,20 @@ outpre_beam1_err.fits and outpre_beam2_err.fits.</p>
 <blockquote>
 <div><p>The number of spectral pixels PER BEAM in the final output data</p>
 </div></blockquote>
-<p><strong>lock</strong> : multiprocessing.synchronize.locl</p>
+<p><strong>dark_lock</strong> : multiprocessing.synchronize.lock</p>
 <blockquote>
-<div><p>If  provided, this lock will be used when reading information from the dark and gain calibration objects. This
-avoids some weirdness in astropy’s FITS containers when accessing the same data at the same time.</p>
+<div><p>This lock will be used when reading information from the dark calibration object. This avoids some weirdness in
+astropy’s FITS containers when accessing the same data at the same time.</p>
+</div></blockquote>
+<p><strong>gain_lock</strong> : multiprocessing.synchronize.lock</p>
+<blockquote>
+<div><p>This lock will be used when reading information from the gain calibration object. This avoids some weirdness in
+astropy’s FITS containers when accessing the same data at the same time.</p>
+</div></blockquote>
+<p><strong>geo_lock</strong> : multiprocessing.synchronize.lock</p>
+<blockquote>
+<div><p>This lock will be used when reading information from the geometric calibration object. This avoids some
+weirdness in astropy’s FITS containers when accessing the same data at the same time.</p>
 </div></blockquote>
 </td>
 </tr>
@@ -253,10 +263,10 @@ avoids some weirdness in astropy’s FITS containers when accessing the same dat
     </div>
    
     <div class="right-footer">
-      Last updated on 21 Jun 2018.
+      Last updated on 03 Aug 2018.
     </div>
     <div class="centre-footer">
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.5
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6
     </div>
   </div>
 </footer>

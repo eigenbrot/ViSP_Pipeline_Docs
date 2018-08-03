@@ -60,6 +60,7 @@
 <li class="toctree-l1"><a class="reference internal" href="index.html">ViSP Pipeline Documentation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Configuration File Format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="walkthrough.html">Data Reduction Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_warning.html">A Word About Data, RAM, and Disk Space</a></li>
 <li class="toctree-l1"><a class="reference internal" href="API.html">Reference/API</a></li>
 </ul>
 </ul>
@@ -150,6 +151,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="walkthrough.html">Data Reduction Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_warning.html">A Word About Data, RAM, and Disk Space</a></li>
 <li class="toctree-l1"><a class="reference internal" href="API.html">Reference/API</a></li>
 </ul>
 
@@ -178,28 +180,57 @@ Calibration Objects by simply pointing the corresponding option to a file that d
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">raw_sci_dir:</th><td class="field-body">Path to the directory containing raw ViSP frames to be reduced. Note that <em>all</em> slit positions found in
+<tr class="field-odd field"><th class="field-name">raw_sci_dir:</th><td class="field-body"><p class="first">Path to the directory containing raw ViSP frames to be reduced. Note that <em>all</em> slit positions found in
 this directory will be reduced. If you only want to reduce a subset of slit positions then move them into a separate
-folder or use the <code class="docutils literal notranslate"><span class="pre">slit_pos</span></code> option.</td>
+folder or use the <code class="docutils literal notranslate"><span class="pre">slit_pos</span></code> option.</p>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">data_set_id:</th><td class="field-body">Only reduce files with this <code class="xref py py-obj docutils literal notranslate"><span class="pre">ID_004</span></code> header value. Can be left blank to reduce all files in <code class="docutils literal notranslate"><span class="pre">raw_sci_dir</span></code>.</td>
+<tr class="field-even field"><th class="field-name">data_set_id:</th><td class="field-body"><p class="first">Only reduce files with this <code class="xref py py-obj docutils literal notranslate"><span class="pre">ID_004</span></code> header value. Can be left blank to reduce all files in <code class="docutils literal notranslate"><span class="pre">raw_sci_dir</span></code>.</p>
+</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">output_prefix:</th><td class="field-body">The prefix to apply to all Level-1 science products. This string can also include a path structure.</td>
+<tr class="field-odd field"><th class="field-name">output_prefix:</th><td class="field-body"><p class="first">The prefix to apply to all Level-1 science products. This string can also include a path structure.</p>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">dark_cal:</th><td class="field-body">The location of a processed Dark Calibration object. If this file does not exist it will be generated.</td>
+<tr class="field-even field"><th class="field-name">dark_cal:</th><td class="field-body"><p class="first">The location of a processed Dark Calibration object. If this file does not exist it will be generated.</p>
+</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">lamp_gain_cal:</th><td class="field-body">The location of a processed Lamp Gain Calibration object. If this file does not exist it will be generated.</td>
+<tr class="field-odd field"><th class="field-name">lamp_gain_cal:</th><td class="field-body"><p class="first">The location of a processed Lamp Gain Calibration object. If this file does not exist it will be generated.</p>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">solar_gain_cal:</th><td class="field-body">The location of a processed Solar Gain Calibration object. If this files does not exist it will be generated.</td>
+<tr class="field-even field"><th class="field-name">solar_gain_cal:</th><td class="field-body"><p class="first">The location of a processed Solar Gain Calibration object. If this files does not exist it will be generated.</p>
+</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">geometric_cal:</th><td class="field-body">The location of a processed Geometric Calibration object. If this file does not exist it will be generated.</td>
+<tr class="field-odd field"><th class="field-name">geometric_cal:</th><td class="field-body"><p class="first">The location of a processed Geometric Calibration object. If this file does not exist it will be generated.</p>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">threads:</th><td class="field-body"><strong>(int)</strong> The number of separate processes to spawn when reducing the raw science data.</td>
+<tr class="field-even field"><th class="field-name" colspan="2">gen_noise_frames:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><p class="first">If True then uncertinaty frames (suffixed “_err.fits”) will be generated from the raw data and propagated through the pipeline. <strong>NOTE</strong> This more than doubles the total processing time.</p>
+</td>
 </tr>
-<tr class="field-odd field"><th class="field-name" colspan="2"><em>remove_tele_pol</em>:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">If False, do NOT apply the inverse Telescope Model. Useful for synthetic data that were created without a TM.</td>
+<tr class="field-odd field"><th class="field-name">threads:</th><td class="field-body"><p class="first"><strong>(int)</strong> The number of separate processes to spawn when reducing the raw science data.</p>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name"><em>slit_pos</em>:</th><td class="field-body">If present, only reduce the single slit position specified.</td>
+<tr class="field-even field"><th class="field-name" colspan="2"><em>remove_tele_pol</em>:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><p class="first">If False, do NOT apply the inverse Telescope Model. Useful for synthetic data that were created without a TM.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name"><em>slit_pos</em>:</th><td class="field-body"><p class="first">If present, this option is used to specify a subset of slit positions to reduce. This option can have one of
+three forms:</p>
+<blockquote class="last">
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">int:</th><td class="field-body">Just reduce a single slit position. Ex: <code class="xref py py-obj docutils literal notranslate"><span class="pre">423</span></code></td>
+</tr>
+<tr class="field-even field"><th class="field-name">list:</th><td class="field-body">Reduce the exact list of slit positions specified. Ex: <code class="xref py py-obj docutils literal notranslate"><span class="pre">[423,</span> <span class="pre">890,</span> <span class="pre">132]</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">NNN:MMM:</th><td class="field-body">Reduce the slit positions specified by <code class="xref py py-obj docutils literal notranslate"><span class="pre">range(NNN,</span> <span class="pre">MMM)</span></code>. Ex: <code class="xref py py-obj docutils literal notranslate"><span class="pre">14:423</span></code></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</td>
 </tr>
 </tbody>
 </table>
@@ -283,6 +314,9 @@ to <code class="docutils literal notranslate"><span class="pre">raw_pol_dir</spa
 <span class="na">lamp_gain_cal</span> <span class="o">=</span> <span class="s">LampGainCal.fits</span>
 <span class="na">solar_gain_cal</span> <span class="o">=</span> <span class="s">SolarGainCal.fits</span>
 <span class="na">geometric_cal</span> <span class="o">=</span> <span class="s">GeoCal.fits</span>
+<span class="na">gen_noise_frames</span> <span class="o">=</span> <span class="s">True</span>
+<span class="na">remove_tele_pol</span> <span class="o">=</span> <span class="s">False</span>
+<span class="na">slit_pos</span> <span class="o">=</span> <span class="s">[0, 458, 111]</span>
 <span class="na">threads</span> <span class="o">=</span> <span class="s">3</span>
 
 <span class="k">[DarkCalibration]</span>
@@ -318,10 +352,10 @@ to <code class="docutils literal notranslate"><span class="pre">raw_pol_dir</spa
     </div>
    
     <div class="right-footer">
-      Last updated on 20 Jun 2018.
+      Last updated on 03 Aug 2018.
     </div>
     <div class="centre-footer">
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.5
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6
     </div>
   </div>
 </footer>

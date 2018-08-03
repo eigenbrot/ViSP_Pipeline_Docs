@@ -140,8 +140,10 @@
 <span class="kn">from</span> <span class="nn">ViSP_Pipeline</span> <span class="k">import</span> <span class="n">ScienceCalibration</span><span class="p">,</span> <span class="n">generic</span><span class="p">,</span> <span class="n">Data</span>
 <span class="kn">from</span> <span class="nn">ViSP_Pipeline.tag</span> <span class="k">import</span> <span class="n">tag</span>
 
-<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../api/ViSP_Pipeline.PolarimetricCalibration.main.html#ViSP_Pipeline.PolarimetricCalibration.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">pol_dir</span><span class="p">,</span> <span class="n">CS_step</span><span class="p">,</span> <span class="n">outpre</span><span class="p">,</span> <span class="n">dark_cal</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">solar_gain_cal</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">geometric_cal</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numpix_x</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">numpix_y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-         <span class="n">lock</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../api/ViSP_Pipeline.PolarimetricCalibration.main.html#ViSP_Pipeline.PolarimetricCalibration.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">pol_dir</span><span class="p">,</span> <span class="n">CS_step</span><span class="p">,</span> <span class="n">outpre</span><span class="p">,</span> <span class="n">dark_cal</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">solar_gain_cal</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">geometric_cal</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+         <span class="n">dark_cal_err</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">solar_gain_cal_err</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gen_err</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+         <span class="n">numpix_x</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">numpix_y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+         <span class="n">dark_lock</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gain_lock</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">geo_lock</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Take in raw data and produce data suitable for use by the PA&amp;C Pipeline.</span>
 
 <span class="sd">    Dark, gain, and geometric effects are removed and the two beams are split into two separate objects/files. An</span>
@@ -176,9 +178,17 @@
 <span class="sd">    numpix_y : int</span>
 <span class="sd">        The number of spectral pixels PER BEAM in the final output data</span>
 
-<span class="sd">    lock : multiprocessing.synchronize.locl</span>
-<span class="sd">        If  provided, this lock will be used when reading information from the dark and gain calibration objects. This</span>
-<span class="sd">        avoids some weirdness in astropy&#39;s FITS containers when accessing the same data at the same time.</span>
+<span class="sd">    dark_lock : multiprocessing.synchronize.lock</span>
+<span class="sd">        This lock will be used when reading information from the dark calibration object. This avoids some weirdness in</span>
+<span class="sd">        astropy&#39;s FITS containers when accessing the same data at the same time.</span>
+
+<span class="sd">    gain_lock : multiprocessing.synchronize.lock</span>
+<span class="sd">        This lock will be used when reading information from the gain calibration object. This avoids some weirdness in</span>
+<span class="sd">        astropy&#39;s FITS containers when accessing the same data at the same time.</span>
+
+<span class="sd">    geo_lock : multiprocessing.synchronize.lock</span>
+<span class="sd">        This lock will be used when reading information from the geometric calibration object. This avoids some</span>
+<span class="sd">        weirdness in astropy&#39;s FITS containers when accessing the same data at the same time.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -196,34 +206,36 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">polData</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">CalibrationCurveData</span><span class="p">(</span><span class="n">pol_dir</span><span class="p">,</span> <span class="n">CS_step</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;VISP*.fits&#39;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Loaded CS step </span><span class="si">{}</span><span class="s1"> from </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">CS_step</span><span class="p">,</span> <span class="n">pol_dir</span><span class="p">))</span>
-    <span class="n">polErr</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="n">gen_err</span><span class="p">:</span>
+        <span class="n">polErr</span> <span class="o">=</span> <span class="n">generic</span><span class="o">.</span><span class="n">generate_noise_frame</span><span class="p">(</span><span class="n">polData</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">polErr</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">if</span> <span class="n">polData</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;VISP_PMD&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;Full Stokes&#39;</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Data are not from a full stokes run&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">dark_cal</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: doing Dark Correction&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
-        <span class="k">if</span> <span class="n">lock</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: acquiring MultiProcessing Lock&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
-            <span class="n">lock</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
-        <span class="n">generic</span><span class="o">.</span><span class="n">dark_correction</span><span class="p">(</span><span class="n">polData</span><span class="p">,</span> <span class="n">dark_cal</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">lock</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: releasing MultiProcessing Lock&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
-            <span class="n">lock</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">dark_lock</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: acquired dark MultiProcessing Lock&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
+            <span class="n">generic</span><span class="o">.</span><span class="n">dark_correction</span><span class="p">(</span><span class="n">polData</span><span class="p">,</span> <span class="n">dark_cal</span><span class="p">,</span> <span class="n">polErr</span><span class="p">,</span> <span class="n">dark_cal_err</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: released dark MultiProcessing Lock&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
 
     <span class="k">if</span> <span class="n">solar_gain_cal</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: doing Gain Correction with Solar Flat&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
-        <span class="k">if</span> <span class="n">lock</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: acquiring MultiProcessing Lock&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
-            <span class="n">lock</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
-        <span class="n">generic</span><span class="o">.</span><span class="n">gain_correction</span><span class="p">(</span><span class="n">polData</span><span class="p">,</span> <span class="n">solar_gain_cal</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">lock</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: releasing MultiProcessing Lock&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
-            <span class="n">lock</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">gain_lock</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: acquired gain MultiProcessing Lock&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
+            <span class="n">generic</span><span class="o">.</span><span class="n">gain_correction</span><span class="p">(</span><span class="n">polData</span><span class="p">,</span> <span class="n">solar_gain_cal</span><span class="p">,</span> <span class="n">polErr</span><span class="p">,</span> <span class="n">solar_gain_cal_err</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: released gain MultiProcessing Lock&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
 
     <span class="k">if</span> <span class="n">geometric_cal</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: removing geometric/spectral distortions&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
-        <span class="n">polData</span><span class="p">,</span> <span class="n">polErr</span> <span class="o">=</span> <span class="n">ScienceCalibration</span><span class="o">.</span><span class="n">geometric_correction</span><span class="p">(</span><span class="n">polData</span><span class="p">,</span> <span class="n">geometric_cal</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">geo_lock</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: acquired geo MultiProcessing Lock&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
+            <span class="n">geo_numbers</span> <span class="o">=</span> <span class="n">ScienceCalibration</span><span class="o">.</span><span class="n">extract_geometric_numbers</span><span class="p">(</span><span class="n">geometric_cal</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: released geo MultiProcessing Lock&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
+        <span class="n">polData</span><span class="p">,</span> <span class="n">polErr</span> <span class="o">=</span> <span class="n">ScienceCalibration</span><span class="o">.</span><span class="n">geometric_correction</span><span class="p">(</span><span class="n">polData</span><span class="p">,</span> <span class="n">geo_numbers</span><span class="p">,</span> <span class="n">errData</span><span class="o">=</span><span class="n">polErr</span><span class="p">)</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: extracting macropixels&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
     <span class="n">binData_1</span><span class="p">,</span> <span class="n">binData_2</span><span class="p">,</span> <span class="n">binErr_1</span><span class="p">,</span> <span class="n">binErr_2</span> <span class="o">=</span> <span class="n">extract_macropixels</span><span class="p">(</span><span class="n">polData</span><span class="p">,</span> <span class="n">numpix_x</span><span class="p">,</span> <span class="n">numpix_y</span><span class="p">,</span> <span class="n">errData</span><span class="o">=</span><span class="n">polErr</span><span class="p">)</span>
@@ -370,6 +382,13 @@
     <span class="n">hdulist_2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;VISP_OGY&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numy_2</span>
     <span class="n">hdulist_2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;VISP_BEM&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
 
+    <span class="k">if</span> <span class="n">errData</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">hdulist_1_err</span> <span class="o">=</span> <span class="p">[</span><span class="n">pyfits</span><span class="o">.</span><span class="n">PrimaryHDU</span><span class="p">(</span><span class="n">header</span><span class="o">=</span><span class="n">hdulist_1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">)]</span>
+        <span class="n">hdulist_2_err</span> <span class="o">=</span> <span class="p">[</span><span class="n">pyfits</span><span class="o">.</span><span class="n">PrimaryHDU</span><span class="p">(</span><span class="n">header</span><span class="o">=</span><span class="n">hdulist_2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">)]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">binData_1_err</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">binData_2_err</span> <span class="o">=</span> <span class="kc">None</span>
+
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nummod</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: modulator state </span><span class="si">{}</span><span class="s1">:&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">i</span><span class="p">))</span>
         <span class="n">idx</span> <span class="o">=</span> <span class="n">fitsData</span><span class="o">.</span><span class="n">find_data_keyword_idx</span><span class="p">(</span><span class="s1">&#39;VISP_YYY&#39;</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
@@ -410,6 +429,34 @@
             <span class="n">ih_2</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;VISP_BEM&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
             <span class="n">hdulist_2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ih_2</span><span class="p">)</span>
 
+            <span class="k">if</span> <span class="n">errData</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">:  extracting from uncertinaty HDU </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">j</span><span class="p">))</span>
+                <span class="n">err</span> <span class="o">=</span> <span class="n">errData</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+                <span class="n">tmp1_err</span> <span class="o">=</span> <span class="n">err</span><span class="p">[:,</span> <span class="p">:</span><span class="n">pivot</span><span class="p">]</span>
+                <span class="n">tmp2_err</span> <span class="o">=</span> <span class="n">err</span><span class="p">[:,</span> <span class="n">pivot</span><span class="p">:]</span>
+
+                <span class="n">x_binned_data1_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">numpix_x</span><span class="p">,</span> <span class="n">pivot</span><span class="p">))</span>
+                <span class="n">binned_data1_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">numpix_x</span><span class="p">,</span> <span class="n">numpix_y</span><span class="p">))</span>
+                <span class="n">x_binned_data2_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">numpix_x</span><span class="p">,</span> <span class="n">numy_all</span> <span class="o">-</span> <span class="n">pivot</span><span class="p">))</span>
+                <span class="n">binned_data2_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">numpix_x</span><span class="p">,</span> <span class="n">numpix_y</span><span class="p">))</span>
+
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">xbin</span><span class="p">):</span>
+                    <span class="n">x_binned_data1_err</span> <span class="o">+=</span> <span class="n">tmp1_err</span><span class="p">[</span><span class="n">k</span><span class="p">:</span><span class="n">xend</span><span class="p">:</span><span class="n">xbin</span><span class="p">,</span> <span class="p">:]</span>
+                    <span class="n">x_binned_data2_err</span> <span class="o">+=</span> <span class="n">tmp2_err</span><span class="p">[</span><span class="n">k</span><span class="p">:</span><span class="n">xend</span><span class="p">:</span><span class="n">xbin</span><span class="p">,</span> <span class="p">:]</span>
+                <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ybin_1</span><span class="p">):</span>
+                    <span class="n">binned_data1_err</span> <span class="o">+=</span> <span class="n">x_binned_data1_err</span><span class="p">[:,</span> <span class="n">l</span><span class="p">:</span><span class="n">yend_1</span><span class="p">:</span><span class="n">ybin_1</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ybin_2</span><span class="p">):</span>
+                    <span class="n">binned_data2_err</span> <span class="o">+=</span> <span class="n">x_binned_data2_err</span><span class="p">[:,</span> <span class="n">l</span><span class="p">:</span><span class="n">yend_2</span><span class="p">:</span><span class="n">ybin_2</span><span class="p">]</span>
+
+                <span class="n">ih_1_err</span> <span class="o">=</span> <span class="n">pyfits</span><span class="o">.</span><span class="n">ImageHDU</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">binned_data1_err</span> <span class="o">/</span> <span class="p">(</span><span class="n">xbin</span> <span class="o">*</span> <span class="n">ybin_1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
+                                           <span class="n">header</span><span class="o">=</span><span class="n">hdulist_1</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">)</span>
+                <span class="n">hdulist_1_err</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ih_1_err</span><span class="p">)</span>
+
+                <span class="n">ih_2_err</span> <span class="o">=</span> <span class="n">pyfits</span><span class="o">.</span><span class="n">ImageHDU</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">binned_data2_err</span> <span class="o">/</span> <span class="p">(</span><span class="n">xbin</span> <span class="o">*</span> <span class="n">ybin_2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
+                                           <span class="n">header</span><span class="o">=</span><span class="n">hdulist_2</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">)</span>
+                <span class="n">hdulist_2_err</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ih_2_err</span><span class="p">)</span>
+
+
     <span class="n">binData_1</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">()</span>
     <span class="n">binData_1</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s1">&#39;extract macropixels&#39;</span>
     <span class="n">binData_1</span><span class="o">.</span><span class="n">hdulist</span> <span class="o">=</span> <span class="n">hdulist_1</span>
@@ -417,7 +464,15 @@
     <span class="n">binData_2</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s1">&#39;extract macropixels&#39;</span>
     <span class="n">binData_2</span><span class="o">.</span><span class="n">hdulist</span> <span class="o">=</span> <span class="n">hdulist_2</span>
 
-    <span class="k">return</span> <span class="n">binData_1</span><span class="p">,</span> <span class="n">binData_2</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span></div>
+    <span class="k">if</span> <span class="n">errData</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">binData_1_err</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">()</span>
+        <span class="n">binData_1_err</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s1">&#39;extract macropixels&#39;</span>
+        <span class="n">binData_1_err</span><span class="o">.</span><span class="n">hdulist</span> <span class="o">=</span> <span class="n">hdulist_1_err</span>
+        <span class="n">binData_2_err</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">()</span>
+        <span class="n">binData_2_err</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s1">&#39;extract macropixels&#39;</span>
+        <span class="n">binData_2_err</span><span class="o">.</span><span class="n">hdulist</span> <span class="o">=</span> <span class="n">hdulist_2_err</span>
+
+    <span class="k">return</span> <span class="n">binData_1</span><span class="p">,</span> <span class="n">binData_2</span><span class="p">,</span> <span class="n">binData_1_err</span><span class="p">,</span> <span class="n">binData_2_err</span></div>
 
 <div class="viewcode-block" id="upsample_demodulation"><a class="viewcode-back" href="../../api/ViSP_Pipeline.PolarimetricCalibration.upsample_demodulation.html#ViSP_Pipeline.PolarimetricCalibration.upsample_demodulation">[docs]</a><span class="k">def</span> <span class="nf">upsample_demodulation</span><span class="p">(</span><span class="n">beam1_dmod</span><span class="p">,</span> <span class="n">beam2_dmod</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Take a pair of demodulation matrices computed for binned data and up-sample them to the full ViSP frame.</span>
@@ -522,10 +577,10 @@
     </div>
    
     <div class="right-footer">
-      Last updated on 21 Jun 2018.
+      Last updated on 03 Aug 2018.
     </div>
     <div class="centre-footer">
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.5
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6
     </div>
   </div>
 </footer>

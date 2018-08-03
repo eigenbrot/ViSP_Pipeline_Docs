@@ -222,7 +222,7 @@
     <span class="k">if</span> <span class="n">errData</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">new_errData</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">()</span>
         <span class="n">new_errData</span><span class="o">.</span><span class="n">hdulist</span> <span class="o">=</span> <span class="n">std_hdulist</span>
-        <span class="n">new_errData</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s1">&#39;average_FitsData&#39;</span>
+        <span class="n">new_errData</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s1">&#39;average_FitsData Uncertainty&#39;</span>
         <span class="k">return</span> <span class="n">newData</span><span class="p">,</span> <span class="n">new_errData</span>
 
     <span class="k">return</span> <span class="n">newData</span><span class="p">,</span> <span class="kc">None</span></div>
@@ -327,7 +327,7 @@
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">:  and using uncertainty estimates </span><span class="si">{}</span><span class="s1"> and </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">errData</span><span class="p">,</span> <span class="n">dark_calibration_err</span><span class="p">))</span>
             <span class="n">err</span> <span class="o">=</span> <span class="n">dark_calibration_err</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: ERROR must have uncertainty estimates for both data and dark frames&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: ERROR must have uncertainty estimates for both data and dark frames&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
 
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">fitsData</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">)):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: subtracting from HDU </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
@@ -372,7 +372,7 @@
         <span class="k">if</span> <span class="n">gain_calibration_err</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">:  and using uncertainty estimates </span><span class="si">{}</span><span class="s1"> and </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">errData</span><span class="p">,</span> <span class="n">gain_calibration_err</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: ERROR must have uncertainty estimates for both data and gain frames&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: ERROR must have uncertainty estimates for both data and gain frames&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
 
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nummod</span><span class="p">):</span>
         <span class="n">didx</span> <span class="o">=</span> <span class="n">fitsData</span><span class="o">.</span><span class="n">find_data_keyword_idx</span><span class="p">(</span><span class="s1">&#39;VISP_YYY&#39;</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
@@ -398,6 +398,53 @@
             <span class="n">fitsData</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">fitsData</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">data</span> <span class="o">/</span> <span class="n">gain</span>
 
     <span class="k">return</span></div>
+
+<div class="viewcode-block" id="generate_noise_frame"><a class="viewcode-back" href="../../api/ViSP_Pipeline.generic.generate_noise_frame.html#ViSP_Pipeline.generic.generate_noise_frame">[docs]</a><span class="k">def</span> <span class="nf">generate_noise_frame</span><span class="p">(</span><span class="n">fitsData</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create a pixel-uncertainty estimate based on known detector properties</span>
+
+<span class="sd">    The Poisson (i.e., counting) noise associated with each pixel is (in electrons):</span>
+
+<span class="sd">      P = sqrt( DN / N / g )</span>
+
+<span class="sd">    where DN is the raw pixel count (in ADU), N is the number of accumulations per FPA, and g is the detector gain (in</span>
+<span class="sd">    ADU per electron).</span>
+
+<span class="sd">    The total noise estimate is then just the quadrature sum of P and the detector read noise.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    fitsData : Data.FitsData</span>
+<span class="sd">        The raw data to use to generate a noise estimate</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Data.FitsData</span>
+<span class="sd">        The pixel uncertainties</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">phdu</span> <span class="o">=</span> <span class="n">pyfits</span><span class="o">.</span><span class="n">PrimaryHDU</span><span class="p">(</span><span class="n">header</span><span class="o">=</span><span class="n">fitsData</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">phdu</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;OBJECT&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_noise&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">phdu</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;OBJECT&#39;</span><span class="p">])</span>
+
+    <span class="n">hdulist</span> <span class="o">=</span> <span class="p">[</span><span class="n">phdu</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">fitsData</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">:</span>
+
+        <span class="n">gain</span> <span class="o">=</span> <span class="mf">1.</span>
+        <span class="n">read_noise</span> <span class="o">=</span> <span class="mf">0.</span>
+        <span class="n">num_frames</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;CAM__014&#39;</span><span class="p">]</span>
+
+        <span class="n">poissonsq</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">data</span> <span class="o">/</span> <span class="p">(</span><span class="n">num_frames</span> <span class="o">*</span> <span class="n">gain</span><span class="p">)</span>
+        <span class="n">total_noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">poissonsq</span> <span class="o">+</span> <span class="n">read_noise</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">gain</span>
+
+        <span class="n">ihdu</span> <span class="o">=</span> <span class="n">pyfits</span><span class="o">.</span><span class="n">ImageHDU</span><span class="p">(</span><span class="n">total_noise</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="n">header</span><span class="o">=</span><span class="n">h</span><span class="o">.</span><span class="n">header</span><span class="p">)</span>
+        <span class="n">ihdu</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;OBJECT&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_noise&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ihdu</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;OBJECT&#39;</span><span class="p">])</span>
+        <span class="n">hdulist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ihdu</span><span class="p">)</span>
+
+    <span class="n">errData</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">()</span>
+    <span class="n">errData</span><span class="o">.</span><span class="n">hdulist</span> <span class="o">=</span> <span class="n">hdulist</span>
+    <span class="n">errData</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s1">&#39;uncertainty on </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fitsData</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">errData</span></div>
 </pre></div>
 
     </div>
@@ -412,10 +459,10 @@
     </div>
    
     <div class="right-footer">
-      Last updated on 21 Jun 2018.
+      Last updated on 03 Aug 2018.
     </div>
     <div class="centre-footer">
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.5
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6
     </div>
   </div>
 </footer>

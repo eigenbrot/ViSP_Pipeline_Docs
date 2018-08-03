@@ -208,7 +208,9 @@
 
     <span class="c1"># This loop sets up a list of mp processes. They have not been started.</span>
     <span class="n">jobs</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">pol_kwargs</span><span class="p">[</span><span class="s1">&#39;lock&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+    <span class="n">pol_kwargs</span><span class="p">[</span><span class="s1">&#39;dark_lock&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+    <span class="n">pol_kwargs</span><span class="p">[</span><span class="s1">&#39;gain_lock&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+    <span class="n">pol_kwargs</span><span class="p">[</span><span class="s1">&#39;geo_lock&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_steps</span><span class="p">):</span>
         <span class="n">outpre</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;output_dir&#39;</span><span class="p">]</span>
         <span class="n">jobs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">PolarimetricCalibration</span><span class="o">.</span><span class="n">main</span><span class="p">,</span>
@@ -253,7 +255,7 @@
         <span class="n">h</span> <span class="o">=</span> <span class="n">pyfits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;DKIST004&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;PolCal&#39;</span><span class="p">:</span>
-                <span class="n">step_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;PAC_999&#39;</span><span class="p">])</span>
+                <span class="n">step_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;PAC__999&#39;</span><span class="p">])</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
             <span class="k">pass</span>
 
@@ -336,10 +338,10 @@
     </div>
    
     <div class="right-footer">
-      Last updated on 21 Jun 2018.
+      Last updated on 03 Aug 2018.
     </div>
     <div class="centre-footer">
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.5
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6
     </div>
   </div>
 </footer>

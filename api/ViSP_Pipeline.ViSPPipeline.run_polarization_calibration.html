@@ -172,7 +172,7 @@
 <h1>run_polarization_calibration<a class="headerlink" href="#run-polarization-calibration" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="ViSP_Pipeline.ViSPPipeline.run_polarization_calibration">
-<code class="descclassname">ViSP_Pipeline.ViSPPipeline.</code><code class="descname">run_polarization_calibration</code><span class="sig-paren">(</span><em>raw_pol_dir</em>, <em>raw_dark_dir</em>, <em>raw_lamp_gain_dir</em>, <em>raw_solar_gain_dir</em>, <em>num_bins_x=1</em>, <em>num_bins_y=1</em>, <em>dark_cal='DarkCal.fits'</em>, <em>lamp_gain_cal='LampGainCal.fits'</em>, <em>solar_gain_cal='SolarGainCal.fits'</em>, <em>geometric_cal='GeoCal.fits'</em>, <em>threads=1</em>, <em>**unused_kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/ViSPPipeline.html#run_polarization_calibration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.ViSPPipeline.run_polarization_calibration" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">ViSP_Pipeline.ViSPPipeline.</code><code class="descname">run_polarization_calibration</code><span class="sig-paren">(</span><em>raw_pol_dir</em>, <em>raw_dark_dir</em>, <em>raw_lamp_gain_dir</em>, <em>raw_solar_gain_dir</em>, <em>num_bins_x=1</em>, <em>num_bins_y=1</em>, <em>dark_cal='DarkCal.fits'</em>, <em>lamp_gain_cal='LampGainCal.fits'</em>, <em>solar_gain_cal='SolarGainCal.fits'</em>, <em>geometric_cal='GeoCal.fits'</em>, <em>threads=1</em>, <em>gen_noise_frames=False</em>, <em>**unused_kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/ViSPPipeline.html#run_polarization_calibration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.ViSPPipeline.run_polarization_calibration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate a set of reduced, macropixel’d ViSP data for use by the PACPipeline.</p>
 <p>This function basically constructs the correct config and kwarg objects and then does all of the actual processing
 via calls to <a class="reference internal" href="ViSP_Pipeline.ViSPPipeline.generate_intermediate_objects.html#ViSP_Pipeline.ViSPPipeline.generate_intermediate_objects" title="ViSP_Pipeline.ViSPPipeline.generate_intermediate_objects"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_intermediate_objects</span></code></a> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">ViSPPolCalPipeline.start_polcal_multiproc</span></code>.</p>
@@ -224,6 +224,10 @@ via calls to <a class="reference internal" href="ViSP_Pipeline.ViSPPipeline.gene
 <blockquote>
 <div><p>Maximum number of cpus/threads to use during reduction</p>
 </div></blockquote>
+<p><strong>gen_noise_frames</strong> : bool</p>
+<blockquote>
+<div><p>If True then uncertainty estimates will be generated for the reduced CS step data</p>
+</div></blockquote>
 <p><strong>unused_kwargs</strong> : dict</p>
 <blockquote>
 <div><p>Keyword arguments that exist in the config file, but are not used by this function</p>
@@ -255,10 +259,10 @@ via calls to <a class="reference internal" href="ViSP_Pipeline.ViSPPipeline.gene
     </div>
    
     <div class="right-footer">
-      Last updated on 21 Jun 2018.
+      Last updated on 03 Aug 2018.
     </div>
     <div class="centre-footer">
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.5
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6
     </div>
   </div>
 </footer>

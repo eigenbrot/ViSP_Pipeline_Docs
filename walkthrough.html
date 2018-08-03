@@ -225,6 +225,7 @@ there</p>
 <span class="na">lamp_gain_cal</span> <span class="o">=</span> <span class="s">LampGainCal.fits</span>
 <span class="na">solar_gain_cal</span> <span class="o">=</span> <span class="s">SolarGainCal.fits</span>
 <span class="na">geometric_cal</span> <span class="o">=</span> <span class="s">GeoCal.fits</span>
+<span class="na">gen_noise_frames</span> <span class="o">=</span> <span class="s">True</span>
 <span class="na">threads</span> <span class="o">=</span> <span class="s">4</span>
 
 <span class="k">[DarkCalibration]</span>
@@ -246,6 +247,11 @@ there</p>
 <span class="na">num_bins_y</span> <span class="o">=</span> <span class="s">1</span>
 <span class="na">threads</span> <span class="o">=</span> <span class="s">4</span>
 </pre></div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Generating uncertainty estimates and propagating them through the pipeline takes a lot of work. In some tests it
+more than <em>doubles</em> the run time. Only set <code class="xref py py-obj docutils literal notranslate"><span class="pre">gen_noise_frames</span> <span class="pre">=</span> <span class="pre">True</span></code> if you really need those uncertainties.</p>
 </div>
 </div>
 <div class="section" id="run">
@@ -329,10 +335,10 @@ produce 3D data cubes for a given Stokes vector:</p>
     </div>
    
     <div class="right-footer">
-      Last updated on 21 Jun 2018.
+      Last updated on 03 Aug 2018.
     </div>
     <div class="centre-footer">
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.5
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6
     </div>
   </div>
 </footer>
