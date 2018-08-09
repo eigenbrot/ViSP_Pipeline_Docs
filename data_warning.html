@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>A Word About Data, RAM, and Disk Space &#8212; ViSP_Pipeline v0.7.0</title>
+    <title>A Word About Data, RAM, and Disk Space &#8212; ViSP_Pipeline v0.10.2</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,600,700" type="text/css" />
@@ -207,7 +207,7 @@ point. It’s good to leave overhead of a few hundred files just in case.</p>
 </div>
 <div class="section" id="ram-limit">
 <h2>RAM Limit<a class="headerlink" href="#ram-limit" title="Permalink to this headline">¶</a></h2>
-<p>The ViSP Pipeline uses <a class="reference external" href="http://docs.astropy.org/en/stable/io/fits/index.html#module-astropy.io.fits" title="(in Astropy v3.0.3)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">astropy.io.fits</span></code></a>’s <code class="xref py py-obj docutils literal notranslate"><span class="pre">memmap</span></code> to try to keep data out of RAM until it is needed, but sometimes
+<p>The ViSP Pipeline uses <a class="reference external" href="http://docs.astropy.org/en/stable/io/fits/index.html#module-astropy.io.fits" title="(in Astropy v3.0.4)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">astropy.io.fits</span></code></a>’s <code class="xref py py-obj docutils literal notranslate"><span class="pre">memmap</span></code> to try to keep data out of RAM until it is needed, but sometimes
 this can cause esoteric problems. Consider the following examples:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">V</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">V</span><span class="o">.</span><span class="n">load_polarimetric_fitsData</span><span class="p">(</span><span class="s1">&#39;./&#39;</span><span class="p">,</span><span class="s1">&#39;Sci*.fits&#39;</span><span class="p">,</span><span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="n">max_open</span><span class="o">=</span><span class="mi">1024</span><span class="p">)</span>
@@ -300,7 +300,7 @@ to your system.</p>
     </div>
    
     <div class="right-footer">
-      Last updated on 03 Aug 2018.
+      Last updated on 09 Aug 2018.
     </div>
     <div class="centre-footer">
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6

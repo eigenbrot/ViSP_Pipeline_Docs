@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>ViSP_Pipeline.PolarimetricCalibration &#8212; ViSP_Pipeline v0.7.0</title>
+    <title>ViSP_Pipeline.PolarimetricCalibration &#8212; ViSP_Pipeline v0.10.2</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,600,700" type="text/css" />
@@ -369,15 +369,15 @@
                       <span class="nb">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="nb">abs</span><span class="p">(</span><span class="n">yend_1</span><span class="p">),</span> <span class="nb">abs</span><span class="p">(</span><span class="n">yend_2</span><span class="p">)))</span>
 
     <span class="n">hdulist_1</span> <span class="o">=</span> <span class="p">[</span><span class="n">pyfits</span><span class="o">.</span><span class="n">PrimaryHDU</span><span class="p">(</span><span class="n">header</span><span class="o">=</span><span class="n">fitsData</span><span class="o">.</span><span class="n">hdulist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">)]</span>
-    <span class="n">hdulist_1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;CAM_010&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xbin</span>
-    <span class="n">hdulist_1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;CAM_011&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ybin_1</span>
+    <span class="n">hdulist_1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;CAM__010&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xbin</span>
+    <span class="n">hdulist_1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;CAM__011&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ybin_1</span>
     <span class="n">hdulist_1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;VISP_OGX&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numx</span>
     <span class="n">hdulist_1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;VISP_OGY&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pivot</span>
     <span class="n">hdulist_1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;VISP_BEM&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
 
     <span class="n">hdulist_2</span> <span class="o">=</span> <span class="p">[</span><span class="n">pyfits</span><span class="o">.</span><span class="n">PrimaryHDU</span><span class="p">(</span><span class="n">header</span><span class="o">=</span><span class="n">fitsData</span><span class="o">.</span><span class="n">hdulist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">)]</span>
-    <span class="n">hdulist_2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;CAM_010&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xbin</span>
-    <span class="n">hdulist_2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;CAM_011&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ybin_2</span>
+    <span class="n">hdulist_2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;CAM__010&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xbin</span>
+    <span class="n">hdulist_2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;CAM__011&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ybin_2</span>
     <span class="n">hdulist_2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;VISP_OGX&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numx</span>
     <span class="n">hdulist_2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;VISP_OGY&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numy_2</span>
     <span class="n">hdulist_2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;VISP_BEM&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
@@ -413,8 +413,8 @@
 
             <span class="n">ih_1</span> <span class="o">=</span> <span class="n">pyfits</span><span class="o">.</span><span class="n">ImageHDU</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">binned_data1</span> <span class="o">/</span> <span class="p">(</span><span class="n">xbin</span> <span class="o">*</span> <span class="n">ybin_1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
                                    <span class="n">header</span><span class="o">=</span><span class="n">fitsData</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">)</span>
-            <span class="n">ih_1</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;CAM_010&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xbin</span>
-            <span class="n">ih_1</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;CAM_011&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ybin_1</span>
+            <span class="n">ih_1</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;CAM__010&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xbin</span>
+            <span class="n">ih_1</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;CAM__011&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ybin_1</span>
             <span class="n">ih_1</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;VISP_OGX&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numx</span>
             <span class="n">ih_1</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;VISP_OGY&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pivot</span>
             <span class="n">ih_1</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;VISP_BEM&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
@@ -422,8 +422,8 @@
 
             <span class="n">ih_2</span> <span class="o">=</span> <span class="n">pyfits</span><span class="o">.</span><span class="n">ImageHDU</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">binned_data2</span> <span class="o">/</span> <span class="p">(</span><span class="n">xbin</span> <span class="o">*</span> <span class="n">ybin_2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
                                    <span class="n">header</span><span class="o">=</span><span class="n">fitsData</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">)</span>
-            <span class="n">ih_2</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;CAM_010&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xbin</span>
-            <span class="n">ih_2</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;CAM_011&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ybin_2</span>
+            <span class="n">ih_2</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;CAM__010&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xbin</span>
+            <span class="n">ih_2</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;CAM__011&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ybin_2</span>
             <span class="n">ih_2</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;VISP_OGX&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numx</span>
             <span class="n">ih_2</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;VISP_OGY&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numy_2</span>
             <span class="n">ih_2</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;VISP_BEM&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
@@ -558,8 +558,8 @@
 
     <span class="n">newhead</span> <span class="o">=</span> <span class="n">beam1_dmod</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">newhead</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;VISP_BEM&#39;</span><span class="p">)</span>
-    <span class="n">newhead</span><span class="p">[</span><span class="s1">&#39;CAM_010&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">newhead</span><span class="p">[</span><span class="s1">&#39;CAM_011&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">newhead</span><span class="p">[</span><span class="s1">&#39;CAM__010&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">newhead</span><span class="p">[</span><span class="s1">&#39;CAM__011&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">dmodData</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">DemodulationData</span><span class="p">(</span><span class="n">full_output</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="n">newhead</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">dmodData</span></div>
@@ -577,7 +577,7 @@
     </div>
    
     <div class="right-footer">
-      Last updated on 03 Aug 2018.
+      Last updated on 09 Aug 2018.
     </div>
     <div class="centre-footer">
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6
