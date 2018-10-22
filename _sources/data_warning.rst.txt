@@ -1,0 +1,143 @@
+.. _data-warning:
+
+A Word About Data, RAM, and Disk Space
+======================================
+
+If you are reducing large data volumes you may run into the limits of your system resources. This page describes the
+3 constraints that may impact your ability to examine/play with the reduced data. **NOTE:** All of this only applies
+to user interaction with the final, reduced data; the automated reduction pipeline is designed to avoid these limits.
+
+Open File Limit
+---------------
+Your OS has a limit of how many files each process is allowed to be accessing at a single time. You can see the default
+with
+
+.. code-block:: console
+
+  $ ulimit -n
+  1024
+
+In this case the limit is 1024 open files. If you have more than 1024 slit positions and are trying to, for example,
+extract a spatial map then your call to `load_polarimetric_fitsData` will file with something like this:
+
+.. code-block:: python
+
+  ...
+  >>> I.load_polarimetric_fitsData('./','Sci*.fits','I')
+  ...
+  Traceback (most recent call last):
+    File "<stdin>", line 1, in <module>
+    File "/home/ade/PycharmProjects/ViSP_pipeline/ViSP_Pipeline/Data.py", line 139, in load_polarimetric_fitsData
+    File "/home/ade/PycharmProjects/ViSP_pipeline/ViSP_Pipeline/Data.py", line 40, in __init__
+    File "/home/ade/PycharmProjects/ViSP_pipeline/ViSP_Pipeline/Data.py", line 62, in load_from_file
+    File "/usr/lib/python3.6/site-packages/astropy/io/fits/hdu/hdulist.py", line 166, in fitsopen
+    File "/usr/lib/python3.6/site-packages/astropy/io/fits/hdu/hdulist.py", line 402, in fromfile
+    File "/usr/lib/python3.6/site-packages/astropy/io/fits/hdu/hdulist.py", line 989, in _readfrom
+    File "/usr/lib/python3.6/site-packages/astropy/utils/decorators.py", line 488, in wrapper
+    File "/usr/lib/python3.6/site-packages/astropy/io/fits/file.py", line 175, in __init__
+    File "/usr/lib/python3.6/site-packages/astropy/io/fits/file.py", line 523, in _open_filename
+    File "/usr/lib/python3.6/site-packages/astropy/io/fits/util.py", line 388, in fileobj_open
+  OSError: [Errno 24] Too many open files: './Sci.1024.fits'
+
+A simple solution to this problem is to just increase your OS's open file limit:
+
+.. code-block:: console
+
+  $ ulimit -n 2048
+  $ ulimit -n
+  2048
+
+Additionally, most of the `Data` classes' load_data functions take the ``max_open`` keyword. This is used to control the
+maximum number of open data files to keep. Once this number of files are loaded the data object will be flushed to disk
+before more files are read.
+
+.. note::
+  Setting your OS limit to be exactly the number of data files you have will probably still result in errors at some
+  point. It's good to leave overhead of a few hundred files just in case.
+
+RAM Limit
+---------
+
+The ViSP Pipeline uses `astropy.io.fits`'s `memmap` to try to keep data out of RAM until it is needed, but sometimes
+this can cause esoteric problems. Consider the following examples:
+
+.. code-block:: python
+
+  >>> V = Data.FitsData()
+  >>> V.load_polarimetric_fitsData('./','Sci*.fits','V', max_open=1024)
+  ...
+  >>> len(V.data_hdus)
+  1000
+  >>> V.data_hdus[0].data.shape
+  (2160, 1280)
+  >>> V.flush()
+  >>> V.data_hdus[0].data.shape
+  Traceback (most recent call last):
+    File "<stdin>", line 1, in <module>
+    File "/usr/lib/python3.6/site-packages/astropy/utils/decorators.py", line 711, in __get__
+      val = self.fget(obj)
+    File "/usr/lib/python3.6/site-packages/astropy/io/fits/hdu/image.py", line 243, in data
+      data = self._get_scaled_image_data(self._data_offset, self.shape)
+    File "/usr/lib/python3.6/site-packages/astropy/io/fits/hdu/image.py", line 709, in _get_scaled_image_data
+      raw_data = self._get_raw_data(shape, code, offset)
+    File "/usr/lib/python3.6/site-packages/astropy/io/fits/hdu/base.py", line 475, in _get_raw_data
+      return self._file.readarray(offset=offset, dtype=code, shape=shape)
+    File "/usr/lib/python3.6/site-packages/astropy/io/fits/file.py", line 295, in readarray
+      dtype=np.uint8)
+    File "/usr/lib/python3.6/site-packages/numpy/core/memmap.py", line 264, in __new__
+      mm = mmap.mmap(fid.fileno(), bytes, access=acc, offset=start)
+  OSError: [Errno 12] Cannot allocate memory
+
+.. code-block:: python
+
+  >>> Q = Data.FitsData()
+  >>> Q.load_polarimetric_fitsData('./','Sci*.fits','Q', max_open=200)
+  ...
+  >>> len(Q.data_hdus)
+  1000
+  >>> Q.data_hdus[0].data.shape
+  Traceback (most recent call last):
+    File "<stdin>", line 1, in <module>
+    File "/usr/lib/python3.6/site-packages/astropy/utils/decorators.py", line 711, in __get__
+      val = self.fget(obj)
+    File "/usr/lib/python3.6/site-packages/astropy/io/fits/hdu/image.py", line 243, in data
+      data = self._get_scaled_image_data(self._data_offset, self.shape)
+    File "/usr/lib/python3.6/site-packages/astropy/io/fits/hdu/image.py", line 709, in _get_scaled_image_data
+      raw_data = self._get_raw_data(shape, code, offset)
+    File "/usr/lib/python3.6/site-packages/astropy/io/fits/hdu/base.py", line 475, in _get_raw_data
+      return self._file.readarray(offset=offset, dtype=code, shape=shape)
+    File "/usr/lib/python3.6/site-packages/astropy/io/fits/file.py", line 295, in readarray
+      dtype=np.uint8)
+    File "/usr/lib/python3.6/site-packages/numpy/core/memmap.py", line 264, in __new__
+      mm = mmap.mmap(fid.fileno(), bytes, access=acc, offset=start)
+  OSError: [Errno 12] Cannot allocate memory
+
+The problem in both cases is that the data cube was flushed to disk. In the first example we manually flushed it to
+induce the error, and in the second example the data were flushed every 200 files. Before the first flush `memmap` is
+smartly keeping pointers to the individual data files, which are relatively small, but after a ``flush()`` `memmap` is
+pointing only to the single, flushed file and this file can get pretty big (1,000 slit positions is ~11 Gb). Now when
+`memmap` tries to access this file it first checks to make sure enough RAM is available to hold the entire thing *even
+if the data won't be loaded directly into RAM*. The above errors were thrown because the system in question did not have
+enough RAM to (potentially) hold the whole, flushed data set.
+
+Disk Limit
+----------
+
+As mentioned above, a set of 1,000 reduced slit positions takes up about 11 Gb. Even if you have enough RAM to do a lot
+of interactive analysis or extracting of maps you will generate a lot large files very quickly. Some of data handlers
+automatically generate temporary files that stick around while your object is in use, so this build up might even
+happen faster than you expect. Watch out! A semi-defense against rampant disk-usage is to pass ``memmap=False`` to any
+of the data loading methods in the `Data` classes.
+
+Conclusion
+----------
+
+Assuming you have plenty of cheap disk space then the real balancing act you need to manage is between the number of
+open files and the amount of RAM on your system. More RAM lets you keep fewer files open, but comes at the expense of...
+more RAM. Conversely, you might be tempted to just set your OS open file limit to some huge number and just go from
+there. This is not a bad idea, but `memmap` does a lot of tricky, behind the scenes stuff while reading and slicing
+data, so you might find that even your hard limit (yes, this exists) of open files is not enough.
+
+It is worth noting that `memmap` doesn't *necessarily* use all the RAM it looks for when loading a file. Thus, you might
+be able to temporarily circumvent limits that prevent you from opening large files by just adding some swap-style RAM
+to your system.

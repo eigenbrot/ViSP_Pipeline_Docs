@@ -1,0 +1,49 @@
+FitsData
+========
+
+.. currentmodule:: ViSP_Pipeline.Data
+
+.. autoclass:: FitsData
+   :show-inheritance:
+
+   .. rubric:: Attributes Summary
+
+   .. autosummary::
+
+      ~FitsData.data_hdus
+      ~FitsData.headers
+
+   .. rubric:: Methods Summary
+
+   .. autosummary::
+
+      ~FitsData.convert_to_float32
+      ~FitsData.find_data_keyword_idx
+      ~FitsData.find_keyword_idx
+      ~FitsData.flush
+      ~FitsData.get_stacked_data
+      ~FitsData.init_with_ndarray
+      ~FitsData.load_from_directory
+      ~FitsData.load_from_file
+      ~FitsData.load_polarimetric_fitsData
+      ~FitsData.update_header
+      ~FitsData.write_out
+
+   .. rubric:: Attributes Documentation
+
+   .. autoattribute:: data_hdus
+   .. autoattribute:: headers
+
+   .. rubric:: Methods Documentation
+
+   .. automethod:: convert_to_float32
+   .. automethod:: find_data_keyword_idx
+   .. automethod:: find_keyword_idx
+   .. automethod:: flush
+   .. automethod:: get_stacked_data
+   .. automethod:: init_with_ndarray
+   .. automethod:: load_from_directory
+   .. automethod:: load_from_file
+   .. automethod:: load_polarimetric_fitsData
+   .. automethod:: update_header
+   .. automethod:: write_out

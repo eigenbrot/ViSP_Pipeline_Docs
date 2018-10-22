@@ -5,16 +5,17 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Configuration File Format &#8212; ViSP_Pipeline v0.10.2</title>
+    <title>Configuration File Format &#8212; ViSP_Pipeline v0.13.0</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,600,700" type="text/css" />
-    <link rel="stylesheet" href="_static/dkist.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:400,600,700" />
+    <link rel="stylesheet" type="text/css" href="_static/dkist.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
@@ -80,7 +81,7 @@
 <li><a class="reference internal" href="#darkcalibration">DarkCalibration</a></li>
 <li><a class="reference internal" href="#lampgaincalibration">LampGainCalibration</a></li>
 <li><a class="reference internal" href="#solargaincalibration">SolarGainCalibration</a></li>
-<li><a class="reference internal" href="#polarimetriccalibration">PolarimetricCalibration</a></li>
+<li><a class="reference internal" href="#instrumentpolarimetriccalibration">InstrumentPolarimetricCalibration</a></li>
 <li><a class="reference internal" href="#example-config-file">Example Config File</a></li>
 </ul>
 </li>
@@ -146,7 +147,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#darkcalibration">DarkCalibration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lampgaincalibration">LampGainCalibration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#solargaincalibration">SolarGainCalibration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#polarimetriccalibration">PolarimetricCalibration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#instrumentpolarimetriccalibration">InstrumentPolarimetricCalibration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#example-config-file">Example Config File</a></li>
 </ul>
 </li>
@@ -164,7 +165,7 @@
   <div class="section" id="configuration-file-format">
 <h1>Configuration File Format<a class="headerlink" href="#configuration-file-format" title="Permalink to this headline">¶</a></h1>
 <p>The ViSP Pipeline configuration file is in the standard INI format and contains the following sections and options. Any
-options in <em>italics</em> is optional and is probably a debug/testing option.</p>
+options in <em>italics</em> are optional.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">It is OK to put science and calibration data all into the same directory. The specific task (Dark, Gain, Observation,
@@ -203,21 +204,30 @@ folder or use the <code class="docutils literal notranslate"><span class="pre">s
 <tr class="field-odd field"><th class="field-name">geometric_cal:</th><td class="field-body"><p class="first">The location of a processed Geometric Calibration object. If this file does not exist it will be generated.</p>
 </td>
 </tr>
+<tr class="field-even field"><th class="field-name" colspan="2">instrumen_pol_cal:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><p class="first">The location of a processed Instrument Pol Calibration object. If this file does not exist it will be generated.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">telescope_pol_db:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><p class="first">The location of the telescope mirror parameter database.</p>
+</td>
+</tr>
 <tr class="field-even field"><th class="field-name" colspan="2">gen_noise_frames:</th></tr>
-<tr class="field-even field"><td>&#160;</td><td class="field-body"><p class="first">If True then uncertinaty frames (suffixed “_err.fits”) will be generated from the raw data and propagated through the pipeline. <strong>NOTE</strong> This more than doubles the total processing time.</p>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><p class="first">If True then uncertainty frames (suffixed “_err.fits”) will be generated from the raw data and propagated through the pipeline. <strong>NOTE</strong> This more than doubles the total processing time.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">threads:</th><td class="field-body"><p class="first"><strong>(int)</strong> The number of separate processes to spawn when reducing the raw science data.</p>
+<tr class="field-odd field"><th class="field-name">continuum_lims:</th><td class="field-body"><p class="first">The pixel range (in reduced images) that contains only continuum signal. The format is <code class="xref py py-obj docutils literal notranslate"><span class="pre">NNN:MMM</span></code>. This information is used to compute QU/I cross-talk. This option is required if the data are polarimetric.</p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name" colspan="2"><em>remove_tele_pol</em>:</th></tr>
-<tr class="field-even field"><td>&#160;</td><td class="field-body"><p class="first">If False, do NOT apply the inverse Telescope Model. Useful for synthetic data that were created without a TM.</p>
+<tr class="field-even field"><th class="field-name">threads:</th><td class="field-body"><p class="first"><strong>(int)</strong> The number of separate processes to spawn when reducing the raw science data.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name"><em>slit_pos</em>:</th><td class="field-body"><p class="first">If present, this option is used to specify a subset of slit positions to reduce. This option can have one of
-three forms:</p>
-<blockquote class="last">
-<div><table class="docutils field-list" frame="void" rules="none">
+<tr class="field-odd field"><th class="field-name" colspan="2"><em>include_parallactic</em>:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><p class="first">If False, do NOT apply a correction to bring data in to common DKIST reference frame.</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name"><em>slit_pos</em>:</th><td class="field-body"><p class="first">If present, this option is used to specify a subset of slit positions to reduce. This option can have one of three forms:</p>
+<table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
@@ -229,7 +239,16 @@ three forms:</p>
 </tr>
 </tbody>
 </table>
-</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name"><em>save_M12_map</em>:</th><td class="field-body"><p class="first">If True then save a full spatial map Stokes map of all slit positions for use by PA&amp;C in determining M12 parameters</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name"><em>M12_lin_lims</em>:</th><td class="field-body"><p class="first">Pixel range containing features of high polarization signal (i.e., spectral lines). Format is <code class="xref py py-obj docutils literal notranslate"><span class="pre">NNN:MMM</span></code>. If <code class="docutils literal notranslate"><span class="pre">save_M12_map</span></code> is True then this option is required.</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2"><em>remove_tele_pol</em>:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><p class="first last">If False, do NOT apply the inverse Telescope Model. Useful for synthetic data that were created without a TM.</p>
 </td>
 </tr>
 </tbody>
@@ -274,8 +293,8 @@ directory must contain solar gain frames or an error will be thrown.</td>
 </tbody>
 </table>
 </div>
-<div class="section" id="polarimetriccalibration">
-<h2>PolarimetricCalibration<a class="headerlink" href="#polarimetriccalibration" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="instrumentpolarimetriccalibration">
+<h2>InstrumentPolarimetricCalibration<a class="headerlink" href="#instrumentpolarimetriccalibration" title="Permalink to this headline">¶</a></h2>
 <p>These options essentially define a separate ViSP reduction; the reduction of a polarimetric Calibration Sequence (CS).
 The software will automatically decide the names for the output prefix and Calibration Objects. These will all be saved
 to <code class="docutils literal notranslate"><span class="pre">raw_pol_dir</span></code>/proc.</p>
@@ -314,10 +333,16 @@ to <code class="docutils literal notranslate"><span class="pre">raw_pol_dir</spa
 <span class="na">lamp_gain_cal</span> <span class="o">=</span> <span class="s">LampGainCal.fits</span>
 <span class="na">solar_gain_cal</span> <span class="o">=</span> <span class="s">SolarGainCal.fits</span>
 <span class="na">geometric_cal</span> <span class="o">=</span> <span class="s">GeoCal.fits</span>
+<span class="na">instrument_pol_cal</span> <span class="o">=</span> <span class="s">InstPolCal.fits</span>
+<span class="na">telescope_pol_db</span> <span class="o">=</span> <span class="s">/media/database/telescope_db.txt</span>
 <span class="na">gen_noise_frames</span> <span class="o">=</span> <span class="s">True</span>
 <span class="na">remove_tele_pol</span> <span class="o">=</span> <span class="s">False</span>
 <span class="na">slit_pos</span> <span class="o">=</span> <span class="s">[0, 458, 111]</span>
 <span class="na">threads</span> <span class="o">=</span> <span class="s">3</span>
+<span class="na">save_M12_map</span> <span class="o">=</span> <span class="s">True</span>
+<span class="na">M12_lin_lims</span> <span class="o">=</span> <span class="s">565:602</span>
+<span class="na">continuum_lims</span> <span class="o">=</span> <span class="s">0:400</span>
+<span class="na">include_parallactic</span> <span class="o">=</span> <span class="s">True</span>
 
 <span class="k">[DarkCalibration]</span>
 <span class="na">raw_dark_dir</span> <span class="o">=</span> <span class="s">visp_run_1</span>
@@ -334,6 +359,9 @@ to <code class="docutils literal notranslate"><span class="pre">raw_pol_dir</spa
 <span class="na">raw_lamp_gain_dir</span> <span class="o">=</span> <span class="s">~/CS_runs/visp_CS_4</span>
 <span class="na">raw_solar_gain_dir</span> <span class="o">=</span> <span class="s">~/CS_runs/visp_CS_4</span>
 <span class="na">telescope_db</span> <span class="o">=</span> <span class="s">~/telescope_db.txt</span>
+<span class="na">num_bins_x</span> <span class="o">=</span> <span class="s">3</span>
+<span class="na">num_bins_y</span> <span class="o">=</span> <span class="s">4</span>
+<span class="na">threads</span> <span class="o">=</span> <span class="s">3</span>
 </pre></div>
 </div>
 </div>
@@ -352,10 +380,10 @@ to <code class="docutils literal notranslate"><span class="pre">raw_pol_dir</spa
     </div>
    
     <div class="right-footer">
-      Last updated on 09 Aug 2018.
+      Last updated on 22 Oct 2018.
     </div>
     <div class="centre-footer">
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.0
     </div>
   </div>
 </footer>

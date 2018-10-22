@@ -1,0 +1,6 @@
+write_reduced_CS_step
+=====================
+
+.. currentmodule:: ViSP_Pipeline.InstrumentPolCalibration
+
+.. autofunction:: write_reduced_CS_step

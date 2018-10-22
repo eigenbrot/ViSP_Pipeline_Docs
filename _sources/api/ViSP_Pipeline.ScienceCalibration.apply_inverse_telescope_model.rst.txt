@@ -1,0 +1,6 @@
+apply_inverse_telescope_model
+=============================
+
+.. currentmodule:: ViSP_Pipeline.ScienceCalibration
+
+.. autofunction:: apply_inverse_telescope_model

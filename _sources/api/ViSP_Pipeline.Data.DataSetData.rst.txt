@@ -1,0 +1,31 @@
+DataSetData
+===========
+
+.. currentmodule:: ViSP_Pipeline.Data
+
+.. autoclass:: DataSetData
+   :show-inheritance:
+
+   .. rubric:: Attributes Summary
+
+   .. autosummary::
+
+      ~DataSetData.num_pos
+      ~DataSetData.spatial_positions
+
+   .. rubric:: Methods Summary
+
+   .. autosummary::
+
+      ~DataSetData.get_slit_pos_data
+      ~DataSetData.read_directory
+
+   .. rubric:: Attributes Documentation
+
+   .. autoattribute:: num_pos
+   .. autoattribute:: spatial_positions
+
+   .. rubric:: Methods Documentation
+
+   .. automethod:: get_slit_pos_data
+   .. automethod:: read_directory

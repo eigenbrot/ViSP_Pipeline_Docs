@@ -1,0 +1,6 @@
+manage_CS_rdx
+=============
+
+.. currentmodule:: ViSP_Pipeline.InstrumentPolCalibration
+
+.. autofunction:: manage_CS_rdx

@@ -1,0 +1,6 @@
+geometric_correction
+====================
+
+.. currentmodule:: ViSP_Pipeline.ScienceCalibration
+
+.. autofunction:: geometric_correction

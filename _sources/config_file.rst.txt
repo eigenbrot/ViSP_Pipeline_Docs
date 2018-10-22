@@ -1,0 +1,144 @@
+Configuration File Format
+=========================
+
+The ViSP Pipeline configuration file is in the standard INI format and contains the following sections and options. Any
+options in *italics* are optional.
+
+.. note::
+   It is OK to put science and calibration data all into the same directory. The specific task (Dark, Gain, Observation,
+   etc.) is determined from the `DKIST004` header value.
+
+Main
+----
+This section controls the top-level Science reduction. All of the \*_cal options point to files that will not exist
+on the first run of the pipeline. Once these objects have been created a lot of time can be saved by reusing them for
+any other science runs that have the same setup. It is also possible to regenerate only a subset of the intermediate
+Calibration Objects by simply pointing the corresponding option to a file that doesn't exist.
+
+:raw_sci_dir: Path to the directory containing raw ViSP frames to be reduced. Note that *all* slit positions found in
+    this directory will be reduced. If you only want to reduce a subset of slit positions then move them into a separate
+    folder or use the ``slit_pos`` option.
+
+:data_set_id: Only reduce files with this `ID_004` header value. Can be left blank to reduce all files in ``raw_sci_dir``.
+
+:output_prefix: The prefix to apply to all Level-1 science products. This string can also include a path structure.
+
+:dark_cal: The location of a processed Dark Calibration object. If this file does not exist it will be generated.
+
+:lamp_gain_cal: The location of a processed Lamp Gain Calibration object. If this file does not exist it will be generated.
+
+:solar_gain_cal: The location of a processed Solar Gain Calibration object. If this files does not exist it will be generated.
+
+:geometric_cal: The location of a processed Geometric Calibration object. If this file does not exist it will be generated.
+
+:instrumen_pol_cal: The location of a processed Instrument Pol Calibration object. If this file does not exist it will be generated.
+
+:telescope_pol_db: The location of the telescope mirror parameter database.
+
+:gen_noise_frames: If True then uncertainty frames (suffixed "_err.fits") will be generated from the raw data and propagated through the pipeline. **NOTE** This more than doubles the total processing time.
+
+:continuum_lims: The pixel range (in reduced images) that contains only continuum signal. The format is `NNN:MMM`. This information is used to compute QU/I cross-talk. This option is required if the data are polarimetric.
+
+:threads: **(int)** The number of separate processes to spawn when reducing the raw science data.
+
+:*include_parallactic*: If False, do NOT apply a correction to bring data in to common DKIST reference frame.
+
+:*slit_pos*: If present, this option is used to specify a subset of slit positions to reduce. This option can have one of three forms:
+
+      :int: Just reduce a single slit position. Ex: `423`
+
+      :list: Reduce the exact list of slit positions specified. Ex: `[423, 890, 132]`
+
+      :NNN\:MMM: Reduce the slit positions specified by `range(NNN, MMM)`. Ex: `14:423`
+
+:*save_M12_map*: If True then save a full spatial map Stokes map of all slit positions for use by PA&C in determining M12 parameters
+
+:*M12_lin_lims*: Pixel range containing features of high polarization signal (i.e., spectral lines). Format is `NNN:MMM`. If ``save_M12_map`` is True then this option is required.
+
+:*remove_tele_pol*: If False, do NOT apply the inverse Telescope Model. Useful for synthetic data that were created without a TM.
+
+DarkCalibration
+---------------
+This section will only be used if the file specified by ``Main.dark_cal`` does not exist.
+
+:raw_dark_dir: The location of a directory containing raw dark frames. If ``dark_cal`` does not exist then this
+    directory must contain dark frames or an error will be thrown.
+
+LampGainCalibration
+-------------------
+This section will only be used if the file specified by ``Main.lamp_gain_cal`` does not exist.
+
+:raw_lamp_gain: The location of a directory containing raw dark frames. If ``lamp_gain_cal`` does not exist then this
+    directory must contain lamp gain frames or an error will be thrown.
+
+SolarGainCalibration
+--------------------
+This section will only be used if the file specified by ``Main.solar_gain_cal`` does not exist.
+
+:raw_solar_gain: The location of a directory containing raw dark frames. If ``solar_gain_cal`` does not exist then this
+    directory must contain solar gain frames or an error will be thrown.
+
+InstrumentPolarimetricCalibration
+---------------------------------
+These options essentially define a separate ViSP reduction; the reduction of a polarimetric Calibration Sequence (CS).
+The software will automatically decide the names for the output prefix and Calibration Objects. These will all be saved
+to ``raw_pol_dir``/proc.
+
+:raw_pol_dir: Path to a directory containing the raw ViSP files for a CS
+
+:raw_dark_dir: Path to the raw dark files associated with the CS
+
+:raw_lamp_gain_dir: Path to the raw lamp gain files associated with the CS
+
+:raw_solar_gain_dir: Path to the raw solar gain files associated with the CS
+
+:telescope_db: Path to the file containing telescope mirror parameters as a function of time and wavelength
+
+:num_bins_x: **(int)** The number of x-dimensions macropixels in the down-sampled CS data
+
+:num_bins_y: **(int)** The number of y-dimensions macropixels in the down-sampled CS data
+
+:threads: **(int)** The number of separate processes to use when reducing the CS data
+
+Example Config File
+-------------------
+
+.. code-block:: ini
+
+  [Main]
+  raw_sci_dir = visp_run_1
+  data_set_id =
+  output_prefix = visp_run_1/rdx
+  dark_cal = DarkCal.fits
+  lamp_gain_cal = LampGainCal.fits
+  solar_gain_cal = SolarGainCal.fits
+  geometric_cal = GeoCal.fits
+  instrument_pol_cal = InstPolCal.fits
+  telescope_pol_db = /media/database/telescope_db.txt
+  gen_noise_frames = True
+  remove_tele_pol = False
+  slit_pos = [0, 458, 111]
+  threads = 3
+  save_M12_map = True
+  M12_lin_lims = 565:602
+  continuum_lims = 0:400
+  include_parallactic = True
+
+  [DarkCalibration]
+  raw_dark_dir = visp_run_1
+
+  [LampGainCalibration]
+  raw_lamp_gain_dir = visp_run_1
+
+  [SolarGainCalibration]
+  raw_solar_gain_dir = visp_run_1
+
+  [PolarimetricCalibration]
+  raw_pol_dir = ~/CS_runs/visp_CS_4
+  raw_dark_dir = ~/CS_runs/visp_CS_4
+  raw_lamp_gain_dir = ~/CS_runs/visp_CS_4
+  raw_solar_gain_dir = ~/CS_runs/visp_CS_4
+  telescope_db = ~/telescope_db.txt
+  num_bins_x = 3
+  num_bins_y = 4
+  threads = 3

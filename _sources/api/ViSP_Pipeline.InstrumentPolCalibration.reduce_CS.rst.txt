@@ -1,0 +1,6 @@
+reduce_CS
+=========
+
+.. currentmodule:: ViSP_Pipeline.InstrumentPolCalibration
+
+.. autofunction:: reduce_CS

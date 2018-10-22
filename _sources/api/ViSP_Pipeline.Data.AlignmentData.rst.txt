@@ -1,0 +1,17 @@
+AlignmentData
+=============
+
+.. currentmodule:: ViSP_Pipeline.Data
+
+.. autoclass:: AlignmentData
+   :show-inheritance:
+
+   .. rubric:: Attributes Summary
+
+   .. autosummary::
+
+      ~AlignmentData.task
+
+   .. rubric:: Attributes Documentation
+
+   .. autoattribute:: task

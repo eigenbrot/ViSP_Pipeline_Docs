@@ -1,0 +1,914 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>ViSP_Pipeline.InstrumentPolCalibration &#8212; ViSP_Pipeline v0.13.0</title>
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:400,600,700" />
+    <link rel="stylesheet" type="text/css" href="../../_static/dkist.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+    <link rel="shortcut icon" href="../../_static/favico.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="col-md-3 navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="http://nso.edu"><img src="../../_static/img/NSOlogo.gif">
+        </a>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav hidden">
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">ViSP Pipeline Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../config_file.html">Configuration File Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../walkthrough.html">Data Reduction Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../data_warning.html">A Word About Data, RAM, and Disk Space</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../API.html">Reference/API</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+          </ul>
+          
+            <ul class="nav navbar-nav navbar-left">
+              <li><a href="http://dkist.nso.edu/">DKIST</a></li>
+              <li><a href="http://docs.cadair.com/devdocs">DC Developer Guide</a></li>
+              <li><a href="http://docs.cadair.com/datarate">DKIST Data Rate</a></li>
+              <li><a href="http://docs.cadair.com/datamodel">DKIST Data Model</a></li>
+            </ul>
+          
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+
+    <div class="col-md-3"><div id="side-logo" >
+            <a href="http://dkist.nso.edu">
+                <img src="../../_static/img/DKISTLogo-Medium.jpg">
+            </a>
+        </div><div id="sidebar" class="bs-sidenav" role="complementary">
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">ViSP Pipeline Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../config_file.html">Configuration File Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../walkthrough.html">Data Reduction Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../data_warning.html">A Word About Data, RAM, and Disk Space</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../API.html">Reference/API</a></li>
+</ul>
+
+            
+        </div>
+    </div>
+
+    <div class="col-md-9 content">
+      
+  <h1>Source code for ViSP_Pipeline.InstrumentPolCalibration</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">multiprocessing</span> <span class="k">as</span> <span class="nn">mp</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">configparser</span> <span class="k">import</span> <span class="n">ConfigParser</span>
+<span class="kn">from</span> <span class="nn">glob</span> <span class="k">import</span> <span class="n">glob</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scipy.interpolate</span> <span class="k">as</span> <span class="nn">spi</span>
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="k">import</span> <span class="n">fits</span> <span class="k">as</span> <span class="n">pyfits</span>
+<span class="kn">from</span> <span class="nn">ViSP_Pipeline</span> <span class="k">import</span> <span class="n">ScienceCalibration</span><span class="p">,</span> <span class="n">generic</span><span class="p">,</span> <span class="n">Data</span><span class="p">,</span> <span class="n">ViSPPipeline</span>
+<span class="kn">from</span> <span class="nn">ViSP_Pipeline.tag</span> <span class="k">import</span> <span class="n">tag</span>
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../api/ViSP_Pipeline.InstrumentPolCalibration.main.html#ViSP_Pipeline.InstrumentPolCalibration.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">raw_pol_dir</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">raw_dark_dir</span><span class="p">,</span> <span class="n">raw_lamp_gain_dir</span><span class="p">,</span> <span class="n">raw_solar_gain_dir</span><span class="p">,</span>
+         <span class="n">gen_noise_frames</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">telescope_db</span><span class="o">=</span><span class="s1">&#39;telescope_db.txt&#39;</span><span class="p">,</span> <span class="n">num_bins_x</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_bins_y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Run raw data (i.e., a PolCal CS observation) through the Instrument Polarization Calibration pipeline</span>
+
+<span class="sd">    The steps in the pipeline are:</span>
+
+<span class="sd">    1. Generate intermediate (dark, gain, etc.) Calibration objects associated with CS</span>
+
+<span class="sd">    2. Perform ViSP reductions on entire CS data set</span>
+
+<span class="sd">    3. Fit CU parameters and generate demodulation matrices from the resulting SoCCs</span>
+
+<span class="sd">    So basically, this pipeline calls the normal ViSP pipeline and then uses PA&amp;C Modules to further analyize the</span>
+<span class="sd">    reduced PolCal data.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    raw_pol_dir : str</span>
+<span class="sd">        Path to directory containing raw PolCal data</span>
+
+<span class="sd">    output : str</span>
+<span class="sd">        Path were final InstrumentPolCalibration (i.e., demodulation matrices) will be saved</span>
+
+<span class="sd">    raw_dark_dir : str</span>
+<span class="sd">        Path to directory containing raw dark data associated with PolCal observations</span>
+
+<span class="sd">    raw_lamp_gain_dir : str</span>
+<span class="sd">        Path to directory containing raw lamp gain data associated with PolCal observations</span>
+
+<span class="sd">    raw_solar_gain_dir : str</span>
+<span class="sd">        Path to directory containing raw solar gain data associated with PolCal observations</span>
+
+<span class="sd">    gen_noise_frames : bool</span>
+<span class="sd">        If True then uncertainty estimates will be generated for all Calibration and data products</span>
+
+<span class="sd">    telescope_db : str</span>
+<span class="sd">        Path to the database of telescope properties (x, \tau)</span>
+
+<span class="sd">    num_bins_x : int</span>
+<span class="sd">        Each beam will have this number of spatial bins in the final demodulation matrices</span>
+
+<span class="sd">    num_bins_y : int</span>
+<span class="sd">        Each beam will have this number of spectral bins in the final demodulation matrices</span>
+
+<span class="sd">    threads : int</span>
+<span class="sd">        The number of independent processes to use when performing ViSP reductions on the PolCal data</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">pol_rdx_dir</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/proc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">raw_pol_dir</span><span class="p">)</span>
+    <span class="n">dmod1_name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/DMOD_beam1.fits&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pol_rdx_dir</span><span class="p">)</span>
+    <span class="n">dmod2_name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/DMOD_beam2.fits&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pol_rdx_dir</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">dmod1_name</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">dmod2_name</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Found previous demodulation matrices in </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">pol_rdx_dir</span><span class="p">))</span>
+        <span class="n">raw_dmod</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">DemodulationData</span><span class="p">()</span>
+        <span class="n">raw_dmod</span><span class="o">.</span><span class="n">load_beam_from_file</span><span class="p">(</span><span class="n">dmod1_name</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: loaded </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">dmod1_name</span><span class="p">))</span>
+
+        <span class="n">raw_dmod</span><span class="o">.</span><span class="n">load_beam_from_file</span><span class="p">(</span><span class="n">dmod2_name</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: loaded </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">dmod2_name</span><span class="p">))</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">pol_args</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;raw_pol_dir&#39;</span><span class="p">:</span> <span class="n">raw_pol_dir</span><span class="p">,</span>
+                    <span class="s1">&#39;raw_dark_dir&#39;</span><span class="p">:</span> <span class="n">raw_dark_dir</span><span class="p">,</span>
+                    <span class="s1">&#39;raw_lamp_gain_dir&#39;</span><span class="p">:</span> <span class="n">raw_lamp_gain_dir</span><span class="p">,</span>
+                    <span class="s1">&#39;raw_solar_gain_dir&#39;</span><span class="p">:</span> <span class="n">raw_solar_gain_dir</span><span class="p">,</span>
+                    <span class="s1">&#39;num_bins_x&#39;</span><span class="p">:</span> <span class="n">num_bins_x</span><span class="p">,</span>
+                    <span class="s1">&#39;num_bins_y&#39;</span><span class="p">:</span> <span class="n">num_bins_y</span><span class="p">,</span>
+                    <span class="s1">&#39;gen_noise_frames&#39;</span><span class="p">:</span> <span class="n">gen_noise_frames</span><span class="p">,</span>
+                    <span class="s1">&#39;threads&#39;</span><span class="p">:</span> <span class="n">threads</span><span class="p">}</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/rdx_complete&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pol_rdx_dir</span><span class="p">)):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Performing ViSP reduction on CS data in </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">raw_pol_dir</span><span class="p">))</span>
+            <span class="n">reduce_CS</span><span class="p">(</span><span class="o">**</span><span class="n">pol_args</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Using PA&amp;C Modules to compute demodulation matrices&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
+        <span class="n">raw_dmod</span> <span class="o">=</span> <span class="n">run_PAC_demod</span><span class="p">(</span><span class="n">pol_rdx_dir</span><span class="p">,</span> <span class="n">telescope_db</span> <span class="o">=</span> <span class="n">telescope_db</span><span class="p">,</span> <span class="n">threads</span> <span class="o">=</span> <span class="n">threads</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Generating Instrument Polarimetric Calibration&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
+    <span class="n">instpol_calibration</span> <span class="o">=</span> <span class="n">generate_instrument_pol_calibration</span><span class="p">(</span><span class="n">raw_dmod</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">instpol_calibration</span></div>
+
+<div class="viewcode-block" id="reduce_CS"><a class="viewcode-back" href="../../api/ViSP_Pipeline.InstrumentPolCalibration.reduce_CS.html#ViSP_Pipeline.InstrumentPolCalibration.reduce_CS">[docs]</a><span class="k">def</span> <span class="nf">reduce_CS</span><span class="p">(</span><span class="n">raw_pol_dir</span><span class="p">,</span> <span class="n">raw_dark_dir</span><span class="p">,</span> <span class="n">raw_lamp_gain_dir</span><span class="p">,</span> <span class="n">raw_solar_gain_dir</span><span class="p">,</span>
+              <span class="n">num_bins_x</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_bins_y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dark_cal</span><span class="o">=</span><span class="s1">&#39;DarkCal.fits&#39;</span><span class="p">,</span> <span class="n">lamp_gain_cal</span><span class="o">=</span><span class="s1">&#39;LampGainCal.fits&#39;</span><span class="p">,</span>
+              <span class="n">solar_gain_cal</span><span class="o">=</span><span class="s1">&#39;SolarGainCal.fits&#39;</span><span class="p">,</span> <span class="n">geometric_cal</span><span class="o">=</span><span class="s1">&#39;GeoCal.fits&#39;</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+              <span class="n">gen_noise_frames</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;ViSP reduce all steps in a set of PolCal Calibration Sequence (CS) observations</span>
+
+<span class="sd">    This function basically constructs the correct config and kwarg objects and then does all of the actual processing</span>
+<span class="sd">    via calls to `generate_intermediate_objects` and `manage_CS_rdx`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    raw_pol_dir : str</span>
+<span class="sd">        Location of directory that contains raw Calibration Sequence (CS) data</span>
+
+<span class="sd">    raw_dark_dir : str</span>
+<span class="sd">        Location of the directory containing raw dark frames associated with the CS</span>
+
+<span class="sd">    raw_lamp_gain_dir : str</span>
+<span class="sd">        Location of the directory containing raw lamp gain frames associated with the CS</span>
+
+<span class="sd">    raw_solar_gain_dir : str</span>
+<span class="sd">        Location of the directory containing raw solar gain frames associated with the CS</span>
+
+<span class="sd">    num_bins_x : int</span>
+<span class="sd">        The final number of macropixels to extract/average from the processed CS data, spectral dimension.</span>
+
+<span class="sd">    num_bins_y : int</span>
+<span class="sd">        The final number of macropixels to extract/average from the processed CS data, spatial dimension.</span>
+
+<span class="sd">    dark_cal : str</span>
+<span class="sd">        Location of the processed DarkCalibration object to either load or save</span>
+
+<span class="sd">    lamp_gain_cal : str</span>
+<span class="sd">        Location of the processed LampGainCalibration object to either load or save</span>
+
+<span class="sd">    solar_gain_cal : str</span>
+<span class="sd">        Location of the processed SolarGainCalibration object to either load or save</span>
+
+<span class="sd">    geometric_cal : str</span>
+<span class="sd">        Location of the processed GeometricCalibration object to either load or save</span>
+
+<span class="sd">    threads : int</span>
+<span class="sd">        Maximum number of cpus/threads to use during reduction</span>
+
+<span class="sd">    gen_noise_frames : bool</span>
+<span class="sd">        If True then uncertainty estimates will be generated for the reduced CS step data</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">outdir</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/proc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">raw_pol_dir</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Make a dummy ConfigParser object with a Pol-only &#39;Main&#39; section</span>
+    <span class="n">darkcal_file</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span> <span class="n">dark_cal</span><span class="p">)</span>
+    <span class="n">lampcal_file</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span> <span class="n">lamp_gain_cal</span><span class="p">)</span>
+    <span class="n">solarcal_file</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span> <span class="n">solar_gain_cal</span><span class="p">)</span>
+    <span class="n">geocal_file</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span> <span class="n">geometric_cal</span><span class="p">)</span>
+    <span class="n">run_args</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Main&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;raw_pol_dir&#39;</span><span class="p">:</span> <span class="n">raw_pol_dir</span><span class="p">,</span>
+                         <span class="s1">&#39;output_dir&#39;</span><span class="p">:</span> <span class="n">outdir</span><span class="p">,</span>
+                         <span class="s1">&#39;dark_cal&#39;</span><span class="p">:</span> <span class="n">darkcal_file</span><span class="p">,</span>
+                         <span class="s1">&#39;lamp_gain_cal&#39;</span><span class="p">:</span> <span class="n">lampcal_file</span><span class="p">,</span>
+                         <span class="s1">&#39;solar_gain_cal&#39;</span><span class="p">:</span> <span class="n">solarcal_file</span><span class="p">,</span>
+                         <span class="s1">&#39;geometric_cal&#39;</span><span class="p">:</span> <span class="n">geocal_file</span><span class="p">,</span>
+                         <span class="s1">&#39;gen_noise_frames&#39;</span><span class="p">:</span> <span class="n">gen_noise_frames</span><span class="p">,</span>
+                         <span class="s1">&#39;threads&#39;</span><span class="p">:</span> <span class="n">threads</span><span class="p">},</span>
+                <span class="s1">&#39;DarkCalibration&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;raw_dark_dir&#39;</span><span class="p">:</span> <span class="n">raw_dark_dir</span><span class="p">},</span>
+                <span class="s1">&#39;LampGainCalibration&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;raw_lamp_gain_dir&#39;</span><span class="p">:</span> <span class="n">raw_lamp_gain_dir</span><span class="p">},</span>
+                <span class="s1">&#39;SolarGainCalibration&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;raw_solar_gain_dir&#39;</span><span class="p">:</span> <span class="n">raw_solar_gain_dir</span><span class="p">}}</span>
+
+    <span class="n">config</span> <span class="o">=</span> <span class="n">ConfigParser</span><span class="p">()</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">read_dict</span><span class="p">(</span><span class="n">run_args</span><span class="p">)</span>
+
+    <span class="c1"># Generate/load the necessary intermediate Calibration objects</span>
+    <span class="n">pol_kwargs</span> <span class="o">=</span> <span class="n">ViSPPipeline</span><span class="o">.</span><span class="n">generate_intermediate_objects</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+    <span class="n">pol_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;numpix_x&#39;</span><span class="p">:</span> <span class="n">num_bins_x</span><span class="p">,</span>
+                       <span class="s1">&#39;numpix_y&#39;</span><span class="p">:</span> <span class="n">num_bins_y</span><span class="p">})</span>
+
+    <span class="c1"># Run the CS through the PolCal reduction pipeline</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Starting PolCal data ViSP reduction&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
+    <span class="n">manage_CS_rdx</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">pol_kwargs</span><span class="p">)</span>
+
+    <span class="c1"># Create a file that indicates all files were successfully reduced</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/rdx_complete&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outdir</span><span class="p">),</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;ViSP PolCal reduction of Calibration sequence in </span><span class="si">{}</span><span class="se">\n</span><span class="s1">saved to </span><span class="si">{}</span><span class="s1">/beam[12] on </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span> \
+                <span class="nb">format</span><span class="p">(</span><span class="n">raw_pol_dir</span><span class="p">,</span> <span class="n">outdir</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">asctime</span><span class="p">()))</span>
+
+    <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="manage_CS_rdx"><a class="viewcode-back" href="../../api/ViSP_Pipeline.InstrumentPolCalibration.manage_CS_rdx.html#ViSP_Pipeline.InstrumentPolCalibration.manage_CS_rdx">[docs]</a><span class="k">def</span> <span class="nf">manage_CS_rdx</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">pol_kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Manage a set of PolCal reduction processes using multiprocessing.</span>
+
+<span class="sd">    Each step in the Calibration Sequence (i.e., separate file) is assigned its own process and then the processes are</span>
+<span class="sd">    started in such a way that there are never more than the user-defined maximum running at a single time.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : configparser.ConfigParser</span>
+<span class="sd">        The object containing user-defined reduction options</span>
+
+<span class="sd">    pol_kwargs : dict</span>
+<span class="sd">        The Polarimetric Calibration keyword arguments that contain the intermediate calibration objects and any other</span>
+<span class="sd">        reduction options</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">numthread</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;threads&#39;</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Running ViSP reduction on all files with </span><span class="si">{}</span><span class="s1"> threads&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">numthread</span><span class="p">))</span>
+    <span class="n">num_steps</span> <span class="o">=</span> <span class="n">find_number_of_CS_steps</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;raw_pol_dir&#39;</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Found </span><span class="si">{}</span><span class="s1"> calibration sequence steps&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">num_steps</span><span class="p">))</span>
+
+    <span class="c1"># This loop sets up a list of mp processes. They have not been started.</span>
+    <span class="n">jobs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">pol_kwargs</span><span class="p">[</span><span class="s1">&#39;dark_lock&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+    <span class="n">pol_kwargs</span><span class="p">[</span><span class="s1">&#39;gain_lock&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+    <span class="n">pol_kwargs</span><span class="p">[</span><span class="s1">&#39;geo_lock&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_steps</span><span class="p">):</span>
+        <span class="n">outpre</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;output_dir&#39;</span><span class="p">]</span>
+        <span class="n">jobs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">reduce_single_step</span><span class="p">,</span>
+                               <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;raw_pol_dir&#39;</span><span class="p">],</span> <span class="n">j</span><span class="p">,</span> <span class="n">outpre</span><span class="p">],</span>
+                               <span class="n">kwargs</span><span class="o">=</span><span class="n">pol_kwargs</span><span class="p">,</span>
+                               <span class="n">name</span><span class="o">=</span><span class="s1">&#39;step_</span><span class="si">{:02}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">j</span><span class="p">)))</span>
+
+    <span class="c1"># Now, start jobs and keep starting jobs until the max number of threads is reached</span>
+    <span class="c1">#  Make a check every second to see if any jobs have finished and thus created room for new ones to start.</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">jobs</span><span class="p">):</span>
+        <span class="k">while</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">is_alive</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">jobs</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">numthread</span><span class="p">:</span>
+            <span class="n">jobs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">jobs</span><span class="p">):</span>
+                <span class="k">break</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># Finally, make sure we wait for all jobs to complete before moving on.</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">jobs</span><span class="p">:</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+
+    <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="reduce_single_step"><a class="viewcode-back" href="../../api/ViSP_Pipeline.InstrumentPolCalibration.reduce_single_step.html#ViSP_Pipeline.InstrumentPolCalibration.reduce_single_step">[docs]</a><span class="k">def</span> <span class="nf">reduce_single_step</span><span class="p">(</span><span class="n">pol_dir</span><span class="p">,</span> <span class="n">CS_step</span><span class="p">,</span> <span class="n">outpre</span><span class="p">,</span> <span class="n">dark_cal</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">solar_gain_cal</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">geometric_cal</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                       <span class="n">dark_cal_err</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">solar_gain_cal_err</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gen_err</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                       <span class="n">numpix_x</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">numpix_y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                       <span class="n">dark_lock</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gain_lock</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">geo_lock</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Perform full ViSP reduction on a single step from a PolCal Calibration Sequence (CS)</span>
+
+<span class="sd">    Dark, gain, and geometric effects are removed and the two beams are split into two separate objects/files. An</span>
+<span class="sd">    arbitrary amount of binning of the final data is also possible. Binning the data results in faster PA&amp;C analysis,</span>
+<span class="sd">    at the expense of spatial/spectral resolution in the derived Calibration Unit parameters.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pol_dir : str</span>
+<span class="sd">        Path to the directory containing a single SoCC</span>
+
+<span class="sd">    CS_step : int</span>
+<span class="sd">        Calibration Sequence step number to use for reduction</span>
+
+<span class="sd">    outpre : str</span>
+<span class="sd">        Prefix of the location to save processed data. Can include the full path. The processed data will be saved as</span>
+<span class="sd">        outpre_beam1.fits and outpre_beam2.fits, and associated uncertainties (if provided) will be saved as</span>
+<span class="sd">        outpre_beam1_err.fits and outpre_beam2_err.fits.</span>
+
+<span class="sd">    dark_cal : Data.FitsData</span>
+<span class="sd">        A Dark Calibration object. Probably the result of DarkCalibration.main().</span>
+
+<span class="sd">    solar_gain_cal : Data.FitsData</span>
+<span class="sd">        A Solar Gain Calibration object. Probably the result of SolarGainCalibration.main().</span>
+
+<span class="sd">    geometric_cal : Data.FitsData</span>
+<span class="sd">        A Geometric Calibration object. Probably produced by SolarGainCalibration.main().</span>
+
+<span class="sd">    dark_cal_err : Data.FitsData</span>
+<span class="sd">        Uncertainty associated with dark_cal</span>
+
+<span class="sd">    solar_gain_cal_err : Data.FitsData</span>
+<span class="sd">        Uncertainty associated with solar_gain_cal</span>
+
+<span class="sd">    gen_err : bool</span>
+<span class="sd">        If True then pixel uncertainty estimates will be generated from the raw data frames</span>
+
+<span class="sd">    numpix_x : int</span>
+<span class="sd">        The number of spatial pixels PER BEAM in the final output data</span>
+
+<span class="sd">    numpix_y : int</span>
+<span class="sd">        The number of spectral pixels PER BEAM in the final output data</span>
+
+<span class="sd">    dark_lock : multiprocessing.synchronize.lock</span>
+<span class="sd">        This lock will be used when reading information from the dark calibration object. This avoids some weirdness in</span>
+<span class="sd">        astropy&#39;s FITS containers when accessing the same data at the same time.</span>
+
+<span class="sd">    gain_lock : multiprocessing.synchronize.lock</span>
+<span class="sd">        This lock will be used when reading information from the gain calibration object. This avoids some weirdness in</span>
+<span class="sd">        astropy&#39;s FITS containers when accessing the same data at the same time.</span>
+
+<span class="sd">    geo_lock : multiprocessing.synchronize.lock</span>
+<span class="sd">        This lock will be used when reading information from the geometric calibration object. This avoids some</span>
+<span class="sd">        weirdness in astropy&#39;s FITS containers when accessing the same data at the same time.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Data.FitsData</span>
+<span class="sd">        PolCal ViSP data for beam 1</span>
+
+<span class="sd">    Data.FitsData</span>
+<span class="sd">        PolCal ViSP data for beam 2</span>
+
+<span class="sd">    Data.FitsData</span>
+<span class="sd">        If uncertainty on the input data is provided, the uncertainty associated with beam 1 PolCal data</span>
+
+<span class="sd">    Data.FitsData</span>
+<span class="sd">        If uncertainty on the input data is provided, the uncertainty associated with beam 2 PolCal data</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">polData</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">CalibrationCurveData</span><span class="p">(</span><span class="n">pol_dir</span><span class="p">,</span> <span class="n">CS_step</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;VISP*.fits&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Loaded CS step </span><span class="si">{}</span><span class="s1"> from </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">CS_step</span><span class="p">,</span> <span class="n">pol_dir</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">gen_err</span><span class="p">:</span>
+        <span class="n">polErr</span> <span class="o">=</span> <span class="n">generic</span><span class="o">.</span><span class="n">generate_noise_frame</span><span class="p">(</span><span class="n">polData</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">polErr</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="n">polData</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;VISP_PMD&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;Full Stokes&#39;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Data are not from a full stokes run&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">dark_cal</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: doing Dark Correction&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
+        <span class="k">with</span> <span class="n">dark_lock</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: acquired dark MultiProcessing Lock&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
+            <span class="n">generic</span><span class="o">.</span><span class="n">dark_correction</span><span class="p">(</span><span class="n">polData</span><span class="p">,</span> <span class="n">dark_cal</span><span class="p">,</span> <span class="n">polErr</span><span class="p">,</span> <span class="n">dark_cal_err</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: released dark MultiProcessing Lock&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
+
+    <span class="k">if</span> <span class="n">solar_gain_cal</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: doing Gain Correction with Solar Flat&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
+        <span class="k">with</span> <span class="n">gain_lock</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: acquired gain MultiProcessing Lock&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
+            <span class="n">generic</span><span class="o">.</span><span class="n">gain_correction</span><span class="p">(</span><span class="n">polData</span><span class="p">,</span> <span class="n">solar_gain_cal</span><span class="p">,</span> <span class="n">polErr</span><span class="p">,</span> <span class="n">solar_gain_cal_err</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: released gain MultiProcessing Lock&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
+
+    <span class="k">if</span> <span class="n">geometric_cal</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: removing geometric/spectral distortions&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
+        <span class="k">with</span> <span class="n">geo_lock</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: acquired geo MultiProcessing Lock&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
+            <span class="n">geo_numbers</span> <span class="o">=</span> <span class="n">ScienceCalibration</span><span class="o">.</span><span class="n">extract_geometric_numbers</span><span class="p">(</span><span class="n">geometric_cal</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: released geo MultiProcessing Lock&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
+        <span class="n">polData</span><span class="p">,</span> <span class="n">polErr</span> <span class="o">=</span> <span class="n">ScienceCalibration</span><span class="o">.</span><span class="n">geometric_correction</span><span class="p">(</span><span class="n">polData</span><span class="p">,</span> <span class="n">geo_numbers</span><span class="p">,</span> <span class="n">errData</span><span class="o">=</span><span class="n">polErr</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: extracting macropixels&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
+    <span class="n">binData_1</span><span class="p">,</span> <span class="n">binData_2</span><span class="p">,</span> <span class="n">binErr_1</span><span class="p">,</span> <span class="n">binErr_2</span> <span class="o">=</span> <span class="n">extract_macropixels</span><span class="p">(</span><span class="n">polData</span><span class="p">,</span> <span class="n">numpix_x</span><span class="p">,</span> <span class="n">numpix_y</span><span class="p">,</span> <span class="n">errData</span><span class="o">=</span><span class="n">polErr</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: saving reduced PolCal data&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
+    <span class="n">write_reduced_CS_step</span><span class="p">(</span><span class="n">binData_1</span><span class="p">,</span> <span class="n">binData_2</span><span class="p">,</span> <span class="n">outpre</span><span class="p">,</span> <span class="n">CS_step</span><span class="p">,</span> <span class="n">binErr_1</span><span class="p">,</span> <span class="n">binErr_2</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">binData_1</span><span class="p">,</span> <span class="n">binData_2</span><span class="p">,</span> <span class="n">binErr_1</span><span class="p">,</span> <span class="n">binErr_2</span></div>
+
+
+<div class="viewcode-block" id="write_reduced_CS_step"><a class="viewcode-back" href="../../api/ViSP_Pipeline.InstrumentPolCalibration.write_reduced_CS_step.html#ViSP_Pipeline.InstrumentPolCalibration.write_reduced_CS_step">[docs]</a><span class="k">def</span> <span class="nf">write_reduced_CS_step</span><span class="p">(</span><span class="n">binData_1</span><span class="p">,</span> <span class="n">binData_2</span><span class="p">,</span> <span class="n">outpre</span><span class="p">,</span> <span class="n">CS_step</span><span class="p">,</span> <span class="n">err_1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">err_2</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Write reduced PolCal to a sensible place.</span>
+
+<span class="sd">    The sensible place is DIR/beam[1|2]/VISP_CS_STEP.PAC.beam[1|2].fits where DIR and STEP are defined by inputs.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    binData_1 : Data.FitsData</span>
+<span class="sd">        PolCal ViSP data for beam 1. Each modulator state in a separate ImageHDU.</span>
+
+<span class="sd">    binData_2 : Data.FitsData</span>
+<span class="sd">        PolCal ViSP data for beam 2. Each modulator state in a separate ImageHDU.</span>
+
+<span class="sd">    outpre : str</span>
+<span class="sd">        Path to top level directory that contains the reduction products</span>
+
+<span class="sd">    CS_step : int</span>
+<span class="sd">        The number of the CS step represented by the input data</span>
+
+<span class="sd">    err_1 : Data.FitsData</span>
+<span class="sd">        Uncertainty associated with binData1</span>
+
+<span class="sd">    err_2 : Data.FitsData</span>
+<span class="sd">        Uncertainty associated with binData2</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/beam1&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outpre</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/beam2&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outpre</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">obj</span><span class="p">,</span> <span class="n">post</span><span class="p">,</span> <span class="n">beamnum</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="n">binData_1</span><span class="p">,</span> <span class="n">binData_2</span><span class="p">,</span> <span class="n">err_1</span><span class="p">,</span> <span class="n">err_2</span><span class="p">],</span>
+                                  <span class="p">[</span><span class="s1">&#39;.fits&#39;</span><span class="p">,</span> <span class="s1">&#39;.fits&#39;</span><span class="p">,</span> <span class="s1">&#39;_err.fits&#39;</span><span class="p">,</span> <span class="s1">&#39;_err.fits&#39;</span><span class="p">],</span>
+                                  <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]):</span>
+        <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">outname</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">/beam</span><span class="si">{1}</span><span class="s1">/VISP_CS_</span><span class="si">{2:02}</span><span class="s1">.PAC.beam</span><span class="si">{1}{3}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outpre</span><span class="p">,</span> <span class="n">beamnum</span><span class="p">,</span> <span class="n">CS_step</span><span class="p">,</span> <span class="n">post</span><span class="p">)</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">write_out</span><span class="p">(</span><span class="n">outname</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="extract_macropixels"><a class="viewcode-back" href="../../api/ViSP_Pipeline.InstrumentPolCalibration.extract_macropixels.html#ViSP_Pipeline.InstrumentPolCalibration.extract_macropixels">[docs]</a><span class="k">def</span> <span class="nf">extract_macropixels</span><span class="p">(</span><span class="n">fitsData</span><span class="p">,</span> <span class="n">numpix_x</span><span class="p">,</span> <span class="n">numpix_y</span><span class="p">,</span> <span class="n">errData</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Bin the input data down to a specified number of pixels.</span>
+
+<span class="sd">    Because this function is designed to produce PolCal data the two ViSP beams are split apart and placed into separate</span>
+<span class="sd">    Data.FitsData objects.</span>
+
+<span class="sd">    If the number of output pixels does not divide evenly into the number of input pixels then some input pixels will be</span>
+<span class="sd">    lost. This might or might not be a bad thing.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    fitsData : Data.FitsData</span>
+<span class="sd">        Object containing data to bin. Should contain both ViSP beams and is probably the output of</span>
+<span class="sd">        ScienceCalibration.geometric_correction()</span>
+
+<span class="sd">    numpix_x : int</span>
+<span class="sd">        The number of spatial output pixels. Both beams will have the same number of spatial pixels.</span>
+
+<span class="sd">    numpix_y : int</span>
+<span class="sd">        The number of spectral output pixels PER BEAM</span>
+
+<span class="sd">    errData : Data.FitsData</span>
+<span class="sd">        Uncertainty associated with the input data</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Data.FitsData</span>
+<span class="sd">        PolCal ViSP data for beam 1. Each modulator state in a separate ImageHDU.</span>
+
+<span class="sd">    Data.FitsData</span>
+<span class="sd">        PolCal ViSP data for beam 2. Each modulator state in a separate ImageHDU.</span>
+
+<span class="sd">    Data.FitsData</span>
+<span class="sd">        If uncertainty on the input data is provided, the uncertainty associated with beam 1 PolCal data</span>
+
+<span class="sd">    Data.FitsData</span>
+<span class="sd">        If uncertainty on the input data is provided, the uncertainty associated with beam 2 PolCal data</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Binning beams to shape (</span><span class="si">{}</span><span class="s1">, </span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">numpix_x</span><span class="p">,</span> <span class="n">numpix_y</span><span class="p">))</span>
+
+    <span class="n">pivot</span> <span class="o">=</span> <span class="n">fitsData</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;VISP_PPP&#39;</span><span class="p">]</span>
+    <span class="n">nummod</span> <span class="o">=</span> <span class="n">fitsData</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;VISP_XXX&#39;</span><span class="p">]</span>
+    <span class="n">numx</span><span class="p">,</span> <span class="n">numy_all</span> <span class="o">=</span> <span class="n">fitsData</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">numy_2</span> <span class="o">=</span> <span class="p">(</span><span class="n">numy_all</span> <span class="o">-</span> <span class="n">pivot</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: full beam 1 shape: (</span><span class="si">{}</span><span class="s1">, </span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">numx</span><span class="p">,</span> <span class="n">pivot</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: full beam 2 shape: (</span><span class="si">{}</span><span class="s1">, </span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">numx</span><span class="p">,</span> <span class="n">numy_2</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">numpix_x</span> <span class="o">&gt;</span> <span class="n">numx</span> <span class="ow">or</span> <span class="n">numpix_y</span> <span class="o">&gt;</span> <span class="n">pivot</span> <span class="ow">or</span> <span class="n">numpix_y</span> <span class="o">&gt;</span> <span class="n">numy_2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="s1">&#39;Cannot bin to more pixels than input data&#39;</span><span class="p">)</span>
+
+    <span class="n">xbin</span> <span class="o">=</span> <span class="n">numx</span> <span class="o">//</span> <span class="n">numpix_x</span>
+    <span class="n">ybin_1</span> <span class="o">=</span> <span class="n">pivot</span> <span class="o">//</span> <span class="n">numpix_y</span>
+    <span class="n">ybin_2</span> <span class="o">=</span> <span class="n">numy_2</span> <span class="o">//</span> <span class="n">numpix_y</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: x binning: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">xbin</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: beam 1 y binning: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">ybin_1</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: beam 2 y binning: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">ybin_2</span><span class="p">))</span>
+
+    <span class="n">xend</span> <span class="o">=</span> <span class="n">numpix_x</span> <span class="o">*</span> <span class="n">xbin</span> <span class="o">-</span> <span class="n">numx</span> <span class="ow">or</span> <span class="kc">None</span>
+    <span class="n">yend_1</span> <span class="o">=</span> <span class="n">numpix_y</span> <span class="o">*</span> <span class="n">ybin_1</span> <span class="o">-</span> <span class="n">pivot</span> <span class="ow">or</span> <span class="kc">None</span>
+    <span class="n">yend_2</span> <span class="o">=</span> <span class="n">numpix_y</span> <span class="o">*</span> <span class="n">ybin_2</span> <span class="o">-</span> <span class="n">numy_2</span> <span class="ow">or</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">numx</span> <span class="o">/</span> <span class="n">numpix_x</span><span class="p">)</span> <span class="o">%</span> <span class="mi">1</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Spatial binning amount is non-integer; </span><span class="si">{}</span><span class="s1"> pixels will be lost from beams 1 and 2&#39;</span><span class="o">.</span> \
+              <span class="nb">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="nb">abs</span><span class="p">(</span><span class="n">xend</span><span class="p">)))</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">pivot</span> <span class="o">/</span> <span class="n">numpix_y</span><span class="p">)</span> <span class="o">%</span> <span class="mi">1</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="p">(</span><span class="n">numy_2</span> <span class="o">/</span> <span class="n">numpix_y</span><span class="p">)</span> <span class="o">%</span> <span class="mi">1</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Spectral binning amount is non-integer; </span><span class="si">{}</span><span class="s1">, </span><span class="si">{}</span><span class="s1"> pixels will be lost from beams 1 and 2&#39;</span><span class="o">.</span> \
+              <span class="nb">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="nb">abs</span><span class="p">(</span><span class="n">yend_1</span><span class="p">),</span> <span class="nb">abs</span><span class="p">(</span><span class="n">yend_2</span><span class="p">)))</span>
+
+    <span class="n">hdulist_1</span> <span class="o">=</span> <span class="p">[</span><span class="n">pyfits</span><span class="o">.</span><span class="n">PrimaryHDU</span><span class="p">(</span><span class="n">header</span><span class="o">=</span><span class="n">fitsData</span><span class="o">.</span><span class="n">hdulist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">)]</span>
+    <span class="n">hdulist_1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;CAM__010&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xbin</span>
+    <span class="n">hdulist_1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;CAM__011&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ybin_1</span>
+    <span class="n">hdulist_1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;VISP_OGX&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numx</span>
+    <span class="n">hdulist_1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;VISP_OGY&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pivot</span>
+    <span class="n">hdulist_1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;VISP_BEM&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="n">hdulist_2</span> <span class="o">=</span> <span class="p">[</span><span class="n">pyfits</span><span class="o">.</span><span class="n">PrimaryHDU</span><span class="p">(</span><span class="n">header</span><span class="o">=</span><span class="n">fitsData</span><span class="o">.</span><span class="n">hdulist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">)]</span>
+    <span class="n">hdulist_2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;CAM__010&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xbin</span>
+    <span class="n">hdulist_2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;CAM__011&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ybin_2</span>
+    <span class="n">hdulist_2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;VISP_OGX&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numx</span>
+    <span class="n">hdulist_2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;VISP_OGY&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numy_2</span>
+    <span class="n">hdulist_2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;VISP_BEM&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+
+    <span class="k">if</span> <span class="n">errData</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">hdulist_1_err</span> <span class="o">=</span> <span class="p">[</span><span class="n">pyfits</span><span class="o">.</span><span class="n">PrimaryHDU</span><span class="p">(</span><span class="n">header</span><span class="o">=</span><span class="n">hdulist_1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">)]</span>
+        <span class="n">hdulist_2_err</span> <span class="o">=</span> <span class="p">[</span><span class="n">pyfits</span><span class="o">.</span><span class="n">PrimaryHDU</span><span class="p">(</span><span class="n">header</span><span class="o">=</span><span class="n">hdulist_2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">)]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">binData_1_err</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">binData_2_err</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nummod</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: modulator state </span><span class="si">{}</span><span class="s1">:&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">i</span><span class="p">))</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">fitsData</span><span class="o">.</span><span class="n">find_data_keyword_idx</span><span class="p">(</span><span class="s1">&#39;VISP_YYY&#39;</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">idx</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">:  extracting from data HDU </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">j</span><span class="p">))</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">fitsData</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+            <span class="n">tmp1</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="p">:</span><span class="n">pivot</span><span class="p">]</span>
+            <span class="n">tmp2</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="n">pivot</span><span class="p">:]</span>
+
+            <span class="n">x_binned_data1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">numpix_x</span><span class="p">,</span> <span class="n">pivot</span><span class="p">))</span>
+            <span class="n">binned_data1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">numpix_x</span><span class="p">,</span> <span class="n">numpix_y</span><span class="p">))</span>
+            <span class="n">x_binned_data2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">numpix_x</span><span class="p">,</span> <span class="n">numy_all</span> <span class="o">-</span> <span class="n">pivot</span><span class="p">))</span>
+            <span class="n">binned_data2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">numpix_x</span><span class="p">,</span> <span class="n">numpix_y</span><span class="p">))</span>
+
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">xbin</span><span class="p">):</span>
+                <span class="n">x_binned_data1</span> <span class="o">+=</span> <span class="n">tmp1</span><span class="p">[</span><span class="n">k</span><span class="p">:</span><span class="n">xend</span><span class="p">:</span><span class="n">xbin</span><span class="p">,</span> <span class="p">:]</span>
+                <span class="n">x_binned_data2</span> <span class="o">+=</span> <span class="n">tmp2</span><span class="p">[</span><span class="n">k</span><span class="p">:</span><span class="n">xend</span><span class="p">:</span><span class="n">xbin</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ybin_1</span><span class="p">):</span>
+                <span class="n">binned_data1</span> <span class="o">+=</span> <span class="n">x_binned_data1</span><span class="p">[:,</span> <span class="n">l</span><span class="p">:</span><span class="n">yend_1</span><span class="p">:</span><span class="n">ybin_1</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ybin_2</span><span class="p">):</span>
+                <span class="n">binned_data2</span> <span class="o">+=</span> <span class="n">x_binned_data2</span><span class="p">[:,</span> <span class="n">l</span><span class="p">:</span><span class="n">yend_2</span><span class="p">:</span><span class="n">ybin_2</span><span class="p">]</span>
+
+            <span class="n">ih_1</span> <span class="o">=</span> <span class="n">pyfits</span><span class="o">.</span><span class="n">ImageHDU</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">binned_data1</span> <span class="o">/</span> <span class="p">(</span><span class="n">xbin</span> <span class="o">*</span> <span class="n">ybin_1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
+                                   <span class="n">header</span><span class="o">=</span><span class="n">fitsData</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">)</span>
+            <span class="n">ih_1</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;CAM__010&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xbin</span>
+            <span class="n">ih_1</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;CAM__011&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ybin_1</span>
+            <span class="n">ih_1</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;VISP_OGX&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numx</span>
+            <span class="n">ih_1</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;VISP_OGY&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pivot</span>
+            <span class="n">ih_1</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;VISP_BEM&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">hdulist_1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ih_1</span><span class="p">)</span>
+
+            <span class="n">ih_2</span> <span class="o">=</span> <span class="n">pyfits</span><span class="o">.</span><span class="n">ImageHDU</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">binned_data2</span> <span class="o">/</span> <span class="p">(</span><span class="n">xbin</span> <span class="o">*</span> <span class="n">ybin_2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
+                                   <span class="n">header</span><span class="o">=</span><span class="n">fitsData</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">)</span>
+            <span class="n">ih_2</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;CAM__010&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xbin</span>
+            <span class="n">ih_2</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;CAM__011&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ybin_2</span>
+            <span class="n">ih_2</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;VISP_OGX&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numx</span>
+            <span class="n">ih_2</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;VISP_OGY&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numy_2</span>
+            <span class="n">ih_2</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;VISP_BEM&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+            <span class="n">hdulist_2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ih_2</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">errData</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">:  extracting from uncertinaty HDU </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">j</span><span class="p">))</span>
+                <span class="n">err</span> <span class="o">=</span> <span class="n">errData</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+                <span class="n">tmp1_err</span> <span class="o">=</span> <span class="n">err</span><span class="p">[:,</span> <span class="p">:</span><span class="n">pivot</span><span class="p">]</span>
+                <span class="n">tmp2_err</span> <span class="o">=</span> <span class="n">err</span><span class="p">[:,</span> <span class="n">pivot</span><span class="p">:]</span>
+
+                <span class="n">x_binned_data1_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">numpix_x</span><span class="p">,</span> <span class="n">pivot</span><span class="p">))</span>
+                <span class="n">binned_data1_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">numpix_x</span><span class="p">,</span> <span class="n">numpix_y</span><span class="p">))</span>
+                <span class="n">x_binned_data2_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">numpix_x</span><span class="p">,</span> <span class="n">numy_all</span> <span class="o">-</span> <span class="n">pivot</span><span class="p">))</span>
+                <span class="n">binned_data2_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">numpix_x</span><span class="p">,</span> <span class="n">numpix_y</span><span class="p">))</span>
+
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">xbin</span><span class="p">):</span>
+                    <span class="n">x_binned_data1_err</span> <span class="o">+=</span> <span class="n">tmp1_err</span><span class="p">[</span><span class="n">k</span><span class="p">:</span><span class="n">xend</span><span class="p">:</span><span class="n">xbin</span><span class="p">,</span> <span class="p">:]</span>
+                    <span class="n">x_binned_data2_err</span> <span class="o">+=</span> <span class="n">tmp2_err</span><span class="p">[</span><span class="n">k</span><span class="p">:</span><span class="n">xend</span><span class="p">:</span><span class="n">xbin</span><span class="p">,</span> <span class="p">:]</span>
+                <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ybin_1</span><span class="p">):</span>
+                    <span class="n">binned_data1_err</span> <span class="o">+=</span> <span class="n">x_binned_data1_err</span><span class="p">[:,</span> <span class="n">l</span><span class="p">:</span><span class="n">yend_1</span><span class="p">:</span><span class="n">ybin_1</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ybin_2</span><span class="p">):</span>
+                    <span class="n">binned_data2_err</span> <span class="o">+=</span> <span class="n">x_binned_data2_err</span><span class="p">[:,</span> <span class="n">l</span><span class="p">:</span><span class="n">yend_2</span><span class="p">:</span><span class="n">ybin_2</span><span class="p">]</span>
+
+                <span class="n">ih_1_err</span> <span class="o">=</span> <span class="n">pyfits</span><span class="o">.</span><span class="n">ImageHDU</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">binned_data1_err</span> <span class="o">/</span> <span class="p">(</span><span class="n">xbin</span> <span class="o">*</span> <span class="n">ybin_1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
+                                           <span class="n">header</span><span class="o">=</span><span class="n">hdulist_1</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">)</span>
+                <span class="n">hdulist_1_err</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ih_1_err</span><span class="p">)</span>
+
+                <span class="n">ih_2_err</span> <span class="o">=</span> <span class="n">pyfits</span><span class="o">.</span><span class="n">ImageHDU</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">binned_data2_err</span> <span class="o">/</span> <span class="p">(</span><span class="n">xbin</span> <span class="o">*</span> <span class="n">ybin_2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
+                                           <span class="n">header</span><span class="o">=</span><span class="n">hdulist_2</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">)</span>
+                <span class="n">hdulist_2_err</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ih_2_err</span><span class="p">)</span>
+
+    <span class="n">binData_1</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">()</span>
+    <span class="n">binData_1</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s1">&#39;extract macropixels&#39;</span>
+    <span class="n">binData_1</span><span class="o">.</span><span class="n">hdulist</span> <span class="o">=</span> <span class="n">hdulist_1</span>
+    <span class="n">binData_2</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">()</span>
+    <span class="n">binData_2</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s1">&#39;extract macropixels&#39;</span>
+    <span class="n">binData_2</span><span class="o">.</span><span class="n">hdulist</span> <span class="o">=</span> <span class="n">hdulist_2</span>
+
+    <span class="k">if</span> <span class="n">errData</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">binData_1_err</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">()</span>
+        <span class="n">binData_1_err</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s1">&#39;extract macropixels&#39;</span>
+        <span class="n">binData_1_err</span><span class="o">.</span><span class="n">hdulist</span> <span class="o">=</span> <span class="n">hdulist_1_err</span>
+        <span class="n">binData_2_err</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">()</span>
+        <span class="n">binData_2_err</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s1">&#39;extract macropixels&#39;</span>
+        <span class="n">binData_2_err</span><span class="o">.</span><span class="n">hdulist</span> <span class="o">=</span> <span class="n">hdulist_2_err</span>
+
+    <span class="k">return</span> <span class="n">binData_1</span><span class="p">,</span> <span class="n">binData_2</span><span class="p">,</span> <span class="n">binData_1_err</span><span class="p">,</span> <span class="n">binData_2_err</span></div>
+
+<div class="viewcode-block" id="upsample_demodulation"><a class="viewcode-back" href="../../api/ViSP_Pipeline.InstrumentPolCalibration.upsample_demodulation.html#ViSP_Pipeline.InstrumentPolCalibration.upsample_demodulation">[docs]</a><span class="k">def</span> <span class="nf">upsample_demodulation</span><span class="p">(</span><span class="n">dmodHDU</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Take a single demodulation matrix computed for binned data and up-sample it to the full ViSP frame.</span>
+
+<span class="sd">    Up-sampling is done using nearest-neighbor interpolation in such a way to ensure that each macropixel (i.e. bin)</span>
+<span class="sd">    is equally represented in the final output matrices. The exception to this is when the number of macropixels was</span>
+<span class="sd">    not an integer divisor of the full frame. In this case the macropixel on the edge of each beam will be slightly</span>
+<span class="sd">    (typically less than 5 px) over represented in the final matrices.</span>
+
+<span class="sd">    All information on the shape of the full frame is pulled from the FITS headers, so they&#39;d better be correct!</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dmodHDU : `astropy.io.fits.hdu.image.ImageHDU`</span>
+<span class="sd">        HDU containing data for a single beam&#39;s demodulation matrix. Should have data with shape (x, y, 4, M).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    numpy.ndarray</span>
+<span class="sd">        The input data upsampled to match the full size of the corresponding ViSP beam.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This function will work exactly as expected if x = y = 1, but in this case you&#39;re probably better off just</span>
+<span class="sd">    squeezing out the extra dimensions and taking advantage of the (mostly) shape-agnostic input of</span>
+<span class="sd">    ScienceCalibration.polarimetric_multiplication</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">full_x</span> <span class="o">=</span> <span class="n">dmodHDU</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;VISP_OGX&#39;</span><span class="p">]</span>
+    <span class="n">full_y</span> <span class="o">=</span> <span class="n">dmodHDU</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;VISP_OGY&#39;</span><span class="p">]</span>
+    <span class="n">nums</span><span class="p">,</span> <span class="n">numm</span> <span class="o">=</span> <span class="n">dmodHDU</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span>
+    <span class="n">full_output</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">full_x</span><span class="p">,</span> <span class="n">full_y</span><span class="p">,</span> <span class="n">nums</span><span class="p">,</span> <span class="n">numm</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: original shape of beam: (</span><span class="si">{}</span><span class="s1">, </span><span class="si">{}</span><span class="s1">, </span><span class="si">{}</span><span class="s1">, </span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">full_x</span><span class="p">,</span> <span class="n">full_y</span><span class="p">,</span> <span class="n">nums</span><span class="p">,</span> <span class="n">numm</span><span class="p">))</span>
+
+    <span class="n">numx</span><span class="p">,</span> <span class="n">numy</span><span class="p">,</span> <span class="n">nums</span><span class="p">,</span> <span class="n">numm</span> <span class="o">=</span> <span class="n">dmodHDU</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">:  demodulation matrix shape: (</span><span class="si">{}</span><span class="s1">, </span><span class="si">{}</span><span class="s1">, </span><span class="si">{}</span><span class="s1">, </span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">numx</span><span class="p">,</span> <span class="n">numy</span><span class="p">,</span> <span class="n">nums</span><span class="p">,</span> <span class="n">numm</span><span class="p">))</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">full_x</span> <span class="o">//</span> <span class="n">numx</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">full_x</span><span class="p">,</span> <span class="n">full_x</span> <span class="o">//</span> <span class="n">numx</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">full_y</span> <span class="o">//</span> <span class="n">numy</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">full_y</span><span class="p">,</span> <span class="n">full_y</span> <span class="o">//</span> <span class="n">numy</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">:  interpolating&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
+
+    <span class="n">xi</span><span class="p">,</span> <span class="n">yi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mgrid</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">full_x</span><span class="p">:</span><span class="n">full_x</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="n">full_y</span><span class="p">:</span><span class="n">full_y</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nums</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">:  stokes parameter </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">i</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">numm</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">:   modulator state </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">j</span><span class="p">))</span>
+            <span class="n">full_output</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">spi</span><span class="o">.</span><span class="n">interpn</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">dmodHDU</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span> <span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">),</span> <span class="n">bounds_error</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                                  <span class="n">fill_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">full_output</span></div>
+
+<div class="viewcode-block" id="run_PAC_demod"><a class="viewcode-back" href="../../api/ViSP_Pipeline.InstrumentPolCalibration.run_PAC_demod.html#ViSP_Pipeline.InstrumentPolCalibration.run_PAC_demod">[docs]</a><span class="k">def</span> <span class="nf">run_PAC_demod</span><span class="p">(</span><span class="n">run_dir</span><span class="p">,</span> <span class="n">telescope_db</span><span class="o">=</span><span class="s1">&#39;telescope_db.txt&#39;</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Take a ViSP reduced set of Calibration Sequence data and compute a set of demodulation matrices.</span>
+
+<span class="sd">    The best demodulation is found by varying the parameters of the Calibration Unit (CU). See the PACPipeline for more</span>
+<span class="sd">    details.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    run_dir : str</span>
+<span class="sd">        Location of the processed, macropixel&#39;d ViSP data associated with a single Calibration Sequence (CS).</span>
+
+<span class="sd">    telescope_db : str</span>
+<span class="sd">        Location of the telescope parameter database</span>
+
+<span class="sd">    threads : int</span>
+<span class="sd">        Maximum number of cpus to use when fitting CU parameters. No more than 2 cpus will ever be used.</span>
+
+<span class="sd">    overwrite : bool</span>
+<span class="sd">        If False then demodulation matrices will not be computed if they already exist.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Data.DemodulationData</span>
+<span class="sd">        Object containing the demodulation matrices for both ViSP beams</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">PAC_Pipeline.PACPipeline</span> <span class="k">import</span> <span class="n">main_demodulation_matrix</span>
+
+    <span class="n">jobs</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">pac_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;overwrite&#39;</span><span class="p">:</span> <span class="n">overwrite</span><span class="p">,</span>
+                  <span class="s1">&#39;save_stats&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                  <span class="s1">&#39;telescope_db&#39;</span><span class="p">:</span> <span class="n">telescope_db</span><span class="p">}</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span>
+        <span class="n">beam_dir</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/beam</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">run_dir</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        <span class="n">beam_output</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/DMOD_beam</span><span class="si">{}</span><span class="s1">.fits&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">run_dir</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        <span class="n">jobs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">main_demodulation_matrix</span><span class="p">,</span>
+                               <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">beam_dir</span><span class="p">,</span> <span class="n">beam_output</span><span class="p">],</span>
+                               <span class="n">kwargs</span><span class="o">=</span><span class="n">pac_kwargs</span><span class="p">,</span>
+                               <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Beam</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)))</span>
+
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">jobs</span><span class="p">):</span>
+        <span class="k">while</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">is_alive</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">jobs</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">threads</span><span class="p">:</span>
+            <span class="n">jobs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">jobs</span><span class="p">):</span>
+                <span class="k">break</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">jobs</span><span class="p">:</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+
+    <span class="n">raw_dmod</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">DemodulationData</span><span class="p">()</span>
+    <span class="n">raw_dmod</span><span class="o">.</span><span class="n">load_beam_from_file</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/DMOD_beam1.fits&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">run_dir</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">raw_dmod</span><span class="o">.</span><span class="n">load_beam_from_file</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/DMOD_beam2.fits&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">run_dir</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">raw_dmod</span></div>
+
+
+<div class="viewcode-block" id="generate_instrument_pol_calibration"><a class="viewcode-back" href="../../api/ViSP_Pipeline.InstrumentPolCalibration.generate_instrument_pol_calibration.html#ViSP_Pipeline.InstrumentPolCalibration.generate_instrument_pol_calibration">[docs]</a><span class="k">def</span> <span class="nf">generate_instrument_pol_calibration</span><span class="p">(</span><span class="n">dmodData</span><span class="p">,</span> <span class="n">output</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Read raw demodulation matrices and prep them for use in Science data reduction</span>
+
+<span class="sd">    The demodulation matrices for each ViSP beam are treated separately and if either one was a full-frame average</span>
+<span class="sd">    then the spatial dimensions are simply squeezed out. Otherwise the data are passed to `upsample_demodulation` for</span>
+<span class="sd">    interpolation to the full beam size.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dmodData : Data.DemodulationData</span>
+<span class="sd">        The demodulation matrix for both ViSP beams. Should have a single data HDU for each beam with shape</span>
+<span class="sd">        (x, y, 4, M) where (x, y) is the shape of the binned ViSP beam 1 frame passed to PA&amp;C and M is the number of</span>
+<span class="sd">        unique modulator states.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Data.DemodulationData</span>
+<span class="sd">        Object containing a data HDU for each ViSP beam. The data shape of these HDUs will either be (X, Y, 4, M) or</span>
+<span class="sd">        (4, M), where X and Y are the full read-out size of a single ViSP beam.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: extracting demoulation matrices&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
+    <span class="n">numx1</span><span class="p">,</span> <span class="n">numy1</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">numm1</span> <span class="o">=</span> <span class="n">dmodData</span><span class="o">.</span><span class="n">beam1</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">numx2</span><span class="p">,</span> <span class="n">numy2</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">numm2</span> <span class="o">=</span> <span class="n">dmodData</span><span class="o">.</span><span class="n">beam2</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span>
+
+    <span class="k">if</span> <span class="n">numm1</span> <span class="o">!=</span> <span class="n">numm2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The demodulation matrices don&#39;t have the same number of modulator states&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">dmodData</span><span class="o">.</span><span class="n">beam1</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;VISP_OGX&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">dmodData</span><span class="o">.</span><span class="n">beam2</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;VISP_OGX&#39;</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Beams 1 and 2 not not have the same original spatial dimension&#39;</span><span class="p">)</span>
+
+    <span class="n">final_dmod</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">DemodulationData</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">numx</span><span class="p">,</span> <span class="n">numy</span><span class="p">,</span> <span class="n">hdu</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">([</span><span class="n">numx1</span><span class="p">,</span> <span class="n">numx2</span><span class="p">],</span> <span class="p">[</span><span class="n">numy1</span><span class="p">,</span> <span class="n">numy2</span><span class="p">],</span> <span class="p">[</span><span class="n">dmodData</span><span class="o">.</span><span class="n">beam1</span><span class="p">,</span> <span class="n">dmodData</span><span class="o">.</span><span class="n">beam2</span><span class="p">])):</span>
+
+        <span class="k">if</span> <span class="n">numx</span> <span class="o">==</span> <span class="n">numy</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Beam </span><span class="si">{}</span><span class="s1"> is a whole beam, passing through&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="n">final_dmod</span><span class="o">.</span><span class="n">init_beam_with_ndarray</span><span class="p">(</span><span class="n">hdu</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:],</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="n">hdu</span><span class="o">.</span><span class="n">header</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Upsampling beam </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">upsample_demodulation</span><span class="p">(</span><span class="n">hdu</span><span class="p">)</span>
+            <span class="n">final_dmod</span><span class="o">.</span><span class="n">init_beam_with_ndarray</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="n">hdu</span><span class="o">.</span><span class="n">header</span><span class="p">)</span>
+
+    <span class="n">final_dmod</span><span class="o">.</span><span class="n">write_out</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">final_dmod</span></div>
+
+
+<div class="viewcode-block" id="find_number_of_CS_steps"><a class="viewcode-back" href="../../api/ViSP_Pipeline.InstrumentPolCalibration.find_number_of_CS_steps.html#ViSP_Pipeline.InstrumentPolCalibration.find_number_of_CS_steps">[docs]</a><span class="k">def</span> <span class="nf">find_number_of_CS_steps</span><span class="p">(</span><span class="n">dirname</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Discover the number of Calibration Sequence steps present in a SoCC directory</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dirname : str</span>
+<span class="sd">        Path to a directory containing a single SoCC</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    int</span>
+<span class="sd">        The number of Calibration Sequence steps in the SoCC</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">step_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">file_list</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/*.fits&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dirname</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">file_list</span><span class="p">:</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">pyfits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;DKIST004&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;PolCal&#39;</span><span class="p">:</span>
+                <span class="n">step_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;PAC__999&#39;</span><span class="p">])</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+    <span class="n">unique</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">step_list</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">unique</span><span class="p">)</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">unique</span><span class="o">.</span><span class="n">size</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;SoCC appears to be missing some CS steps&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">unique</span><span class="o">.</span><span class="n">size</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <div class="left-footer">
+         &copy; 2018, Arthur Eigenbrot
+       <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png" /></a>
+    </div>
+   
+    <div class="right-footer">
+      Last updated on 22 Oct 2018.
+    </div>
+    <div class="centre-footer">
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.0
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

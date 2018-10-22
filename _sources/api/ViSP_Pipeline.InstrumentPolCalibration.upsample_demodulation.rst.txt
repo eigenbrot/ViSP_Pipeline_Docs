@@ -1,0 +1,6 @@
+upsample_demodulation
+=====================
+
+.. currentmodule:: ViSP_Pipeline.InstrumentPolCalibration
+
+.. autofunction:: upsample_demodulation

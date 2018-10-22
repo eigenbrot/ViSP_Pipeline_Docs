@@ -5,16 +5,17 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Data Reduction Walkthrough &#8212; ViSP_Pipeline v0.10.2</title>
+    <title>Data Reduction Walkthrough &#8212; ViSP_Pipeline v0.13.0</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,600,700" type="text/css" />
-    <link rel="stylesheet" href="_static/dkist.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:400,600,700" />
+    <link rel="stylesheet" type="text/css" href="_static/dkist.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
@@ -206,6 +207,14 @@ which generates a full suite of input data:</p>
 <span class="go">...</span>
 </pre></div>
 </div>
+<p>We also need a telescope mirror parameter database. The <a class="reference external" href="https://bitbucket.org/dkistdc/pac-pipeline/src/master/">PA&amp;C Modules</a>
+have a dummy version we can use</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> cp ../PAC_pipeline/telescope_db.txt .
+<span class="gp">$</span> ls -1
+<span class="go">raw</span>
+<span class="go">telescope_db.txt</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="setup">
 <h2>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h2>
@@ -225,7 +234,13 @@ there</p>
 <span class="na">lamp_gain_cal</span> <span class="o">=</span> <span class="s">LampGainCal.fits</span>
 <span class="na">solar_gain_cal</span> <span class="o">=</span> <span class="s">SolarGainCal.fits</span>
 <span class="na">geometric_cal</span> <span class="o">=</span> <span class="s">GeoCal.fits</span>
-<span class="na">gen_noise_frames</span> <span class="o">=</span> <span class="s">True</span>
+<span class="na">instrument_pol_cal</span> <span class="o">=</span> <span class="s">InstPolCal.fits</span>
+<span class="na">telescope_pol_db</span> <span class="o">=</span> <span class="s">telescope_db.txt</span>
+<span class="na">gen_noise_frames</span> <span class="o">=</span> <span class="s">False</span>
+<span class="na">continuum_lims</span> <span class="o">=</span> <span class="s">0:100</span>
+<span class="na">save_M12_map</span> <span class="o">=</span> <span class="s">True</span>
+<span class="na">M12_line_lims</span> <span class="o">=</span> <span class="s">200:240</span>
+<span class="na">slit_pos</span> <span class="o">=</span> <span class="s">555</span>
 <span class="na">threads</span> <span class="o">=</span> <span class="s">4</span>
 
 <span class="k">[DarkCalibration]</span>
@@ -277,6 +292,7 @@ you need to set the environmental variable <code class="xref py py-obj docutils 
 <span class="go">config.ini</span>
 <span class="go">DarkCal.fits</span>
 <span class="go">GeoCal.fits</span>
+<span class="go">InstPolCal.fits</span>
 <span class="go">LampGainCal.fits</span>
 <span class="go">Sci.0555.fits</span>
 <span class="go">SolarGainCal.fits</span>
@@ -343,10 +359,10 @@ produce 3D data cubes for a given Stokes vector:</p>
     </div>
    
     <div class="right-footer">
-      Last updated on 09 Aug 2018.
+      Last updated on 22 Oct 2018.
     </div>
     <div class="centre-footer">
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.0
     </div>
   </div>
 </footer>

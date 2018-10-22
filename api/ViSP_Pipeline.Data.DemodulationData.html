@@ -5,16 +5,17 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>DemodulationData &#8212; ViSP_Pipeline v0.10.2</title>
+    <title>DemodulationData &#8212; ViSP_Pipeline v0.13.0</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,600,700" type="text/css" />
-    <link rel="stylesheet" href="../_static/dkist.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:400,600,700" />
+    <link rel="stylesheet" type="text/css" href="../_static/dkist.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
@@ -140,7 +141,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ViSPPipeline">ViSP_Pipeline.ViSPPipeline Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ViSPPolCalPipeline">ViSP_Pipeline.ViSPPolCalPipeline Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ScienceCalibration">ViSP_Pipeline.ScienceCalibration Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.PolarimetricCalibration">ViSP_Pipeline.PolarimetricCalibration Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.InstrumentPolCalibration">ViSP_Pipeline.InstrumentPolCalibration Module</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.Data">ViSP_Pipeline.Data Module</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="../API.html#classes">Classes</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.Data.AlignmentData.html">AlignmentData</a></li>
@@ -170,35 +171,11 @@
 <h1>DemodulationData<a class="headerlink" href="#demodulationdata" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="ViSP_Pipeline.Data.DemodulationData">
-<em class="property">class </em><code class="descclassname">ViSP_Pipeline.Data.</code><code class="descname">DemodulationData</code><span class="sig-paren">(</span><em>array=None</em>, <em>header=None</em>, <em>outputfile=None</em>, <em>overwrite=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#DemodulationData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.DemodulationData" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">ViSP_Pipeline.Data.</code><code class="descname">DemodulationData</code><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#DemodulationData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.DemodulationData" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData" title="ViSP_Pipeline.Data.FitsData"><code class="xref py py-class docutils literal notranslate"><span class="pre">ViSP_Pipeline.Data.FitsData</span></code></a></p>
-<p>DemodulationData is a small modification of the <a class="reference internal" href="ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData" title="ViSP_Pipeline.Data.FitsData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FitsData</span></code></a> class. It requires that input arrays have 4 dimensions
-and provides a ‘data’ property to access the demodulation matrix.</p>
+<p>DemodulationData is a small modification of the <a class="reference internal" href="ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData" title="ViSP_Pipeline.Data.FitsData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FitsData</span></code></a> class. It keeps track of demodulation matrices for each
+beam and allows the beams to either have shape (X, Y, 4, M) or (4, M).</p>
 <p>Initialize the object and generate an HDU list with the input array</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>array</strong> : numpy.ndarray</p>
-<blockquote>
-<div><p>A set of demodulation matrices. Must be 4 dimensional.</p>
-</div></blockquote>
-<p><strong>header</strong> : astropy.io.fits.header.Header</p>
-<blockquote>
-<div><p>If provided, all HDUs in the current object will be given this header.</p>
-</div></blockquote>
-<p><strong>outputfile</strong> : str</p>
-<blockquote>
-<div><p>If provided, this object’s HDUList will be written to this file.</p>
-</div></blockquote>
-<p><strong>overwrite</strong> : bool</p>
-<blockquote class="last">
-<div><p>If True then outputfile will be overwritten if present.</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
 <p class="rubric">Attributes Summary</p>
 <table border="1" class="longtable docutils">
 <colgroup>
@@ -206,8 +183,11 @@ and provides a ‘data’ property to access the demodulation matrix.</p>
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#ViSP_Pipeline.Data.DemodulationData.data" title="ViSP_Pipeline.Data.DemodulationData.data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">data</span></code></a></td>
-<td>The demodulation matrices</td>
+<tr class="row-odd"><td><a class="reference internal" href="#ViSP_Pipeline.Data.DemodulationData.beam1" title="ViSP_Pipeline.Data.DemodulationData.beam1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">beam1</span></code></a></td>
+<td>The HDU associated with beam 1</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#ViSP_Pipeline.Data.DemodulationData.beam2" title="ViSP_Pipeline.Data.DemodulationData.beam2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">beam2</span></code></a></td>
+<td>The HDU associated with beam 2</td>
 </tr>
 </tbody>
 </table>
@@ -218,28 +198,37 @@ and provides a ‘data’ property to access the demodulation matrix.</p>
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#ViSP_Pipeline.Data.DemodulationData.init_with_ndarray" title="ViSP_Pipeline.Data.DemodulationData.init_with_ndarray"><code class="xref py py-obj docutils literal notranslate"><span class="pre">init_with_ndarray</span></code></a>(array[,&nbsp;outputfile,&nbsp;overwrite])</td>
+<tr class="row-odd"><td><a class="reference internal" href="#ViSP_Pipeline.Data.DemodulationData.init_beam_with_ndarray" title="ViSP_Pipeline.Data.DemodulationData.init_beam_with_ndarray"><code class="xref py py-obj docutils literal notranslate"><span class="pre">init_beam_with_ndarray</span></code></a>(array,&nbsp;beam[,&nbsp;header])</td>
 <td>Load data from a demodulation-style numpy.ndarray and construct an astropy.io.fits HDU list</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#ViSP_Pipeline.Data.DemodulationData.load_beam_from_file" title="ViSP_Pipeline.Data.DemodulationData.load_beam_from_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_beam_from_file</span></code></a>(fitsfile,&nbsp;beam)</td>
+<td>Load a demodulation-style FITS file from disk and assign it two the HDU corresponding to the specified beam.</td>
 </tr>
 </tbody>
 </table>
 <p class="rubric">Attributes Documentation</p>
 <dl class="attribute">
-<dt id="ViSP_Pipeline.Data.DemodulationData.data">
-<code class="descname">data</code><a class="headerlink" href="#ViSP_Pipeline.Data.DemodulationData.data" title="Permalink to this definition">¶</a></dt>
-<dd><p>The demodulation matrices</p>
+<dt id="ViSP_Pipeline.Data.DemodulationData.beam1">
+<code class="descname">beam1</code><a class="headerlink" href="#ViSP_Pipeline.Data.DemodulationData.beam1" title="Permalink to this definition">¶</a></dt>
+<dd><p>The HDU associated with beam 1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ViSP_Pipeline.Data.DemodulationData.beam2">
+<code class="descname">beam2</code><a class="headerlink" href="#ViSP_Pipeline.Data.DemodulationData.beam2" title="Permalink to this definition">¶</a></dt>
+<dd><p>The HDU associated with beam 2</p>
 </dd></dl>
 
 <p class="rubric">Methods Documentation</p>
 <dl class="method">
-<dt id="ViSP_Pipeline.Data.DemodulationData.init_with_ndarray">
-<code class="descname">init_with_ndarray</code><span class="sig-paren">(</span><em>array</em>, <em>outputfile=None</em>, <em>overwrite=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#DemodulationData.init_with_ndarray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.DemodulationData.init_with_ndarray" title="Permalink to this definition">¶</a></dt>
+<dt id="ViSP_Pipeline.Data.DemodulationData.init_beam_with_ndarray">
+<code class="descname">init_beam_with_ndarray</code><span class="sig-paren">(</span><em>array</em>, <em>beam</em>, <em>header=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#DemodulationData.init_beam_with_ndarray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.DemodulationData.init_beam_with_ndarray" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load data from a demodulation-style numpy.ndarray and construct an astropy.io.fits HDU list</p>
-<p>Because all demodulation matrices should have the same shape (X, Y, 4, M), a check is made to ensure this is
+<p>Because all demodulation matrices should have shape (X, Y, 4, M) or (4, M), a check is made to ensure this is
 true.</p>
-<p>If an output file is not specified then a temporary FITS file will be created to take advantage of
-astropy.io.fits’ memmap ability. In this case the FitsData object will be completely lost when it is no
-longer needed. To save the object use the .write_out() method prior to deletion.</p>
+<p>A temporary FITS file will be created to take advantage of astropy.io.fits’ memmap ability. Thie means this
+object will be completely lost when it is no longer needed. To save the object use the .write_out() method
+prior to deletion.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -248,14 +237,31 @@ longer needed. To save the object use the .write_out() method prior to deletion.
 <blockquote>
 <div><p>Array to be loaded into the FitsData object. Must have exactly 4 dimensions.</p>
 </div></blockquote>
-<p><strong>outputfile</strong> : str</p>
-<blockquote>
-<div><p>If specified, a FITS file will be saved to this path and then reloaded. If None then a temporary file
-will be created.</p>
-</div></blockquote>
-<p><strong>overwrite</strong> : bool</p>
+<p><strong>beam</strong> : int</p>
 <blockquote class="last">
-<div><p>If True the outputfile specified will be overwritten.</p>
+<div><p>The ViSP beam that the specified demodulation matrix belongs to</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ViSP_Pipeline.Data.DemodulationData.load_beam_from_file">
+<code class="descname">load_beam_from_file</code><span class="sig-paren">(</span><em>fitsfile</em>, <em>beam</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#DemodulationData.load_beam_from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.DemodulationData.load_beam_from_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a demodulation-style FITS file from disk and assign it two the HDU corresponding to the specified beam.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>fitsfile</strong> : str</p>
+<blockquote>
+<div><p>The path the to FITS file to load. Should exist.</p>
+</div></blockquote>
+<p><strong>beam</strong> : int</p>
+<blockquote class="last">
+<div><p>The beam slot into which to load the provided data</p>
 </div></blockquote>
 </td>
 </tr>
@@ -280,10 +286,10 @@ will be created.</p>
     </div>
    
     <div class="right-footer">
-      Last updated on 09 Aug 2018.
+      Last updated on 22 Oct 2018.
     </div>
     <div class="centre-footer">
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.0
     </div>
   </div>
 </footer>

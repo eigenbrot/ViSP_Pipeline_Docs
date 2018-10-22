@@ -1,0 +1,6 @@
+extract_geometric_numbers
+=========================
+
+.. currentmodule:: ViSP_Pipeline.ScienceCalibration
+
+.. autofunction:: extract_geometric_numbers

@@ -1,0 +1,6 @@
+polarimetric_multiplication
+===========================
+
+.. currentmodule:: ViSP_Pipeline.ScienceCalibration
+
+.. autofunction:: polarimetric_multiplication

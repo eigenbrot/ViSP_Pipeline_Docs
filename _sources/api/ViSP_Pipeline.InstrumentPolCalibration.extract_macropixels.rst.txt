@@ -1,0 +1,6 @@
+extract_macropixels
+===================
+
+.. currentmodule:: ViSP_Pipeline.InstrumentPolCalibration
+
+.. autofunction:: extract_macropixels

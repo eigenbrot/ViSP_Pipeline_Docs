@@ -1,0 +1,6 @@
+gen_errname
+===========
+
+.. currentmodule:: ViSP_Pipeline.ViSPPipeline
+
+.. autofunction:: gen_errname

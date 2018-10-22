@@ -1,0 +1,6 @@
+reduce_single_step
+==================
+
+.. currentmodule:: ViSP_Pipeline.InstrumentPolCalibration
+
+.. autofunction:: reduce_single_step

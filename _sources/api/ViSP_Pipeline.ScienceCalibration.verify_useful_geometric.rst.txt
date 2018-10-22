@@ -1,0 +1,6 @@
+verify_useful_geometric
+=======================
+
+.. currentmodule:: ViSP_Pipeline.ScienceCalibration
+
+.. autofunction:: verify_useful_geometric

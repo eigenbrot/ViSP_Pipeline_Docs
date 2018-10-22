@@ -1,0 +1,31 @@
+DemodulationData
+================
+
+.. currentmodule:: ViSP_Pipeline.Data
+
+.. autoclass:: DemodulationData
+   :show-inheritance:
+
+   .. rubric:: Attributes Summary
+
+   .. autosummary::
+
+      ~DemodulationData.beam1
+      ~DemodulationData.beam2
+
+   .. rubric:: Methods Summary
+
+   .. autosummary::
+
+      ~DemodulationData.init_beam_with_ndarray
+      ~DemodulationData.load_beam_from_file
+
+   .. rubric:: Attributes Documentation
+
+   .. autoattribute:: beam1
+   .. autoattribute:: beam2
+
+   .. rubric:: Methods Documentation
+
+   .. automethod:: init_beam_with_ndarray
+   .. automethod:: load_beam_from_file

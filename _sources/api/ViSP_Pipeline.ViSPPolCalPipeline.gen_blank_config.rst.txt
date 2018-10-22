@@ -1,0 +1,6 @@
+gen_blank_config
+================
+
+.. currentmodule:: ViSP_Pipeline.ViSPPolCalPipeline
+
+.. autofunction:: gen_blank_config

@@ -5,16 +5,17 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>ViSP_Pipeline.generic &#8212; ViSP_Pipeline v0.10.2</title>
+    <title>ViSP_Pipeline.generic &#8212; ViSP_Pipeline v0.13.0</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,600,700" type="text/css" />
-    <link rel="stylesheet" href="../../_static/dkist.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:400,600,700" />
+    <link rel="stylesheet" type="text/css" href="../../_static/dkist.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
@@ -310,7 +311,7 @@
 <span class="sd">    errData : Data.FitsData</span>
 <span class="sd">        The pixel uncertainty estimates of the input data</span>
 
-<span class="sd">    dark_calibration_err</span>
+<span class="sd">    dark_calibration_err : Data.FitsData</span>
 <span class="sd">        The pixel uncertainty estimates of the dark calibration data</span>
 
 <span class="sd">    Returns</span>
@@ -330,7 +331,7 @@
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: ERROR must have uncertainty estimates for both data and dark frames&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
 
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">fitsData</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">)):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: subtracting from HDU </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: subtracting from HDU </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">i</span><span class="p">))</span>
         <span class="n">fitsData</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">fitsData</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">data</span> <span class="o">-</span> <span class="n">dark</span>
         <span class="k">if</span> <span class="n">errData</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">:  and err&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
@@ -357,7 +358,7 @@
 <span class="sd">    errData : Data.FitsData</span>
 <span class="sd">        The pixel uncertainty estimates of the input data</span>
 
-<span class="sd">    gain_calibration_err</span>
+<span class="sd">    gain_calibration_err : Data.FitsData</span>
 <span class="sd">        The pixel uncertainty estimates of the gain calibration data</span>
 
 <span class="sd">    Returns</span>
@@ -399,6 +400,7 @@
 
     <span class="k">return</span></div>
 
+
 <div class="viewcode-block" id="generate_noise_frame"><a class="viewcode-back" href="../../api/ViSP_Pipeline.generic.generate_noise_frame.html#ViSP_Pipeline.generic.generate_noise_frame">[docs]</a><span class="k">def</span> <span class="nf">generate_noise_frame</span><span class="p">(</span><span class="n">fitsData</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Create a pixel-uncertainty estimate based on known detector properties</span>
 
@@ -429,6 +431,7 @@
 
     <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">fitsData</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">:</span>
 
+        <span class="c1"># THIS WILL CHANGE WHEN WE FIGURE OUT WHERE THE CAMERA NOISE CHARACTERISTICS WILL BE KEPT</span>
         <span class="n">gain</span> <span class="o">=</span> <span class="mf">1.</span>
         <span class="n">read_noise</span> <span class="o">=</span> <span class="mf">0.</span>
         <span class="n">num_frames</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;CAM__014&#39;</span><span class="p">]</span>
@@ -459,10 +462,10 @@
     </div>
    
     <div class="right-footer">
-      Last updated on 09 Aug 2018.
+      Last updated on 22 Oct 2018.
     </div>
     <div class="centre-footer">
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.0
     </div>
   </div>
 </footer>

@@ -1,0 +1,19 @@
+SlitPositionData
+================
+
+.. currentmodule:: ViSP_Pipeline.Data
+
+.. autoclass:: SlitPositionData
+   :show-inheritance:
+
+   .. rubric:: Methods Summary
+
+   .. autosummary::
+
+      ~SlitPositionData.load_from_directory
+      ~SlitPositionData.load_from_filelist
+
+   .. rubric:: Methods Documentation
+
+   .. automethod:: load_from_directory
+   .. automethod:: load_from_filelist

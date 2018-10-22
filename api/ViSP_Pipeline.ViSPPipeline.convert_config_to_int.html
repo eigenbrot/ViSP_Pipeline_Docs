@@ -5,16 +5,17 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>convert_config_to_int &#8212; ViSP_Pipeline v0.10.2</title>
+    <title>convert_config_to_int &#8212; ViSP_Pipeline v0.13.0</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,600,700" type="text/css" />
-    <link rel="stylesheet" href="../_static/dkist.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:400,600,700" />
+    <link rel="stylesheet" type="text/css" href="../_static/dkist.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
@@ -145,17 +146,16 @@
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ViSPPipeline.generate_intermediate_objects.html">generate_intermediate_objects</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ViSPPipeline.get_pol_mode.html">get_pol_mode</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ViSPPipeline.main.html">main</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ViSPPipeline.run_PAC_demod.html">run_PAC_demod</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ViSPPipeline.run_polarization_calibration.html">run_polarization_calibration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ViSPPipeline.start_science_multiproc.html">start_science_multiproc</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ViSPPipeline.strip_fits.html">strip_fits</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ViSPPipeline.update_args_with_pol.html">update_args_with_pol</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ViSPPolCalPipeline">ViSP_Pipeline.ViSPPolCalPipeline Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ScienceCalibration">ViSP_Pipeline.ScienceCalibration Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.PolarimetricCalibration">ViSP_Pipeline.PolarimetricCalibration Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.InstrumentPolCalibration">ViSP_Pipeline.InstrumentPolCalibration Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.Data">ViSP_Pipeline.Data Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.generic">ViSP_Pipeline.generic Module</a></li>
 </ul>
@@ -191,10 +191,10 @@
     </div>
    
     <div class="right-footer">
-      Last updated on 09 Aug 2018.
+      Last updated on 22 Oct 2018.
     </div>
     <div class="centre-footer">
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.0
     </div>
   </div>
 </footer>

@@ -1,0 +1,6 @@
+update_args_with_pol
+====================
+
+.. currentmodule:: ViSP_Pipeline.ViSPPipeline
+
+.. autofunction:: update_args_with_pol

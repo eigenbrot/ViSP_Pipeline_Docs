@@ -1,0 +1,6 @@
+main
+====
+
+.. currentmodule:: ViSP_Pipeline.ViSPPolCalPipeline
+
+.. autofunction:: main

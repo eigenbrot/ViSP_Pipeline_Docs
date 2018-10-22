@@ -5,16 +5,17 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>ViSP_Pipeline.ScienceCalibration &#8212; ViSP_Pipeline v0.10.2</title>
+    <title>ViSP_Pipeline.ScienceCalibration &#8212; ViSP_Pipeline v0.13.0</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,600,700" type="text/css" />
-    <link rel="stylesheet" href="../../_static/dkist.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:400,600,700" />
+    <link rel="stylesheet" type="text/css" href="../../_static/dkist.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
@@ -137,16 +138,14 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">scipy.ndimage</span> <span class="k">as</span> <span class="nn">spnd</span>
 <span class="kn">from</span> <span class="nn">astropy.io</span> <span class="k">import</span> <span class="n">fits</span> <span class="k">as</span> <span class="n">pyfits</span>
-<span class="kn">from</span> <span class="nn">astropy.time</span> <span class="k">import</span> <span class="n">Time</span>
-<span class="kn">from</span> <span class="nn">ViSP_Pipeline</span> <span class="k">import</span> <span class="n">generic</span><span class="p">,</span> <span class="n">Data</span><span class="p">,</span> <span class="n">PolarimetricCalibration</span>
+<span class="kn">from</span> <span class="nn">ViSP_Pipeline</span> <span class="k">import</span> <span class="n">generic</span><span class="p">,</span> <span class="n">Data</span><span class="p">,</span> <span class="n">TelescopePolCalibration</span>
 <span class="kn">from</span> <span class="nn">ViSP_Pipeline.tag</span> <span class="k">import</span> <span class="n">tag</span>
-<span class="kn">from</span> <span class="nn">PAC_Pipeline</span> <span class="k">import</span> <span class="n">TelescopeModel</span>
-
 
 <div class="viewcode-block" id="main"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ScienceCalibration.main.html#ViSP_Pipeline.ScienceCalibration.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">datasetData</span><span class="p">,</span> <span class="n">slit_pos</span><span class="p">,</span> <span class="n">outpre</span><span class="p">,</span> <span class="n">dark_cal</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">solar_gain_cal</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">geometric_cal</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
          <span class="n">dark_cal_err</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">solar_gain_cal_err</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gen_err</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-         <span class="n">dark_lock</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gain_lock</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">geo_lock</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-         <span class="n">demodulation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">telescope_db</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">remove_tele</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+         <span class="n">dark_lock</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gain_lock</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">geo_lock</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pol_lock</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+         <span class="n">pol</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">demodulation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">telescope_db</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">remove_tele</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">include_parallactic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+         <span class="n">save_M12_map</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">M12_line_lims</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">continuum_lims</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
     <span class="sd">&quot;&quot;&quot;Run raw data through the Science Calibration pipeline.</span>
 
 <span class="sd">    If no intermediate Calibration objects are provided then the pipeline simply averages the (potentially</span>
@@ -173,6 +172,15 @@
 <span class="sd">    geometric_cal : Data.FitsData</span>
 <span class="sd">        A Geometric Calibration object. Probably produced by SolarGainCalibration.main().</span>
 
+<span class="sd">    dark_cal_err : Data.FitsData</span>
+<span class="sd">        Uncertainty associated with dark_cal</span>
+
+<span class="sd">    solar_gain_cal_err : Data.FitsData</span>
+<span class="sd">        Uncertainty associated with solar_gain_cal</span>
+
+<span class="sd">    gen_err : bool</span>
+<span class="sd">        If True then pixel uncertainties will be generated from the raw data frames</span>
+
 <span class="sd">    demodulation : Data.DemodulationData</span>
 <span class="sd">        Object containing an array of shape (X, Y, 4, M) containing the demodulation matrix for each (x, y) pixel.</span>
 <span class="sd">        This is probably the output of PolarimetricCalibration.upsample_demodulation.</span>
@@ -192,6 +200,28 @@
 <span class="sd">        This lock will be used when reading information from the geometric calibration object. This avoids some</span>
 <span class="sd">        weirdness in astropy&#39;s FITS containers when accessing the same data at the same time.</span>
 
+<span class="sd">    pol_lock : multiprocessing.synchronize.lock</span>
+<span class="sd">        This lock will be used when reading information from the demodulation calibration object. This avoids some</span>
+<span class="sd">        weirdness in astropy&#39;s FITS containers when accessing the same data at the same time.</span>
+
+<span class="sd">    remove_tele : bool</span>
+<span class="sd">        If True the inverse Telescope Model will be applied to the demodulated Stokes data</span>
+
+<span class="sd">    include_parallactic : bool</span>
+<span class="sd">        If True the data will be rotated into the DKIST common reference frame</span>
+
+<span class="sd">    save_M12_map : bool</span>
+<span class="sd">        If True a copy of the reduced data WITHOUT an inverse M12 correction will be saved for later use by the PA&amp;C</span>
+<span class="sd">        Modules. This copy will be truncated in wavelength to save space.</span>
+
+<span class="sd">    M12_line_lims : list</span>
+<span class="sd">        If `save_M12_map = True` then this list defines the wavelength pixel range that contains a strong polarization</span>
+<span class="sd">        signal (i.e., a spectral line).</span>
+
+<span class="sd">    continuum_lims : list</span>
+<span class="sd">        The wavelength pixel range that contains primarily continuum signal. These data are extracted to update a</span>
+<span class="sd">        database of X12 mirror parameters.</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    Data.FitsData</span>
@@ -208,17 +238,6 @@
         <span class="n">sciErr</span> <span class="o">=</span> <span class="n">generic</span><span class="o">.</span><span class="n">generate_noise_frame</span><span class="p">(</span><span class="n">sciData</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">sciErr</span> <span class="o">=</span> <span class="kc">None</span>
-
-    <span class="k">try</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">sciData</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;VISP_PMD&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Full Stokes&#39;</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Polarimetric data detected&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
-            <span class="n">pol</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="k">elif</span> <span class="n">sciData</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;VISP_PMD&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Stokes-I&#39;</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Basic intensity data detected&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
-            <span class="n">pol</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Could not determine polarization mode. Assuming Stokes-I&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
-        <span class="n">pol</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="k">if</span> <span class="n">dark_cal</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: doing Dark Correction&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
@@ -246,26 +265,40 @@
         <span class="n">sciData</span><span class="p">,</span> <span class="n">sciErr</span> <span class="o">=</span> <span class="n">geometric_correction</span><span class="p">(</span><span class="n">sciData</span><span class="p">,</span> <span class="n">geo_numbers</span><span class="p">,</span> <span class="n">errData</span><span class="o">=</span><span class="n">sciErr</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">pol</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">ViSP_Pipeline</span> <span class="k">import</span> <span class="n">PolarimetricUtils</span>
         <span class="k">if</span> <span class="n">demodulation</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Polarimetric data requires a demodulation matrix and a telescope polaization calibration&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">telescope_db</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">telescope_db</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">telescope_db</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">telescope_db</span><span class="p">))</span> <span class="ow">and</span> <span class="n">remove_tele</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Telescope database was either not provided or does not exist&#39;</span><span class="p">)</span>
 
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: demodulating ViSP polarlization&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
-        <span class="n">verify_useful_demodulation</span><span class="p">(</span><span class="n">sciData</span><span class="p">,</span> <span class="n">demodulation</span><span class="p">)</span>
-        <span class="n">instData</span><span class="p">,</span> <span class="n">instErr</span> <span class="o">=</span> <span class="n">polarimetric_demodulation</span><span class="p">(</span><span class="n">sciData</span><span class="p">,</span> <span class="n">demodulation</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">sciErr</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">pol_lock</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: acquired pol MultiProcessing Lock&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
+            <span class="n">verify_useful_demodulation</span><span class="p">(</span><span class="n">sciData</span><span class="p">,</span> <span class="n">demodulation</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: released pol MultiProcessing Lock&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
+        <span class="p">(</span><span class="n">beam1Data</span><span class="p">,</span> <span class="n">beam2Data</span><span class="p">),</span> <span class="p">(</span><span class="n">beam1Err</span><span class="p">,</span> <span class="n">beam2Err</span><span class="p">)</span> <span class="o">=</span> <span class="n">polarimetric_demodulation</span><span class="p">(</span><span class="n">sciData</span><span class="p">,</span> <span class="n">demodulation</span><span class="p">,</span> <span class="n">sciErr</span><span class="p">)</span>
 
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: combining polarimetric beams&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
-        <span class="n">avgBeams</span><span class="p">,</span> <span class="n">avgErr</span> <span class="o">=</span> <span class="n">average_polarimetric_beams</span><span class="p">(</span><span class="n">instData</span><span class="p">,</span> <span class="n">instErr</span><span class="p">)</span>
+        <span class="n">avgBeams</span><span class="p">,</span> <span class="n">avgErr</span> <span class="o">=</span> <span class="n">average_polarimetric_beams</span><span class="p">(</span><span class="n">beam1Data</span><span class="p">,</span> <span class="n">beam2Data</span><span class="p">,</span> <span class="n">beam1Err</span><span class="p">,</span> <span class="n">beam2Err</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">save_M12_map</span><span class="p">:</span>
+            <span class="n">savedir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">outpre</span><span class="p">)</span> <span class="ow">or</span> <span class="s1">&#39;.&#39;</span>
+            <span class="n">M12dir</span> <span class="o">=</span> <span class="n">savedir</span> <span class="o">+</span> <span class="s1">&#39;/M12_map&#39;</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">M12dir</span><span class="p">):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">M12dir</span><span class="p">)</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: saving line data for PA&amp;C M12 determination to </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">M12dir</span><span class="p">))</span>
+            <span class="n">M12outname</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/M12.</span><span class="si">{}</span><span class="s1">.fits&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">M12dir</span><span class="p">,</span> <span class="n">outpre</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">PolarimetricUtils</span><span class="o">.</span><span class="n">save_M12_map_frame</span><span class="p">(</span><span class="n">avgBeams</span><span class="p">,</span> <span class="n">telescope_db</span><span class="p">,</span> <span class="n">M12_line_lims</span><span class="p">,</span> <span class="n">M12outname</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">remove_tele</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: removing telescope polarization matrix&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
-            <span class="n">inv_tele</span> <span class="o">=</span> <span class="n">setup_telescope_model</span><span class="p">(</span><span class="n">avgBeams</span><span class="p">,</span> <span class="n">telescope_db</span><span class="p">)</span>
-            <span class="n">outData</span><span class="p">,</span> <span class="n">outErr</span> <span class="o">=</span> <span class="n">polarimetric_demodulation</span><span class="p">(</span><span class="n">avgBeams</span><span class="p">,</span> <span class="n">inv_tele</span><span class="p">,</span> <span class="n">avgErr</span><span class="p">)</span>
+            <span class="n">teleCal</span> <span class="o">=</span> <span class="n">TelescopePolCalibration</span><span class="o">.</span><span class="n">generate_telescope_pol_calibration</span><span class="p">(</span><span class="n">avgBeams</span><span class="p">,</span> <span class="n">telescope_db</span><span class="p">,</span>
+                                                                                 <span class="n">M12</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">include_parallactic</span><span class="o">=</span><span class="n">include_parallactic</span><span class="p">)</span>
+            <span class="n">outData</span><span class="p">,</span> <span class="n">outErr</span> <span class="o">=</span> <span class="n">apply_inverse_telescope_model</span><span class="p">(</span><span class="n">avgBeams</span><span class="p">,</span> <span class="n">teleCal</span><span class="p">,</span> <span class="n">avgErr</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: skipping removal of telescope polarization matrix!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
             <span class="n">outData</span><span class="p">,</span> <span class="n">outErr</span> <span class="o">=</span> <span class="n">avgBeams</span><span class="p">,</span> <span class="n">avgErr</span>
-
     <span class="k">else</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: combining non-polarimetric beams&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
         <span class="n">outData</span><span class="p">,</span> <span class="n">outErr</span> <span class="o">=</span> <span class="n">average_beams</span><span class="p">(</span><span class="n">sciData</span><span class="p">,</span> <span class="n">sciErr</span><span class="p">)</span>
@@ -273,7 +306,13 @@
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Generating level-1 science data&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
     <span class="n">ViSPData</span><span class="p">,</span> <span class="n">ViSPErr</span> <span class="o">=</span> <span class="n">generate_science_calibration</span><span class="p">(</span><span class="n">outData</span><span class="p">,</span> <span class="n">outErr</span><span class="p">,</span> <span class="n">outpre</span><span class="p">,</span> <span class="n">pol</span><span class="p">)</span>
 
+    <span class="k">if</span> <span class="n">pol</span> <span class="ow">and</span> <span class="n">remove_tele</span><span class="p">:</span>
+        <span class="c1"># The x-talk measurements will only be useful if the TM was applied</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Reporting continuum cross-talk to PA&amp;C Modules&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
+        <span class="n">PolarimetricUtils</span><span class="o">.</span><span class="n">report_continuum_xtalk</span><span class="p">(</span><span class="n">outData</span><span class="p">,</span> <span class="n">continuum_lims</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">ViSPData</span><span class="p">,</span> <span class="n">ViSPErr</span></div>
+
 
 <div class="viewcode-block" id="verify_useful_dark"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ScienceCalibration.verify_useful_dark.html#ViSP_Pipeline.ScienceCalibration.verify_useful_dark">[docs]</a><span class="k">def</span> <span class="nf">verify_useful_dark</span><span class="p">(</span><span class="n">sciData</span><span class="p">,</span> <span class="n">darkData</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -299,18 +338,19 @@
                   <span class="s1">&#39;CAM__009&#39;</span><span class="p">,</span>  <span class="c1">#   binning</span>
                   <span class="s1">&#39;CAM__010&#39;</span><span class="p">,</span>  <span class="c1"># Software</span>
                   <span class="s1">&#39;CAM__011&#39;</span><span class="p">,</span>  <span class="c1">#   binning</span>
-                  <span class="s1">&#39;VISP_016&#39;</span><span class="p">,</span> <span class="c1"># GratingID</span>
-                  <span class="s1">&#39;VISP_019&#39;</span><span class="p">,</span> <span class="c1"># GratingAngle</span>
-                  <span class="s1">&#39;VISP_002&#39;</span><span class="p">]</span> <span class="c1"># ArmAngle</span>
+                  <span class="s1">&#39;VISP_016&#39;</span><span class="p">,</span>  <span class="c1"># GratingID</span>
+                  <span class="s1">&#39;VISP_019&#39;</span><span class="p">,</span>  <span class="c1"># GratingAngle</span>
+                  <span class="s1">&#39;VISP_002&#39;</span><span class="p">]</span>  <span class="c1"># ArmAngle</span>
 
     <span class="c1"># Add ROI information parametrically because there are a ton of these keywords</span>
-    <span class="n">check_keys</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;CAM__</span><span class="si">{:03}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">31</span><span class="p">)]</span>
+    <span class="n">check_keys</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;CAM__</span><span class="si">{:03}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">31</span><span class="p">)]</span>
 
     <span class="n">dark_head</span> <span class="o">=</span> <span class="n">darkData</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span>
     <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">check_keys</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">sciData</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">h</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">!=</span> <span class="n">dark_head</span><span class="p">[</span><span class="n">k</span><span class="p">]:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Dark keyword </span><span class="si">{}</span><span class="s1"> does not match data&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">))</span></div>
+
 
 <div class="viewcode-block" id="verify_useful_gain"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ScienceCalibration.verify_useful_gain.html#ViSP_Pipeline.ScienceCalibration.verify_useful_gain">[docs]</a><span class="k">def</span> <span class="nf">verify_useful_gain</span><span class="p">(</span><span class="n">sciData</span><span class="p">,</span> <span class="n">gainData</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -336,19 +376,20 @@
                   <span class="s1">&#39;CAM__009&#39;</span><span class="p">,</span>  <span class="c1">#   binning</span>
                   <span class="s1">&#39;CAM__010&#39;</span><span class="p">,</span>  <span class="c1"># Software</span>
                   <span class="s1">&#39;CAM__011&#39;</span><span class="p">,</span>  <span class="c1">#   binning</span>
-                  <span class="s1">&#39;VISP_016&#39;</span><span class="p">,</span> <span class="c1"># GratingID</span>
-                  <span class="s1">&#39;VISP_019&#39;</span><span class="p">,</span> <span class="c1"># GratingAngle</span>
-                  <span class="s1">&#39;VISP_002&#39;</span><span class="p">,</span> <span class="c1"># ArmAngle</span>
-                  <span class="s1">&#39;VISP_XXX&#39;</span><span class="p">]</span> <span class="c1"># NumberOfStates</span>
+                  <span class="s1">&#39;VISP_016&#39;</span><span class="p">,</span>  <span class="c1"># GratingID</span>
+                  <span class="s1">&#39;VISP_019&#39;</span><span class="p">,</span>  <span class="c1"># GratingAngle</span>
+                  <span class="s1">&#39;VISP_002&#39;</span><span class="p">,</span>  <span class="c1"># ArmAngle</span>
+                  <span class="s1">&#39;VISP_XXX&#39;</span><span class="p">]</span>  <span class="c1"># NumberOfStates</span>
 
     <span class="c1"># Add ROI information parametrically because there are a ton of these keywords</span>
-    <span class="n">check_keys</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;CAM__</span><span class="si">{:03}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">31</span><span class="p">)]</span>
+    <span class="n">check_keys</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;CAM__</span><span class="si">{:03}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">31</span><span class="p">)]</span>
 
     <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">check_keys</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">sh</span> <span class="ow">in</span> <span class="n">sciData</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">gh</span> <span class="ow">in</span> <span class="n">gainData</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">sh</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">!=</span> <span class="n">gh</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="n">k</span><span class="p">]:</span>
                     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Gain keyword </span><span class="si">{}</span><span class="s1"> does not match data&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">))</span></div>
+
 
 <div class="viewcode-block" id="verify_useful_geometric"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ScienceCalibration.verify_useful_geometric.html#ViSP_Pipeline.ScienceCalibration.verify_useful_geometric">[docs]</a><span class="k">def</span> <span class="nf">verify_useful_geometric</span><span class="p">(</span><span class="n">sciData</span><span class="p">,</span> <span class="n">geoData</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -369,13 +410,13 @@
                   <span class="s1">&#39;CAM__009&#39;</span><span class="p">,</span>  <span class="c1">#   binning</span>
                   <span class="s1">&#39;CAM__010&#39;</span><span class="p">,</span>  <span class="c1"># Software</span>
                   <span class="s1">&#39;CAM__011&#39;</span><span class="p">,</span>  <span class="c1">#   binning</span>
-                  <span class="s1">&#39;VISP_016&#39;</span><span class="p">,</span> <span class="c1"># GratingID</span>
-                  <span class="s1">&#39;VISP_019&#39;</span><span class="p">,</span> <span class="c1"># GratingAngle</span>
-                  <span class="s1">&#39;VISP_002&#39;</span><span class="p">,</span> <span class="c1"># ArmAngle</span>
-                  <span class="s1">&#39;VISP_XXX&#39;</span><span class="p">]</span> <span class="c1"># NumberOfStates</span>
+                  <span class="s1">&#39;VISP_016&#39;</span><span class="p">,</span>  <span class="c1"># GratingID</span>
+                  <span class="s1">&#39;VISP_019&#39;</span><span class="p">,</span>  <span class="c1"># GratingAngle</span>
+                  <span class="s1">&#39;VISP_002&#39;</span><span class="p">,</span>  <span class="c1"># ArmAngle</span>
+                  <span class="s1">&#39;VISP_XXX&#39;</span><span class="p">]</span>  <span class="c1"># NumberOfStates</span>
 
     <span class="c1"># Add ROI information parametrically because there are a ton of these keywords</span>
-    <span class="n">check_keys</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;CAM__</span><span class="si">{:03}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">31</span><span class="p">)]</span>
+    <span class="n">check_keys</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;CAM__</span><span class="si">{:03}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">31</span><span class="p">)]</span>
 
     <span class="n">geo_head</span> <span class="o">=</span> <span class="n">geoData</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">sciData</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">:</span>
@@ -384,6 +425,7 @@
         <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">check_keys</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">h</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">!=</span> <span class="n">geo_head</span><span class="p">[</span><span class="n">k</span><span class="p">]:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Geometric keyword </span><span class="si">{}</span><span class="s1"> does not match data&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">))</span></div>
+
 
 <div class="viewcode-block" id="verify_useful_demodulation"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ScienceCalibration.verify_useful_demodulation.html#ViSP_Pipeline.ScienceCalibration.verify_useful_demodulation">[docs]</a><span class="k">def</span> <span class="nf">verify_useful_demodulation</span><span class="p">(</span><span class="n">sciData</span><span class="p">,</span> <span class="n">demodData</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -402,23 +444,30 @@
     <span class="n">check_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;CAM__001&#39;</span><span class="p">,</span>  <span class="c1"># CameraUniqueID</span>
                   <span class="s1">&#39;CAM__008&#39;</span><span class="p">,</span>  <span class="c1"># Hardware</span>
                   <span class="s1">&#39;CAM__009&#39;</span><span class="p">,</span>  <span class="c1">#   binning</span>
-                  <span class="s1">&#39;CAM__010&#39;</span><span class="p">,</span>  <span class="c1"># Software</span>
-                  <span class="s1">&#39;CAM__011&#39;</span><span class="p">,</span>  <span class="c1">#   binning</span>
-                  <span class="s1">&#39;VISP_016&#39;</span><span class="p">,</span> <span class="c1"># GratingID</span>
-                  <span class="s1">&#39;VISP_019&#39;</span><span class="p">,</span> <span class="c1"># GratingAngle</span>
-                  <span class="s1">&#39;VISP_002&#39;</span><span class="p">,</span> <span class="c1"># ArmAngle</span>
-                  <span class="s1">&#39;VISP_XXX&#39;</span><span class="p">]</span> <span class="c1"># NumberOfStates</span>
+                  <span class="s1">&#39;VISP_016&#39;</span><span class="p">,</span>  <span class="c1"># GratingID</span>
+                  <span class="s1">&#39;VISP_019&#39;</span><span class="p">,</span>  <span class="c1"># GratingAngle</span>
+                  <span class="s1">&#39;VISP_002&#39;</span><span class="p">,</span>  <span class="c1"># ArmAngle</span>
+                  <span class="s1">&#39;VISP_XXX&#39;</span><span class="p">]</span>  <span class="c1"># NumberOfStates</span>
 
     <span class="c1"># Add ROI information parametrically because there are a ton of these keywords</span>
-    <span class="n">check_keys</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;CAM__</span><span class="si">{:03}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">31</span><span class="p">)]</span>
+    <span class="n">check_keys</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;CAM__</span><span class="si">{:03}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">31</span><span class="p">)]</span>
 
     <span class="n">demod_head</span> <span class="o">=</span> <span class="n">demodData</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">pivot</span> <span class="o">=</span> <span class="n">sciData</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;VISP_PPP&#39;</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">sciData</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">demod_head</span><span class="p">[</span><span class="s1">&#39;NAXIS3&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">h</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;NAXIS1&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">demod_head</span><span class="p">[</span><span class="s1">&#39;NAXIS4&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">h</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;NAXIS2&#39;</span><span class="p">]:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Demodulation Cal has different image size&#39;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">check_keys</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">h</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">!=</span> <span class="n">demod_head</span><span class="p">[</span><span class="n">k</span><span class="p">]:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Demodulation keyword </span><span class="si">{}</span><span class="s1"> does not match data&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">))</span></div>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Demodulation keyword </span><span class="si">{}</span><span class="s1"> does not match data (</span><span class="si">{}</span><span class="s1"> != </span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">,</span>
+                                                                                                 <span class="n">h</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="n">k</span><span class="p">],</span>
+                                                                                                 <span class="n">demod_head</span><span class="p">[</span><span class="n">k</span><span class="p">]))</span>
+        <span class="c1"># Check if the demodulation matrices are full-frame of single averages</span>
+        <span class="n">numx</span><span class="p">,</span> <span class="n">numy</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">demodData</span><span class="o">.</span><span class="n">beam1</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">numx</span> <span class="o">!=</span> <span class="n">demodData</span><span class="o">.</span><span class="n">beam1</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="n">pivot</span> <span class="o">!=</span> <span class="n">demodData</span><span class="o">.</span><span class="n">beam1</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Demodulation beam1 shape does not match data&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">demodData</span><span class="o">.</span><span class="n">beam2</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">numx</span> <span class="o">!=</span> <span class="n">demodData</span><span class="o">.</span><span class="n">beam2</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="p">(</span><span class="n">numy</span> <span class="o">-</span> <span class="n">pivot</span><span class="p">)</span> <span class="o">!=</span> <span class="n">demodData</span><span class="o">.</span><span class="n">beam2</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Demodulation beam2 shape does not match data&#39;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="generate_science_calibration"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ScienceCalibration.generate_science_calibration.html#ViSP_Pipeline.ScienceCalibration.generate_science_calibration">[docs]</a><span class="k">def</span> <span class="nf">generate_science_calibration</span><span class="p">(</span><span class="n">sciData</span><span class="p">,</span> <span class="n">sciErr</span><span class="p">,</span> <span class="n">outpre</span><span class="p">,</span> <span class="n">pol</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
@@ -456,6 +505,7 @@
             <span class="n">obj</span><span class="o">.</span><span class="n">write_out</span><span class="p">(</span><span class="n">outname</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">sciData</span><span class="p">,</span> <span class="n">sciErr</span></div>
+
 
 <div class="viewcode-block" id="extract_geometric_numbers"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ScienceCalibration.extract_geometric_numbers.html#ViSP_Pipeline.ScienceCalibration.extract_geometric_numbers">[docs]</a><span class="k">def</span> <span class="nf">extract_geometric_numbers</span><span class="p">(</span><span class="n">geometric_cal</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Simply load the necessary geometric parameters from disk.</span>
@@ -495,6 +545,7 @@
     <span class="n">spec_shifts</span> <span class="o">=</span> <span class="n">geometric_cal</span><span class="o">.</span><span class="n">hdulist</span><span class="p">[</span><span class="n">geometric_cal</span><span class="o">.</span><span class="n">find_keyword_idx</span><span class="p">(</span><span class="s1">&#39;NAME&#39;</span><span class="p">,</span> <span class="s1">&#39;SPECSHFT&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">data</span>
 
     <span class="k">return</span> <span class="n">angles</span><span class="p">,</span> <span class="n">beam_offset</span><span class="p">,</span> <span class="n">state_offset</span><span class="p">,</span> <span class="n">spec_shifts</span></div>
+
 
 <div class="viewcode-block" id="geometric_correction"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ScienceCalibration.geometric_correction.html#ViSP_Pipeline.ScienceCalibration.geometric_correction">[docs]</a><span class="k">def</span> <span class="nf">geometric_correction</span><span class="p">(</span><span class="n">fitsData</span><span class="p">,</span> <span class="n">geometric_numbers</span><span class="p">,</span> <span class="n">errData</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Remove hairline angles, beam/modulator state offsets, and spectral shifts from data</span>
@@ -703,40 +754,153 @@
 
     <span class="k">return</span> <span class="n">avgData</span><span class="p">,</span> <span class="n">avgErr</span></div>
 
-<div class="viewcode-block" id="get_demodulation_matrix"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ScienceCalibration.get_demodulation_matrix.html#ViSP_Pipeline.ScienceCalibration.get_demodulation_matrix">[docs]</a><span class="k">def</span> <span class="nf">get_demodulation_matrix</span><span class="p">(</span><span class="n">beam1Data</span><span class="p">,</span> <span class="n">beam2Data</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Read demodulation matrices from disk and prep them for polarimetric_demodulation()</span>
 
-<span class="sd">    At some point this function will help the machinery that doesn&#39;t up-sample demodulation matrices with</span>
-<span class="sd">    shape[:2] = (1, 1), but for now it basically just passes the data along.</span>
+<div class="viewcode-block" id="polarimetric_demodulation"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ScienceCalibration.polarimetric_demodulation.html#ViSP_Pipeline.ScienceCalibration.polarimetric_demodulation">[docs]</a><span class="k">def</span> <span class="nf">polarimetric_demodulation</span><span class="p">(</span><span class="n">fitsData</span><span class="p">,</span> <span class="n">dmodData</span><span class="p">,</span> <span class="n">errData</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Split a ViSP frame into its two beams and apply a demodulation matrix to each beam.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    beam1Data : Data.DemodulationData</span>
-<span class="sd">        The demodulation matrix for ViSP beam 1. Should have a single data HDU with shape (x, y, 4, M) where (x, y) is</span>
-<span class="sd">        the shape of the binned ViSP beam 1 frame passed to PA&amp;C and M is the number of unique modulator states.</span>
+<span class="sd">    fitsData : Data.FitsData</span>
+<span class="sd">        The data to demodulate.</span>
 
-<span class="sd">    beam2Data : Data.DemodulationData</span>
-<span class="sd">        The demodulation matrix for ViSP beam 2. Should have a single data HDU with shape (x, y, 4, M) where (x, y) is</span>
-<span class="sd">        the shape of the binned ViSP beam 2 frame passed to PA&amp;C and M is the number of unique modulator states.</span>
+<span class="sd">    dmodData : Data.DemodulationData</span>
+<span class="sd">        The demodulation matrices to use. Should contain a data HDU for each of the ViSP beams.</span>
+
+<span class="sd">    errData : Data.FitsData</span>
+<span class="sd">        Uncertainty estimates associated with fitsData</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    Data.DemodulationData</span>
-<span class="sd">        Object containing array of shape (X, Y, 4, M) where X and Y are the dimensions of the original ViSP frame.</span>
+<span class="sd">    Data.FitsData</span>
+<span class="sd">        Demodulated beam 1 data</span>
+
+<span class="sd">    Data.FitsData</span>
+<span class="sd">        Demodulated beam 2 data</span>
+
+<span class="sd">    Data.FitsData or None</span>
+<span class="sd">        If errData is provided then this contains uncertainty estimates on the Demodulated beam 1 data</span>
+
+<span class="sd">    Data.FitsData or None</span>
+<span class="sd">        If errData is provided then this contains uncertainty estimates on the Demodulated beam 2 data</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: extracting demoulation matrices&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
-    <span class="n">numx1</span><span class="p">,</span> <span class="n">numy1</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">numm1</span> <span class="o">=</span> <span class="n">beam1Data</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span>
-    <span class="n">numx2</span><span class="p">,</span> <span class="n">numy2</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">numm2</span> <span class="o">=</span> <span class="n">beam2Data</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: splitting beams&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
+    <span class="n">stacked_data</span> <span class="o">=</span> <span class="n">fitsData</span><span class="o">.</span><span class="n">get_stacked_data</span><span class="p">()</span>
+    <span class="n">pivot</span> <span class="o">=</span> <span class="n">fitsData</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;VISP_PPP&#39;</span><span class="p">]</span>
 
-    <span class="k">if</span> <span class="n">numx1</span> <span class="o">!=</span> <span class="n">numx2</span> <span class="ow">or</span> <span class="n">numy1</span> <span class="o">!=</span> <span class="n">numy2</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The demodulation matrices have different shaped beams&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">numm1</span> <span class="o">!=</span> <span class="n">numm2</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The demodulation matrices don&#39;t have the same number of modulator states&quot;</span><span class="p">)</span>
+    <span class="n">beam1</span> <span class="o">=</span> <span class="n">stacked_data</span><span class="p">[:,</span> <span class="p">:</span><span class="n">pivot</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">beam2</span> <span class="o">=</span> <span class="n">stacked_data</span><span class="p">[:,</span> <span class="n">pivot</span><span class="p">:,</span> <span class="p">:]</span>
 
-    <span class="k">return</span> <span class="n">PolarimetricCalibration</span><span class="o">.</span><span class="n">upsample_demodulation</span><span class="p">(</span><span class="n">beam1Data</span><span class="p">,</span> <span class="n">beam2Data</span><span class="p">)</span></div>
+    <span class="k">if</span> <span class="n">errData</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: splitting uncertainty beams&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
+        <span class="n">stacked_data_err</span> <span class="o">=</span> <span class="n">errData</span><span class="o">.</span><span class="n">get_stacked_data</span><span class="p">()</span>
+        <span class="n">beam1_err</span> <span class="o">=</span> <span class="n">stacked_data_err</span><span class="p">[:,</span> <span class="p">:</span><span class="n">pivot</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">beam2_err</span> <span class="o">=</span> <span class="n">stacked_data_err</span><span class="p">[:,</span> <span class="n">pivot</span><span class="p">:,</span> <span class="p">:]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">beam1_err</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">beam2_err</span> <span class="o">=</span> <span class="kc">None</span>
 
-<span class="c1">#TODO: Figure out how/if to generate demod_err</span>
-<div class="viewcode-block" id="polarimetric_demodulation"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ScienceCalibration.polarimetric_demodulation.html#ViSP_Pipeline.ScienceCalibration.polarimetric_demodulation">[docs]</a><span class="k">def</span> <span class="nf">polarimetric_demodulation</span><span class="p">(</span><span class="n">fitsData</span><span class="p">,</span> <span class="n">demod</span><span class="p">,</span> <span class="n">errData</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">demod_err</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">outdata_lst</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">outerr_lst</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dmod</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">([</span><span class="n">beam1</span><span class="p">,</span> <span class="n">beam2</span><span class="p">],</span>
+                                              <span class="p">[</span><span class="n">dmodData</span><span class="o">.</span><span class="n">beam1</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">dmodData</span><span class="o">.</span><span class="n">beam2</span><span class="o">.</span><span class="n">data</span><span class="p">],</span>
+                                              <span class="p">[</span><span class="n">beam1_err</span><span class="p">,</span> <span class="n">beam2_err</span><span class="p">])):</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: applying demodulation matrix to beam </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">dmoded_data</span><span class="p">,</span> <span class="n">dmoded_err</span> <span class="o">=</span> <span class="n">polarimetric_multiplication</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dmod</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+
+        <span class="n">outData</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">()</span>
+        <span class="n">outData</span><span class="o">.</span><span class="n">init_with_ndarray</span><span class="p">(</span><span class="n">dmoded_data</span><span class="p">)</span>
+        <span class="n">outData</span><span class="o">.</span><span class="n">hdulist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">fitsData</span><span class="o">.</span><span class="n">hdulist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span>
+        <span class="n">outData</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s1">&#39;polarimetric_demodulation&#39;</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">outData</span><span class="o">.</span><span class="n">hdulist</span><span class="p">)):</span>
+            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">fitsData</span><span class="o">.</span><span class="n">hdulist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">cards</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;SIMPLE&#39;</span><span class="p">,</span> <span class="s1">&#39;BITPIX&#39;</span><span class="p">,</span> <span class="s1">&#39;NAXIS&#39;</span><span class="p">,</span> <span class="s1">&#39;NAXIS1&#39;</span><span class="p">,</span> <span class="s1">&#39;NAXIS2&#39;</span><span class="p">,</span> <span class="s1">&#39;EXTEND&#39;</span><span class="p">,</span> <span class="s1">&#39;END&#39;</span><span class="p">]:</span>
+                    <span class="n">outData</span><span class="o">.</span><span class="n">update_header</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">i</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">outdata_lst</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">outData</span><span class="p">)</span>
+
+        <span class="n">outErr</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">dmoded_err</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">outErr</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">()</span>
+            <span class="n">outErr</span><span class="o">.</span><span class="n">init_with_ndarray</span><span class="p">(</span><span class="n">dmoded_err</span><span class="p">)</span>
+            <span class="n">outErr</span><span class="o">.</span><span class="n">hdulist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">errData</span><span class="o">.</span><span class="n">hdulist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span>
+            <span class="n">errData</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s1">&#39;polarimetric_demodulation&#39;</span>
+
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">outErr</span><span class="o">.</span><span class="n">hdulist</span><span class="p">)):</span>
+                <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">errData</span><span class="o">.</span><span class="n">hdulist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">cards</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;SIMPLE&#39;</span><span class="p">,</span> <span class="s1">&#39;BITPIX&#39;</span><span class="p">,</span> <span class="s1">&#39;NAXIS&#39;</span><span class="p">,</span> <span class="s1">&#39;NAXIS1&#39;</span><span class="p">,</span> <span class="s1">&#39;NAXIS2&#39;</span><span class="p">,</span> <span class="s1">&#39;EXTEND&#39;</span><span class="p">,</span> <span class="s1">&#39;END&#39;</span><span class="p">]:</span>
+                        <span class="n">outErr</span><span class="o">.</span><span class="n">update_header</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">i</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">outerr_lst</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">outErr</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">outdata_lst</span><span class="p">,</span> <span class="n">outerr_lst</span></div>
+
+
+<div class="viewcode-block" id="apply_inverse_telescope_model"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ScienceCalibration.apply_inverse_telescope_model.html#ViSP_Pipeline.ScienceCalibration.apply_inverse_telescope_model">[docs]</a><span class="k">def</span> <span class="nf">apply_inverse_telescope_model</span><span class="p">(</span><span class="n">fitsData</span><span class="p">,</span> <span class="n">teleCal</span><span class="p">,</span> <span class="n">errData</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Apply an inverse Telescope Mueller matrix and update header values</span>
+
+<span class="sd">    The inverse TM captures all mirrors from M1 to M6 (inclusive)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    fitsData : Data.FitsData</span>
+<span class="sd">        Data to apply the inverse TM to. Should have 4 data HDUs (stokes vectors).</span>
+
+<span class="sd">    teleCal : numpy.ndarray</span>
+<span class="sd">        A (4, 4) array containing the Mueller matrix for the inverse of mirrors 1 - 6</span>
+
+<span class="sd">    errData : Data.FitsData</span>
+<span class="sd">        Uncertainty estimates on fitsData</span>
+
+<span class="sd">    include_parallactic : bool</span>
+<span class="sd">        If True the returned Mueller matrix will include rotation by the parallactic angle and will thus put</span>
+<span class="sd">        the data into a common solar reference frame</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Data.FitsData</span>
+<span class="sd">        The input data with the polarimetric contributions of M1 - M6 removed</span>
+
+<span class="sd">    Data.FitsData or None</span>
+<span class="sd">        If uncertainties are provided then this will contain the uncertainty associated with the previous output.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">fitsData</span><span class="o">.</span><span class="n">get_stacked_data</span><span class="p">()</span>
+
+    <span class="n">data_err</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">errData</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">data_err</span> <span class="o">=</span> <span class="n">errData</span><span class="o">.</span><span class="n">get_stacked_data</span><span class="p">()</span>
+
+    <span class="n">output</span><span class="p">,</span> <span class="n">out_err</span> <span class="o">=</span> <span class="n">polarimetric_multiplication</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">teleCal</span><span class="p">,</span> <span class="n">data_err</span><span class="p">)</span>
+
+    <span class="n">outData</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">()</span>
+    <span class="n">outData</span><span class="o">.</span><span class="n">init_with_ndarray</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+    <span class="n">outData</span><span class="o">.</span><span class="n">hdulist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">fitsData</span><span class="o">.</span><span class="n">hdulist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span>
+    <span class="n">outData</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s1">&#39;polarimetric_demodulation&#39;</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">outData</span><span class="o">.</span><span class="n">hdulist</span><span class="p">)):</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">fitsData</span><span class="o">.</span><span class="n">hdulist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">cards</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;SIMPLE&#39;</span><span class="p">,</span> <span class="s1">&#39;BITPIX&#39;</span><span class="p">,</span> <span class="s1">&#39;NAXIS&#39;</span><span class="p">,</span> <span class="s1">&#39;NAXIS1&#39;</span><span class="p">,</span> <span class="s1">&#39;NAXIS2&#39;</span><span class="p">,</span> <span class="s1">&#39;EXTEND&#39;</span><span class="p">,</span> <span class="s1">&#39;END&#39;</span><span class="p">]:</span>
+                <span class="n">outData</span><span class="o">.</span><span class="n">update_header</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">i</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">outErr</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">errData</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">outErr</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">()</span>
+        <span class="n">outErr</span><span class="o">.</span><span class="n">init_with_ndarray</span><span class="p">(</span><span class="n">out_err</span><span class="p">)</span>
+        <span class="n">outErr</span><span class="o">.</span><span class="n">hdulist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">errData</span><span class="o">.</span><span class="n">hdulist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span>
+        <span class="n">errData</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s1">&#39;polarimetric_demodulation&#39;</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">outErr</span><span class="o">.</span><span class="n">hdulist</span><span class="p">)):</span>
+            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">errData</span><span class="o">.</span><span class="n">hdulist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">cards</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;SIMPLE&#39;</span><span class="p">,</span> <span class="s1">&#39;BITPIX&#39;</span><span class="p">,</span> <span class="s1">&#39;NAXIS&#39;</span><span class="p">,</span> <span class="s1">&#39;NAXIS1&#39;</span><span class="p">,</span> <span class="s1">&#39;NAXIS2&#39;</span><span class="p">,</span> <span class="s1">&#39;EXTEND&#39;</span><span class="p">,</span> <span class="s1">&#39;END&#39;</span><span class="p">]:</span>
+                    <span class="n">outErr</span><span class="o">.</span><span class="n">update_header</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">i</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">outData</span><span class="p">,</span> <span class="n">outErr</span></div>
+
+
+<span class="c1"># TODO: Figure out how/if to generate demod_err</span>
+<div class="viewcode-block" id="polarimetric_multiplication"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ScienceCalibration.polarimetric_multiplication.html#ViSP_Pipeline.ScienceCalibration.polarimetric_multiplication">[docs]</a><span class="k">def</span> <span class="nf">polarimetric_multiplication</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">demod</span><span class="p">,</span> <span class="n">err_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">demod_err</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Matrix multiply the input data by a polarization demodulation matrix.</span>
 
 <span class="sd">    This is a general-purpose function that requires good understanding of the input parameters. The important thing</span>
@@ -763,7 +927,7 @@
 <span class="sd">        Note that in all cases the length of the second to last dimension is 4 (corresponding to the Stokes vector)</span>
 <span class="sd">        and the length of the last dimension is equal to the number of data HDUs in the input data.</span>
 
-<span class="sd">    errData : Data.FitsData or None</span>
+<span class="sd">    err_data : Data.FitsData or None</span>
 <span class="sd">        The uncertainty on the input data</span>
 
 <span class="sd">    demod_err : numpy.ndarray</span>
@@ -779,44 +943,22 @@
 <span class="sd">        If errData is provided, the uncertainty associated with the output data.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">fitsData</span><span class="o">.</span><span class="n">get_stacked_data</span><span class="p">()</span>
-
     <span class="n">output</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">demod</span> <span class="o">*</span> <span class="n">data</span><span class="p">[:,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 
-    <span class="n">outData</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">()</span>
-    <span class="n">outData</span><span class="o">.</span><span class="n">init_with_ndarray</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
-    <span class="n">outData</span><span class="o">.</span><span class="n">hdulist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">fitsData</span><span class="o">.</span><span class="n">hdulist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span>
-    <span class="n">outData</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s1">&#39;polarimetric_demodulation&#39;</span>
-
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">outData</span><span class="o">.</span><span class="n">hdulist</span><span class="p">)):</span>
-        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">fitsData</span><span class="o">.</span><span class="n">hdulist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">cards</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;SIMPLE&#39;</span><span class="p">,</span><span class="s1">&#39;BITPIX&#39;</span><span class="p">,</span><span class="s1">&#39;NAXIS&#39;</span><span class="p">,</span><span class="s1">&#39;NAXIS1&#39;</span><span class="p">,</span><span class="s1">&#39;NAXIS2&#39;</span><span class="p">,</span><span class="s1">&#39;EXTEND&#39;</span><span class="p">,</span><span class="s1">&#39;END&#39;</span><span class="p">]:</span>
-                <span class="n">outData</span><span class="o">.</span><span class="n">update_header</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">i</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-
-    <span class="n">outErr</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="k">if</span> <span class="n">errData</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">output_err</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">err_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># if demod_err is None:</span>
         <span class="c1">#     raise Exception(&#39;Demodulation matrix uncertainty estimate not provided&#39;)</span>
-        <span class="n">data_err</span> <span class="o">=</span> <span class="n">errData</span><span class="o">.</span><span class="n">get_stacked_data</span><span class="p">()</span>
+        <span class="n">data_err</span> <span class="o">=</span> <span class="n">err_data</span><span class="o">.</span><span class="n">get_stacked_data</span><span class="p">()</span>
 
         <span class="n">output_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">demod</span> <span class="o">*</span> <span class="n">data_err</span><span class="p">[:,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
         <span class="c1"># output_err = np.sqrt(np.sum(demod**2 * data_err[:, :, None, :]**2, axis=3) +</span>
         <span class="c1">#                      np.sum(demod_err**2 * data[:, :, None, :]**2, axis=3))</span>
 
-        <span class="n">outErr</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">()</span>
-        <span class="n">outErr</span><span class="o">.</span><span class="n">init_with_ndarray</span><span class="p">(</span><span class="n">output_err</span><span class="p">)</span>
-        <span class="n">outErr</span><span class="o">.</span><span class="n">hdulist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">errData</span><span class="o">.</span><span class="n">hdulist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span>
-        <span class="n">errData</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s1">&#39;polarimetric_demodulation&#39;</span>
-
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">outErr</span><span class="o">.</span><span class="n">hdulist</span><span class="p">)):</span>
-            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">errData</span><span class="o">.</span><span class="n">hdulist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">cards</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;SIMPLE&#39;</span><span class="p">,</span><span class="s1">&#39;BITPIX&#39;</span><span class="p">,</span><span class="s1">&#39;NAXIS&#39;</span><span class="p">,</span><span class="s1">&#39;NAXIS1&#39;</span><span class="p">,</span><span class="s1">&#39;NAXIS2&#39;</span><span class="p">,</span><span class="s1">&#39;EXTEND&#39;</span><span class="p">,</span><span class="s1">&#39;END&#39;</span><span class="p">]:</span>
-                    <span class="n">outErr</span><span class="o">.</span><span class="n">update_header</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">i</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">outData</span><span class="p">,</span> <span class="n">outErr</span></div>
+    <span class="k">return</span> <span class="n">output</span><span class="p">,</span> <span class="n">output_err</span></div>
 
 
-<div class="viewcode-block" id="average_polarimetric_beams"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ScienceCalibration.average_polarimetric_beams.html#ViSP_Pipeline.ScienceCalibration.average_polarimetric_beams">[docs]</a><span class="k">def</span> <span class="nf">average_polarimetric_beams</span><span class="p">(</span><span class="n">fitsData</span><span class="p">,</span> <span class="n">errData</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="average_polarimetric_beams"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ScienceCalibration.average_polarimetric_beams.html#ViSP_Pipeline.ScienceCalibration.average_polarimetric_beams">[docs]</a><span class="k">def</span> <span class="nf">average_polarimetric_beams</span><span class="p">(</span><span class="n">beam1Data</span><span class="p">,</span> <span class="n">beam2Data</span><span class="p">,</span> <span class="n">beam1Err</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">beam2Err</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Average beams over each stokes parameter</span>
 
 <span class="sd">    Basically the same as average_beams, but just different enough, instead of looking for modulator state (VISP_YYY)</span>
@@ -824,11 +966,17 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    fitsData : Data.FitsData</span>
-<span class="sd">        Data containing two beams across 4 stokes parameters</span>
+<span class="sd">    beam1Data : Data.FitsData</span>
+<span class="sd">        Stokes data for beam 1</span>
 
-<span class="sd">    errData : Data.FitsData</span>
-<span class="sd">        Uncertainty on fitsData</span>
+<span class="sd">    beam2Data : Data.FitsData</span>
+<span class="sd">        Stokes data for beam 2</span>
+
+<span class="sd">    beam1Err : Data.FitsData</span>
+<span class="sd">        Uncertainty estimates for beam1Data</span>
+
+<span class="sd">    beam2Err : Data.FitsData</span>
+<span class="sd">        Uncertainty estimates for beam2Data</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -840,68 +988,36 @@
 <span class="sd">        If errData is provided then this will be the uncertainty associated with the output</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">pivot</span> <span class="o">=</span> <span class="n">fitsData</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;VISP_PPP&#39;</span><span class="p">]</span>
-    <span class="n">numx</span><span class="p">,</span> <span class="n">numy</span> <span class="o">=</span> <span class="n">fitsData</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span>
-    <span class="n">newy</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">pivot</span><span class="p">,</span> <span class="n">numy</span> <span class="o">-</span> <span class="n">pivot</span><span class="p">)</span>
-    <span class="n">hdulist</span> <span class="o">=</span> <span class="p">[</span><span class="n">fitsData</span><span class="o">.</span><span class="n">hdulist</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="n">numy1</span> <span class="o">=</span> <span class="n">beam1Data</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">numy2</span> <span class="o">=</span> <span class="n">beam2Data</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">newy</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">numy1</span><span class="p">,</span> <span class="n">numy2</span><span class="p">)</span>
+    <span class="n">hdulist</span> <span class="o">=</span> <span class="p">[</span><span class="n">beam1Data</span><span class="o">.</span><span class="n">hdulist</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
 
-    <span class="k">if</span> <span class="n">errData</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">hdulist_err</span> <span class="o">=</span> <span class="p">[</span><span class="n">errData</span><span class="o">.</span><span class="n">hdulist</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="k">if</span> <span class="n">beam1Err</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">beam2Err</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">hdulist_err</span> <span class="o">=</span> <span class="p">[</span><span class="n">beam1Err</span><span class="o">.</span><span class="n">hdulist</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
 
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
 
-        <span class="n">beam1</span> <span class="o">=</span> <span class="n">fitsData</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span> <span class="p">:</span><span class="n">newy</span><span class="p">]</span>
-        <span class="n">beam2</span> <span class="o">=</span> <span class="n">fitsData</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span> <span class="n">pivot</span><span class="p">:</span><span class="n">pivot</span> <span class="o">+</span> <span class="n">newy</span><span class="p">]</span>
-        <span class="n">avg</span> <span class="o">=</span> <span class="p">(</span><span class="n">beam1</span> <span class="o">+</span> <span class="n">beam2</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span>
-        <span class="n">hdulist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pyfits</span><span class="o">.</span><span class="n">ImageHDU</span><span class="p">(</span><span class="n">avg</span><span class="p">,</span> <span class="n">fitsData</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">))</span>
+        <span class="n">avg</span> <span class="o">=</span> <span class="p">(</span><span class="n">beam1Data</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span> <span class="p">:</span><span class="n">newy</span><span class="p">]</span> <span class="o">+</span> <span class="n">beam2Data</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span> <span class="p">:</span><span class="n">newy</span><span class="p">])</span> <span class="o">*</span> <span class="mf">0.5</span>
+        <span class="n">hdulist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pyfits</span><span class="o">.</span><span class="n">ImageHDU</span><span class="p">(</span><span class="n">avg</span><span class="p">,</span> <span class="n">beam1Data</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">))</span>
 
-        <span class="k">if</span> <span class="n">errData</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">beam1_err</span> <span class="o">=</span> <span class="n">errData</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span> <span class="p">:</span><span class="n">newy</span><span class="p">]</span>
-            <span class="n">beam2_err</span> <span class="o">=</span> <span class="n">errData</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span> <span class="n">pivot</span><span class="p">:</span><span class="n">pivot</span> <span class="o">+</span> <span class="n">newy</span><span class="p">]</span>
-            <span class="n">avg_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">beam1_err</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">beam2_err</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span>
-            <span class="n">hdulist_err</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pyfits</span><span class="o">.</span><span class="n">ImageHDU</span><span class="p">(</span><span class="n">avg_err</span><span class="p">,</span> <span class="n">errData</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">beam1Err</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">beam2Err</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">avg_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">beam1Err</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span> <span class="p">:</span><span class="n">newy</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">beam2Err</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span> <span class="p">:</span><span class="n">newy</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span>
+            <span class="n">hdulist_err</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pyfits</span><span class="o">.</span><span class="n">ImageHDU</span><span class="p">(</span><span class="n">avg_err</span><span class="p">,</span> <span class="n">beam1Err</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">))</span>
 
     <span class="n">avgData</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">()</span>
     <span class="n">avgData</span><span class="o">.</span><span class="n">hdulist</span> <span class="o">=</span> <span class="n">hdulist</span>
     <span class="n">avgData</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s1">&#39;average_polarimetric_beams&#39;</span>
     <span class="n">avgErr</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">if</span> <span class="n">errData</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">beam1Err</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">beam2Err</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">avgErr</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">()</span>
         <span class="n">avgErr</span><span class="o">.</span><span class="n">hdulist</span> <span class="o">=</span> <span class="n">hdulist_err</span>
         <span class="n">avgErr</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s1">&#39;average_polarimetric_beams&#39;</span>
 
     <span class="k">return</span> <span class="n">avgData</span><span class="p">,</span> <span class="n">avgErr</span></div>
 
-<div class="viewcode-block" id="setup_telescope_model"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ScienceCalibration.setup_telescope_model.html#ViSP_Pipeline.ScienceCalibration.setup_telescope_model">[docs]</a><span class="k">def</span> <span class="nf">setup_telescope_model</span><span class="p">(</span><span class="n">fitsData</span><span class="p">,</span> <span class="n">database</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Initialize a TelescopeModel object and load parameters that correspond to when science data were taken</span>
 
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    fitsData : Data.FitsData</span>
-<span class="sd">        Science data object. Used to get wavelength and date</span>
-
-<span class="sd">    database : str</span>
-<span class="sd">        Location of telescope parameter database</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    numpy.ndarray</span>
-<span class="sd">        (4, 4) array containing the DKIST inverse telescope model for the time and wavelength specified</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">wavelength</span> <span class="o">=</span> <span class="n">fitsData</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;WAVELNTH&#39;</span><span class="p">]</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">obstime</span> <span class="o">=</span> <span class="n">Time</span><span class="p">(</span><span class="n">fitsData</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;DATE-OBS&#39;</span><span class="p">],</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;fits&#39;</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-        <span class="n">obstime</span> <span class="o">=</span> <span class="n">Time</span><span class="p">(</span><span class="n">fitsData</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;DATE-OBS&#39;</span><span class="p">],</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;iso&#39;</span><span class="p">)</span>
-
-    <span class="n">TM</span> <span class="o">=</span> <span class="n">TelescopeModel</span><span class="o">.</span><span class="n">TelescopeModel</span><span class="p">(</span><span class="n">fitsData</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;TAZIMUTH&#39;</span><span class="p">],</span>
-                                       <span class="n">fitsData</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;TELEVATN&#39;</span><span class="p">],</span>
-                                       <span class="n">fitsData</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;TTBLANGL&#39;</span><span class="p">])</span>
-
-    <span class="n">TM</span><span class="o">.</span><span class="n">load_from_database</span><span class="p">(</span><span class="n">database</span><span class="p">,</span> <span class="n">obstime</span><span class="o">.</span><span class="n">mjd</span><span class="p">,</span> <span class="n">wavelength</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">TM</span><span class="o">.</span><span class="n">generate_inverse_telescope_model</span><span class="p">()</span></div>
 </pre></div>
 
     </div>
@@ -916,10 +1032,10 @@
     </div>
    
     <div class="right-footer">
-      Last updated on 09 Aug 2018.
+      Last updated on 22 Oct 2018.
     </div>
     <div class="centre-footer">
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.0
     </div>
   </div>
 </footer>
