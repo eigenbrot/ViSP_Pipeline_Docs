@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Index &#8212; ViSP_Pipeline v0.13.0</title>
+    <title>Index &#8212; ViSP_Pipeline v0.14.0</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
     <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
@@ -146,12 +146,10 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/ViSP_Pipeline.Data.AlignmentData.html#ViSP_Pipeline.Data.AlignmentData">AlignmentData (class in ViSP_Pipeline.Data)</a>
 </li>
-      <li><a href="api/ViSP_Pipeline.ScienceCalibration.apply_inverse_telescope_model.html#ViSP_Pipeline.ScienceCalibration.apply_inverse_telescope_model">apply_inverse_telescope_model() (in module ViSP_Pipeline.ScienceCalibration)</a>
+      <li><a href="api/ViSP_Pipeline.ScienceCalibration.average_beams.html#ViSP_Pipeline.ScienceCalibration.average_beams">average_beams() (in module ViSP_Pipeline.ScienceCalibration)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/ViSP_Pipeline.ScienceCalibration.average_beams.html#ViSP_Pipeline.ScienceCalibration.average_beams">average_beams() (in module ViSP_Pipeline.ScienceCalibration)</a>
-</li>
       <li><a href="api/ViSP_Pipeline.generic.average_FitsData.html#ViSP_Pipeline.generic.average_FitsData">average_FitsData() (in module ViSP_Pipeline.generic)</a>
 </li>
       <li><a href="api/ViSP_Pipeline.ScienceCalibration.average_polarimetric_beams.html#ViSP_Pipeline.ScienceCalibration.average_polarimetric_beams">average_polarimetric_beams() (in module ViSP_Pipeline.ScienceCalibration)</a>
@@ -175,6 +173,8 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/ViSP_Pipeline.Data.CalibrationCurveData.html#ViSP_Pipeline.Data.CalibrationCurveData">CalibrationCurveData (class in ViSP_Pipeline.Data)</a>
+</li>
+      <li><a href="api/ViSP_Pipeline.ViSPPipeline.check_files.html#ViSP_Pipeline.ViSPPipeline.check_files">check_files() (in module ViSP_Pipeline.ViSPPipeline)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -250,6 +250,8 @@
       </ul></li>
       <li><a href="api/ViSP_Pipeline.ViSPPipeline.gen_errname.html#ViSP_Pipeline.ViSPPipeline.gen_errname">gen_errname() (in module ViSP_Pipeline.ViSPPipeline)</a>
 </li>
+      <li><a href="api/ViSP_Pipeline.ViSPPipeline.gen_sensible_config.html#ViSP_Pipeline.ViSPPipeline.gen_sensible_config">gen_sensible_config() (in module ViSP_Pipeline.ViSPPipeline)</a>
+</li>
       <li><a href="api/ViSP_Pipeline.InstrumentPolCalibration.generate_instrument_pol_calibration.html#ViSP_Pipeline.InstrumentPolCalibration.generate_instrument_pol_calibration">generate_instrument_pol_calibration() (in module ViSP_Pipeline.InstrumentPolCalibration)</a>
 </li>
   </ul></td>
@@ -287,6 +289,8 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData.init_with_ndarray">init_with_ndarray() (ViSP_Pipeline.Data.FitsData method)</a>
+</li>
+      <li><a href="api/ViSP_Pipeline.ScienceCalibration.instrument_pol_correction.html#ViSP_Pipeline.ScienceCalibration.instrument_pol_correction">instrument_pol_correction() (in module ViSP_Pipeline.ScienceCalibration)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -346,10 +350,6 @@
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/ViSP_Pipeline.ScienceCalibration.polarimetric_demodulation.html#ViSP_Pipeline.ScienceCalibration.polarimetric_demodulation">polarimetric_demodulation() (in module ViSP_Pipeline.ScienceCalibration)</a>
-</li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/ViSP_Pipeline.ScienceCalibration.polarimetric_multiplication.html#ViSP_Pipeline.ScienceCalibration.polarimetric_multiplication">polarimetric_multiplication() (in module ViSP_Pipeline.ScienceCalibration)</a>
 </li>
   </ul></td>
@@ -365,6 +365,8 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/ViSP_Pipeline.InstrumentPolCalibration.reduce_single_step.html#ViSP_Pipeline.InstrumentPolCalibration.reduce_single_step">reduce_single_step() (in module ViSP_Pipeline.InstrumentPolCalibration)</a>
+</li>
+      <li><a href="api/ViSP_Pipeline.InstrumentPolCalibration.run_PAC_CUpar.html#ViSP_Pipeline.InstrumentPolCalibration.run_PAC_CUpar">run_PAC_CUpar() (in module ViSP_Pipeline.InstrumentPolCalibration)</a>
 </li>
       <li><a href="api/ViSP_Pipeline.InstrumentPolCalibration.run_PAC_demod.html#ViSP_Pipeline.InstrumentPolCalibration.run_PAC_demod">run_PAC_demod() (in module ViSP_Pipeline.InstrumentPolCalibration)</a>
 </li>
@@ -399,6 +401,10 @@
 </li>
       </ul></li>
   </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/ViSP_Pipeline.ScienceCalibration.telescope_pol_correction.html#ViSP_Pipeline.ScienceCalibration.telescope_pol_correction">telescope_pol_correction() (in module ViSP_Pipeline.ScienceCalibration)</a>
+</li>
+  </ul></td>
 </tr></table>
 
 <h2 id="U">U</h2>
@@ -406,9 +412,11 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/ViSP_Pipeline.ViSPPipeline.update_args_with_pol.html#ViSP_Pipeline.ViSPPipeline.update_args_with_pol">update_args_with_pol() (in module ViSP_Pipeline.ViSPPipeline)</a>
 </li>
+      <li><a href="api/ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData.update_header">update_header() (ViSP_Pipeline.Data.FitsData method)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData.update_header">update_header() (ViSP_Pipeline.Data.FitsData method)</a>
+      <li><a href="api/ViSP_Pipeline.InstrumentPolCalibration.upsample_CU_parameters.html#ViSP_Pipeline.InstrumentPolCalibration.upsample_CU_parameters">upsample_CU_parameters() (in module ViSP_Pipeline.InstrumentPolCalibration)</a>
 </li>
       <li><a href="api/ViSP_Pipeline.InstrumentPolCalibration.upsample_demodulation.html#ViSP_Pipeline.InstrumentPolCalibration.upsample_demodulation">upsample_demodulation() (in module ViSP_Pipeline.InstrumentPolCalibration)</a>
 </li>
@@ -464,15 +472,15 @@
 <footer class="footer">
   <div class="container">
     <div class="left-footer">
-         &copy; 2018, Arthur Eigenbrot
+         &copy; 2019, Arthur Eigenbrot
        <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png" /></a>
     </div>
    
     <div class="right-footer">
-      Last updated on 22 Oct 2018.
+      Last updated on 07 Jan 2019.
     </div>
     <div class="centre-footer">
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.0
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.3
     </div>
   </div>
 </footer>

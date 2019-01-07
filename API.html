@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Reference/API &#8212; ViSP_Pipeline v0.13.0</title>
+    <title>Reference/API &#8212; ViSP_Pipeline v0.14.0</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
@@ -15,7 +15,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
     <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
@@ -23,7 +23,7 @@
     <link rel="shortcut icon" href="_static/favico.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="convert_config_to_int" href="api/ViSP_Pipeline.ViSPPipeline.convert_config_to_int.html" />
+    <link rel="next" title="check_files" href="api/ViSP_Pipeline.ViSPPipeline.check_files.html" />
     <link rel="prev" title="A Word About Data, RAM, and Disk Space" href="data_warning.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -116,7 +116,7 @@
     </a>
   </li>
   <li>
-    <a href="api/ViSP_Pipeline.ViSPPipeline.convert_config_to_int.html" title="Next Chapter: convert_config_to_int"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">convert_config_to_int &raquo;</span>
+    <a href="api/ViSP_Pipeline.ViSPPipeline.check_files.html" title="Next Chapter: check_files"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">check_files &raquo;</span>
     </a>
   </li>
               
@@ -166,9 +166,11 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Reference/API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-ViSP_Pipeline.ViSPPipeline">ViSP_Pipeline.ViSPPipeline Module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#functions">Functions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/ViSP_Pipeline.ViSPPipeline.check_files.html">check_files</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/ViSP_Pipeline.ViSPPipeline.convert_config_to_int.html">convert_config_to_int</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/ViSP_Pipeline.ViSPPipeline.gen_blank_config.html">gen_blank_config</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/ViSP_Pipeline.ViSPPipeline.gen_errname.html">gen_errname</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ViSP_Pipeline.ViSPPipeline.gen_sensible_config.html">gen_sensible_config</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/ViSP_Pipeline.ViSPPipeline.generate_intermediate_objects.html">generate_intermediate_objects</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/ViSP_Pipeline.ViSPPipeline.get_pol_mode.html">get_pol_mode</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/ViSP_Pipeline.ViSPPipeline.main.html">main</a></li>
@@ -189,15 +191,15 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-ViSP_Pipeline.ScienceCalibration">ViSP_Pipeline.ScienceCalibration Module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#id2">Functions</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="api/ViSP_Pipeline.ScienceCalibration.apply_inverse_telescope_model.html">apply_inverse_telescope_model</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/ViSP_Pipeline.ScienceCalibration.average_beams.html">average_beams</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/ViSP_Pipeline.ScienceCalibration.average_polarimetric_beams.html">average_polarimetric_beams</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/ViSP_Pipeline.ScienceCalibration.extract_geometric_numbers.html">extract_geometric_numbers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/ViSP_Pipeline.ScienceCalibration.generate_science_calibration.html">generate_science_calibration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/ViSP_Pipeline.ScienceCalibration.geometric_correction.html">geometric_correction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ViSP_Pipeline.ScienceCalibration.instrument_pol_correction.html">instrument_pol_correction</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/ViSP_Pipeline.ScienceCalibration.main.html">main</a></li>
-<li class="toctree-l4"><a class="reference internal" href="api/ViSP_Pipeline.ScienceCalibration.polarimetric_demodulation.html">polarimetric_demodulation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/ViSP_Pipeline.ScienceCalibration.polarimetric_multiplication.html">polarimetric_multiplication</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ViSP_Pipeline.ScienceCalibration.telescope_pol_correction.html">telescope_pol_correction</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/ViSP_Pipeline.ScienceCalibration.verify_useful_dark.html">verify_useful_dark</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/ViSP_Pipeline.ScienceCalibration.verify_useful_demodulation.html">verify_useful_demodulation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/ViSP_Pipeline.ScienceCalibration.verify_useful_gain.html">verify_useful_gain</a></li>
@@ -215,7 +217,9 @@
 <li class="toctree-l4"><a class="reference internal" href="api/ViSP_Pipeline.InstrumentPolCalibration.manage_CS_rdx.html">manage_CS_rdx</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/ViSP_Pipeline.InstrumentPolCalibration.reduce_CS.html">reduce_CS</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/ViSP_Pipeline.InstrumentPolCalibration.reduce_single_step.html">reduce_single_step</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ViSP_Pipeline.InstrumentPolCalibration.run_PAC_CUpar.html">run_PAC_CUpar</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/ViSP_Pipeline.InstrumentPolCalibration.run_PAC_demod.html">run_PAC_demod</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ViSP_Pipeline.InstrumentPolCalibration.upsample_CU_parameters.html">upsample_CU_parameters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/ViSP_Pipeline.InstrumentPolCalibration.upsample_demodulation.html">upsample_demodulation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/ViSP_Pipeline.InstrumentPolCalibration.write_reduced_CS_step.html">write_reduced_CS_step</a></li>
 </ul>
@@ -269,14 +273,20 @@
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="api/ViSP_Pipeline.ViSPPipeline.convert_config_to_int.html#ViSP_Pipeline.ViSPPipeline.convert_config_to_int" title="ViSP_Pipeline.ViSPPipeline.convert_config_to_int"><code class="xref py py-obj docutils literal notranslate"><span class="pre">convert_config_to_int</span></code></a>(configdict)</td>
+<tr class="row-odd"><td><a class="reference internal" href="api/ViSP_Pipeline.ViSPPipeline.check_files.html#ViSP_Pipeline.ViSPPipeline.check_files" title="ViSP_Pipeline.ViSPPipeline.check_files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_files</span></code></a>(config)</td>
+<td>Check that all the files/dirs needed for reduction at least exist.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="api/ViSP_Pipeline.ViSPPipeline.convert_config_to_int.html#ViSP_Pipeline.ViSPPipeline.convert_config_to_int" title="ViSP_Pipeline.ViSPPipeline.convert_config_to_int"><code class="xref py py-obj docutils literal notranslate"><span class="pre">convert_config_to_int</span></code></a>(configdict)</td>
 <td>Convert configparser-style dictionary of arguments to integers, where appropriate</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="api/ViSP_Pipeline.ViSPPipeline.gen_blank_config.html#ViSP_Pipeline.ViSPPipeline.gen_blank_config" title="ViSP_Pipeline.ViSPPipeline.gen_blank_config"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gen_blank_config</span></code></a>(filename)</td>
+<tr class="row-odd"><td><a class="reference internal" href="api/ViSP_Pipeline.ViSPPipeline.gen_blank_config.html#ViSP_Pipeline.ViSPPipeline.gen_blank_config" title="ViSP_Pipeline.ViSPPipeline.gen_blank_config"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gen_blank_config</span></code></a>(filename)</td>
 <td>Create a blank configuration file.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="api/ViSP_Pipeline.ViSPPipeline.gen_errname.html#ViSP_Pipeline.ViSPPipeline.gen_errname" title="ViSP_Pipeline.ViSPPipeline.gen_errname"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gen_errname</span></code></a>(filename)</td>
+<tr class="row-even"><td><a class="reference internal" href="api/ViSP_Pipeline.ViSPPipeline.gen_errname.html#ViSP_Pipeline.ViSPPipeline.gen_errname" title="ViSP_Pipeline.ViSPPipeline.gen_errname"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gen_errname</span></code></a>(filename)</td>
 <td>Add a ‘_err’ suffix to a filename, before the fits extension</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="api/ViSP_Pipeline.ViSPPipeline.gen_sensible_config.html#ViSP_Pipeline.ViSPPipeline.gen_sensible_config" title="ViSP_Pipeline.ViSPPipeline.gen_sensible_config"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gen_sensible_config</span></code></a>(filename,&nbsp;rawdir[,&nbsp;…])</td>
+<td>Create a default configuration file with values based on provided directory</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="api/ViSP_Pipeline.ViSPPipeline.generate_intermediate_objects.html#ViSP_Pipeline.ViSPPipeline.generate_intermediate_objects" title="ViSP_Pipeline.ViSPPipeline.generate_intermediate_objects"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_intermediate_objects</span></code></a>(config)</td>
 <td>Generate/collect the intermediate Calibration Objects needed by the Science Calibration module.</td>
@@ -330,32 +340,32 @@
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="api/ViSP_Pipeline.ScienceCalibration.apply_inverse_telescope_model.html#ViSP_Pipeline.ScienceCalibration.apply_inverse_telescope_model" title="ViSP_Pipeline.ScienceCalibration.apply_inverse_telescope_model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">apply_inverse_telescope_model</span></code></a>(fitsData,&nbsp;teleCal)</td>
-<td>Apply an inverse Telescope Mueller matrix and update header values</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="api/ViSP_Pipeline.ScienceCalibration.average_beams.html#ViSP_Pipeline.ScienceCalibration.average_beams" title="ViSP_Pipeline.ScienceCalibration.average_beams"><code class="xref py py-obj docutils literal notranslate"><span class="pre">average_beams</span></code></a>(fitsData[,&nbsp;errData,&nbsp;…])</td>
+<tr class="row-odd"><td><a class="reference internal" href="api/ViSP_Pipeline.ScienceCalibration.average_beams.html#ViSP_Pipeline.ScienceCalibration.average_beams" title="ViSP_Pipeline.ScienceCalibration.average_beams"><code class="xref py py-obj docutils literal notranslate"><span class="pre">average_beams</span></code></a>(fitsData[,&nbsp;errData,&nbsp;…])</td>
 <td>Average the two beams together.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="api/ViSP_Pipeline.ScienceCalibration.average_polarimetric_beams.html#ViSP_Pipeline.ScienceCalibration.average_polarimetric_beams" title="ViSP_Pipeline.ScienceCalibration.average_polarimetric_beams"><code class="xref py py-obj docutils literal notranslate"><span class="pre">average_polarimetric_beams</span></code></a>(beam1Data,&nbsp;beam2Data)</td>
+<tr class="row-even"><td><a class="reference internal" href="api/ViSP_Pipeline.ScienceCalibration.average_polarimetric_beams.html#ViSP_Pipeline.ScienceCalibration.average_polarimetric_beams" title="ViSP_Pipeline.ScienceCalibration.average_polarimetric_beams"><code class="xref py py-obj docutils literal notranslate"><span class="pre">average_polarimetric_beams</span></code></a>(beam1Data,&nbsp;beam2Data)</td>
 <td>Average beams over each stokes parameter</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="api/ViSP_Pipeline.ScienceCalibration.extract_geometric_numbers.html#ViSP_Pipeline.ScienceCalibration.extract_geometric_numbers" title="ViSP_Pipeline.ScienceCalibration.extract_geometric_numbers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_geometric_numbers</span></code></a>(geometric_cal)</td>
+<tr class="row-odd"><td><a class="reference internal" href="api/ViSP_Pipeline.ScienceCalibration.extract_geometric_numbers.html#ViSP_Pipeline.ScienceCalibration.extract_geometric_numbers" title="ViSP_Pipeline.ScienceCalibration.extract_geometric_numbers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_geometric_numbers</span></code></a>(geometric_cal)</td>
 <td>Simply load the necessary geometric parameters from disk.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="api/ViSP_Pipeline.ScienceCalibration.generate_science_calibration.html#ViSP_Pipeline.ScienceCalibration.generate_science_calibration" title="ViSP_Pipeline.ScienceCalibration.generate_science_calibration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_science_calibration</span></code></a>(sciData,&nbsp;…[,&nbsp;pol])</td>
+<tr class="row-even"><td><a class="reference internal" href="api/ViSP_Pipeline.ScienceCalibration.generate_science_calibration.html#ViSP_Pipeline.ScienceCalibration.generate_science_calibration" title="ViSP_Pipeline.ScienceCalibration.generate_science_calibration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_science_calibration</span></code></a>(sciData,&nbsp;…[,&nbsp;pol])</td>
 <td>Update header information to contain Stokes parameter names and data to disk</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="api/ViSP_Pipeline.ScienceCalibration.geometric_correction.html#ViSP_Pipeline.ScienceCalibration.geometric_correction" title="ViSP_Pipeline.ScienceCalibration.geometric_correction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">geometric_correction</span></code></a>(fitsData,&nbsp;geometric_numbers)</td>
+<tr class="row-odd"><td><a class="reference internal" href="api/ViSP_Pipeline.ScienceCalibration.geometric_correction.html#ViSP_Pipeline.ScienceCalibration.geometric_correction" title="ViSP_Pipeline.ScienceCalibration.geometric_correction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">geometric_correction</span></code></a>(fitsData,&nbsp;geometric_numbers)</td>
 <td>Remove hairline angles, beam/modulator state offsets, and spectral shifts from data</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="api/ViSP_Pipeline.ScienceCalibration.instrument_pol_correction.html#ViSP_Pipeline.ScienceCalibration.instrument_pol_correction" title="ViSP_Pipeline.ScienceCalibration.instrument_pol_correction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">instrument_pol_correction</span></code></a>(fitsData,&nbsp;dmodData)</td>
+<td>Split a ViSP frame into its two beams and apply a demodulation matrix to each beam.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="api/ViSP_Pipeline.ScienceCalibration.main.html#ViSP_Pipeline.ScienceCalibration.main" title="ViSP_Pipeline.ScienceCalibration.main"><code class="xref py py-obj docutils literal notranslate"><span class="pre">main</span></code></a>(datasetData,&nbsp;slit_pos,&nbsp;outpre[,&nbsp;…])</td>
 <td>Run raw data through the Science Calibration pipeline.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="api/ViSP_Pipeline.ScienceCalibration.polarimetric_demodulation.html#ViSP_Pipeline.ScienceCalibration.polarimetric_demodulation" title="ViSP_Pipeline.ScienceCalibration.polarimetric_demodulation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">polarimetric_demodulation</span></code></a>(fitsData,&nbsp;dmodData)</td>
-<td>Split a ViSP frame into its two beams and apply a demodulation matrix to each beam.</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="api/ViSP_Pipeline.ScienceCalibration.polarimetric_multiplication.html#ViSP_Pipeline.ScienceCalibration.polarimetric_multiplication" title="ViSP_Pipeline.ScienceCalibration.polarimetric_multiplication"><code class="xref py py-obj docutils literal notranslate"><span class="pre">polarimetric_multiplication</span></code></a>(data,&nbsp;demod[,&nbsp;…])</td>
+<tr class="row-even"><td><a class="reference internal" href="api/ViSP_Pipeline.ScienceCalibration.polarimetric_multiplication.html#ViSP_Pipeline.ScienceCalibration.polarimetric_multiplication" title="ViSP_Pipeline.ScienceCalibration.polarimetric_multiplication"><code class="xref py py-obj docutils literal notranslate"><span class="pre">polarimetric_multiplication</span></code></a>(data,&nbsp;demod[,&nbsp;…])</td>
 <td>Matrix multiply the input data by a polarization demodulation matrix.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="api/ViSP_Pipeline.ScienceCalibration.telescope_pol_correction.html#ViSP_Pipeline.ScienceCalibration.telescope_pol_correction" title="ViSP_Pipeline.ScienceCalibration.telescope_pol_correction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">telescope_pol_correction</span></code></a>(fitsData,&nbsp;teleCal)</td>
+<td>Apply an inverse Telescope Mueller matrix and update header values</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="api/ViSP_Pipeline.ScienceCalibration.verify_useful_dark.html#ViSP_Pipeline.ScienceCalibration.verify_useful_dark" title="ViSP_Pipeline.ScienceCalibration.verify_useful_dark"><code class="xref py py-obj docutils literal notranslate"><span class="pre">verify_useful_dark</span></code></a>(sciData,&nbsp;darkData)</td>
 <td>Confirm that the provided DarkCalibration object can be used with the provided Science frame.</td>
@@ -404,8 +414,14 @@
 <tr class="row-odd"><td><a class="reference internal" href="api/ViSP_Pipeline.InstrumentPolCalibration.reduce_single_step.html#ViSP_Pipeline.InstrumentPolCalibration.reduce_single_step" title="ViSP_Pipeline.InstrumentPolCalibration.reduce_single_step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reduce_single_step</span></code></a>(pol_dir,&nbsp;CS_step,&nbsp;outpre)</td>
 <td>Perform full ViSP reduction on a single step from a PolCal Calibration Sequence (CS)</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="api/ViSP_Pipeline.InstrumentPolCalibration.run_PAC_demod.html#ViSP_Pipeline.InstrumentPolCalibration.run_PAC_demod" title="ViSP_Pipeline.InstrumentPolCalibration.run_PAC_demod"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_PAC_demod</span></code></a>(run_dir[,&nbsp;telescope_db,&nbsp;…])</td>
+<tr class="row-even"><td><a class="reference internal" href="api/ViSP_Pipeline.InstrumentPolCalibration.run_PAC_CUpar.html#ViSP_Pipeline.InstrumentPolCalibration.run_PAC_CUpar" title="ViSP_Pipeline.InstrumentPolCalibration.run_PAC_CUpar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_PAC_CUpar</span></code></a>(run_dir[,&nbsp;telescope_db,&nbsp;…])</td>
+<td>Take a ViSP reduced set of Calibration Sequence data and compute a fit to the CU parameters</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="api/ViSP_Pipeline.InstrumentPolCalibration.run_PAC_demod.html#ViSP_Pipeline.InstrumentPolCalibration.run_PAC_demod" title="ViSP_Pipeline.InstrumentPolCalibration.run_PAC_demod"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_PAC_demod</span></code></a>(run_dir[,&nbsp;telescope_db,&nbsp;…])</td>
 <td>Take a ViSP reduced set of Calibration Sequence data and compute a set of demodulation matrices.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="api/ViSP_Pipeline.InstrumentPolCalibration.upsample_CU_parameters.html#ViSP_Pipeline.InstrumentPolCalibration.upsample_CU_parameters" title="ViSP_Pipeline.InstrumentPolCalibration.upsample_CU_parameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">upsample_CU_parameters</span></code></a>(cuHDU,&nbsp;newx,&nbsp;newy)</td>
+<td>Take CU parameters fit to a subsample of the ViSP frame and upsample to some new sampling</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="api/ViSP_Pipeline.InstrumentPolCalibration.upsample_demodulation.html#ViSP_Pipeline.InstrumentPolCalibration.upsample_demodulation" title="ViSP_Pipeline.InstrumentPolCalibration.upsample_demodulation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">upsample_demodulation</span></code></a>(dmodHDU)</td>
 <td>Take a single demodulation matrix computed for binned data and up-sample it to the full ViSP frame.</td>
@@ -494,15 +510,15 @@
 <footer class="footer">
   <div class="container">
     <div class="left-footer">
-         &copy; 2018, Arthur Eigenbrot
+         &copy; 2019, Arthur Eigenbrot
        <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png" /></a>
     </div>
    
     <div class="right-footer">
-      Last updated on 22 Oct 2018.
+      Last updated on 07 Jan 2019.
     </div>
     <div class="centre-footer">
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.0
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.3
     </div>
   </div>
 </footer>

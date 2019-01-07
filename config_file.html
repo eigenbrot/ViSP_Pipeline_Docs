@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Configuration File Format &#8212; ViSP_Pipeline v0.13.0</title>
+    <title>Configuration File Format &#8212; ViSP_Pipeline v0.14.0</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
@@ -15,7 +15,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
     <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
@@ -226,6 +226,12 @@ folder or use the <code class="docutils literal notranslate"><span class="pre">s
 <tr class="field-odd field"><td>&#160;</td><td class="field-body"><p class="first">If False, do NOT apply a correction to bring data in to common DKIST reference frame.</p>
 </td>
 </tr>
+<tr class="field-even field"><th class="field-name">save_M12_map:</th><td class="field-body"><p class="first">If True then save a full spatial map Stokes map of all slit positions for use by PA&amp;C in determining M12 parameters</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name"><em>M12_lin_lims</em>:</th><td class="field-body"><p class="first">Pixel range containing features of high polarization signal (i.e., spectral lines). Format is <code class="xref py py-obj docutils literal notranslate"><span class="pre">NNN:MMM</span></code>. If <code class="docutils literal notranslate"><span class="pre">save_M12_map</span></code> is True then this option is required.</p>
+</td>
+</tr>
 <tr class="field-even field"><th class="field-name"><em>slit_pos</em>:</th><td class="field-body"><p class="first">If present, this option is used to specify a subset of slit positions to reduce. This option can have one of three forms:</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -239,12 +245,6 @@ folder or use the <code class="docutils literal notranslate"><span class="pre">s
 </tr>
 </tbody>
 </table>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name"><em>save_M12_map</em>:</th><td class="field-body"><p class="first">If True then save a full spatial map Stokes map of all slit positions for use by PA&amp;C in determining M12 parameters</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name"><em>M12_lin_lims</em>:</th><td class="field-body"><p class="first">Pixel range containing features of high polarization signal (i.e., spectral lines). Format is <code class="xref py py-obj docutils literal notranslate"><span class="pre">NNN:MMM</span></code>. If <code class="docutils literal notranslate"><span class="pre">save_M12_map</span></code> is True then this option is required.</p>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name" colspan="2"><em>remove_tele_pol</em>:</th></tr>
@@ -312,13 +312,22 @@ to <code class="docutils literal notranslate"><span class="pre">raw_pol_dir</spa
 <tr class="field-even field"><th class="field-name" colspan="2">raw_solar_gain_dir:</th></tr>
 <tr class="field-even field"><td>&#160;</td><td class="field-body">Path to the raw solar gain files associated with the CS</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">telescope_db:</th><td class="field-body">Path to the file containing telescope mirror parameters as a function of time and wavelength</td>
+<tr class="field-odd field"><th class="field-name" colspan="2">gen_noise_frames:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body">If True then uncertainty frames (suffixed “_err.fits”) will be generated from the raw data and propagated through the pipeline. <strong>NOTE</strong> This more than doubles the total processing time.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">num_bins_x:</th><td class="field-body"><strong>(int)</strong> The number of x-dimensions macropixels in the down-sampled CS data</td>
+<tr class="field-even field"><th class="field-name">telescope_db:</th><td class="field-body">Path to the file containing telescope mirror parameters as a function of time and wavelength</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">num_bins_y:</th><td class="field-body"><strong>(int)</strong> The number of y-dimensions macropixels in the down-sampled CS data</td>
+<tr class="field-odd field"><th class="field-name">cu_numbins_x:</th><td class="field-body"><strong>(int)</strong> The number of x-dimensions macropixels in the down-sampled CS data used for CU parameter fitting</td>
 </tr>
-<tr class="field-even field"><th class="field-name">threads:</th><td class="field-body"><strong>(int)</strong> The number of separate processes to use when reducing the CS data</td>
+<tr class="field-even field"><th class="field-name">cu_numbins_y:</th><td class="field-body"><strong>(int)</strong> The number of y-dimensions macropixels in the down-sampled CS data used for CU parameter fitting</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">demod_numbins_x:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><strong>(int)</strong> The number of x-dimensions macropixels in the down-sampled CS data used for demodulation matrix calculation</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">demod_numbins_y:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><strong>(int)</strong> The number of y-dimensions macropixels in the down-sampled CS data used for demodulation matrix calculation</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">threads:</th><td class="field-body"><strong>(int)</strong> The number of separate processes to use when reducing the CS data</td>
 </tr>
 </tbody>
 </table>
@@ -359,8 +368,10 @@ to <code class="docutils literal notranslate"><span class="pre">raw_pol_dir</spa
 <span class="na">raw_lamp_gain_dir</span> <span class="o">=</span> <span class="s">~/CS_runs/visp_CS_4</span>
 <span class="na">raw_solar_gain_dir</span> <span class="o">=</span> <span class="s">~/CS_runs/visp_CS_4</span>
 <span class="na">telescope_db</span> <span class="o">=</span> <span class="s">~/telescope_db.txt</span>
-<span class="na">num_bins_x</span> <span class="o">=</span> <span class="s">3</span>
-<span class="na">num_bins_y</span> <span class="o">=</span> <span class="s">4</span>
+<span class="na">cu_numbins_x</span> <span class="o">=</span> <span class="s">1</span>
+<span class="na">cu_numbins_y</span> <span class="o">=</span> <span class="s">1</span>
+<span class="na">demod_numbins_x</span> <span class="o">=</span> <span class="s">4</span>
+<span class="na">demod_numbins_y</span> <span class="o">=</span> <span class="s">4</span>
 <span class="na">threads</span> <span class="o">=</span> <span class="s">3</span>
 </pre></div>
 </div>
@@ -375,15 +386,15 @@ to <code class="docutils literal notranslate"><span class="pre">raw_pol_dir</spa
 <footer class="footer">
   <div class="container">
     <div class="left-footer">
-         &copy; 2018, Arthur Eigenbrot
+         &copy; 2019, Arthur Eigenbrot
        <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png" /></a>
     </div>
    
     <div class="right-footer">
-      Last updated on 22 Oct 2018.
+      Last updated on 07 Jan 2019.
     </div>
     <div class="centre-footer">
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.0
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.3
     </div>
   </div>
 </footer>
