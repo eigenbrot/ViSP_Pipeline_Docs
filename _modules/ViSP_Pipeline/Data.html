@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>ViSP_Pipeline.Data &#8212; ViSP_Pipeline v0.14.0</title>
+    <title>ViSP_Pipeline.Data &#8212; ViSP_Pipeline v0.14.1</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
@@ -142,6 +142,7 @@
 <span class="kn">from</span> <span class="nn">astropy.io</span> <span class="k">import</span> <span class="n">fits</span> <span class="k">as</span> <span class="n">pyfits</span>
 <span class="kn">from</span> <span class="nn">ViSP_Pipeline.tag</span> <span class="k">import</span> <span class="n">tag</span>
 
+<span class="n">TMPDIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
 
 <div class="viewcode-block" id="FitsData"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData">[docs]</a><span class="k">class</span> <span class="nc">FitsData</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;FitsData is a basically a wrapper for astropy.io.fits, with some extra methods and properties to aid the</span>
@@ -310,7 +311,7 @@
 <span class="sd">            If True the outputfile specified will be overwritten.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">outputfile</span><span class="p">:</span>
-            <span class="n">outputfile</span> <span class="o">=</span> <span class="s1">&#39;tmp</span><span class="si">{}</span><span class="s1">.fits&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)))</span>
+            <span class="n">outputfile</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/tmp</span><span class="si">{}</span><span class="s1">.fits&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">TMPDIR</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">is_tmp</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">tmp_file</span> <span class="o">=</span> <span class="n">outputfile</span>
 
@@ -473,7 +474,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_tmp</span><span class="p">:</span>
             <span class="n">outputfile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmp_file</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">outputfile</span> <span class="o">=</span> <span class="s1">&#39;tmp</span><span class="si">{}</span><span class="s1">.fits&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)))</span>
+            <span class="n">outputfile</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/tmp</span><span class="si">{}</span><span class="s1">.fits&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">TMPDIR</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)))</span>
 
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Flushing </span><span class="si">{}</span><span class="s1"> to </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="bp">self</span><span class="p">,</span> <span class="n">outputfile</span><span class="p">))</span>
 
@@ -949,10 +950,10 @@
     </div>
    
     <div class="right-footer">
-      Last updated on 07 Jan 2019.
+      Last updated on 25 Feb 2019.
     </div>
     <div class="centre-footer">
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.3
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.4
     </div>
   </div>
 </footer>

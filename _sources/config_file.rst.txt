@@ -57,6 +57,8 @@ Calibration Objects by simply pointing the corresponding option to a file that d
 
 :*remove_tele_pol*: If False, do NOT apply the inverse Telescope Model. Useful for synthetic data that were created without a TM.
 
+:*tmp_dir*: Directory to use for intermediate, temporary files. If not specified it will default to wherever the Level-1 Science Products are saved (see ``output_prefix``).
+
 DarkCalibration
 ---------------
 This section will only be used if the file specified by ``Main.dark_cal`` does not exist.
