@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>ViSP_Pipeline.ViSPPipeline &#8212; ViSP_Pipeline v0.14.1</title>
+    <title>ViSP_Pipeline.ViSPPipeline &#8212; ViSP_Pipeline v0.15.0</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
@@ -178,8 +178,11 @@
     <span class="n">ispol</span> <span class="o">=</span> <span class="n">get_pol_mode</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;raw_sci_dir&#39;</span><span class="p">],</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;data_set_ID&#39;</span><span class="p">])</span>
     <span class="n">save_M12</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">if</span> <span class="n">ispol</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">ViSP_Pipeline</span> <span class="k">import</span> <span class="n">PolarimetricUtils</span>
-        <span class="n">save_M12</span> <span class="o">=</span> <span class="n">update_args_with_pol</span><span class="p">(</span><span class="n">sci_kwargs</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+        <span class="n">pol_kwargs</span> <span class="o">=</span> <span class="n">generate_polarimetric_objects</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="n">save_M12</span> <span class="o">=</span> <span class="n">pol_kwargs</span><span class="p">[</span><span class="s1">&#39;save_M12_map&#39;</span><span class="p">]</span>
+
+        <span class="c1"># Merge the two dictionaries together.</span>
+        <span class="n">sci_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">pol_kwargs</span><span class="p">)</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Running science data&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Reading files in </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;raw_sci_dir&#39;</span><span class="p">]))</span>
@@ -190,9 +193,11 @@
     <span class="k">if</span> <span class="n">output_dir</span><span class="p">:</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Spawning ScienceCalibration&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
     <span class="n">start_science_multiproc</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">sci_kwargs</span><span class="p">,</span> <span class="n">all_Data</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">ispol</span> <span class="ow">and</span> <span class="n">save_M12</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">ViSP_Pipeline</span> <span class="k">import</span> <span class="n">PolarimetricUtils</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Extracting full spatial map for PA&amp;C&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
         <span class="n">savedir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;output_prefix&#39;</span><span class="p">])</span> <span class="ow">or</span> <span class="s1">&#39;.&#39;</span>
         <span class="n">M12dir</span> <span class="o">=</span> <span class="n">savedir</span> <span class="o">+</span> <span class="s1">&#39;/M12_map&#39;</span>
@@ -283,6 +288,8 @@
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Science kwargs: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">sci_kwargs</span><span class="p">))</span>
 
     <span class="n">numthread</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;threads&#39;</span><span class="p">])</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Input directory contains </span><span class="si">{}</span><span class="s1"> slit positions&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">datasetData</span><span class="o">.</span><span class="n">num_pos</span><span class="p">))</span>
@@ -425,8 +432,9 @@
     <span class="n">filename</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;solar_gain_cal&#39;</span><span class="p">]</span>
     <span class="n">geoname</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;geometric_cal&#39;</span><span class="p">]</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">geoname</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Could not find </span><span class="si">{}</span><span class="s1"> or </span><span class="si">{}</span><span class="s1">, attempting to generate with SolarGainCalibration&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">filename</span><span class="p">,</span>
-                                                                                                     <span class="n">geoname</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Could not find </span><span class="si">{}</span><span class="s1"> and/or </span><span class="si">{}</span><span class="s1">, attempting to generate with SolarGainCalibration&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span>
+                                                                                                         <span class="n">filename</span><span class="p">,</span>
+                                                                                                         <span class="n">geoname</span><span class="p">))</span>
         <span class="n">SolarCal</span><span class="p">,</span> <span class="n">SolarErr</span><span class="p">,</span> <span class="n">GeoCal</span> <span class="o">=</span> <span class="n">SolarGainCalibration</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;SolarGainCalibration&#39;</span><span class="p">][</span><span class="s1">&#39;raw_solar_gain_dir&#39;</span><span class="p">],</span>
                                                                <span class="n">strip_fits</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="n">geoname</span><span class="p">,</span> <span class="n">dark_cal</span><span class="o">=</span><span class="n">DarkCal</span><span class="p">,</span>
                                                                <span class="n">lamp_gain_cal</span><span class="o">=</span><span class="n">LampCal</span><span class="p">,</span> <span class="n">dark_cal_err</span><span class="o">=</span><span class="n">DarkErr</span><span class="p">,</span>
@@ -452,66 +460,62 @@
 
     <span class="k">return</span> <span class="n">sci_kwargs</span></div>
 
-<div class="viewcode-block" id="update_args_with_pol"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ViSPPipeline.update_args_with_pol.html#ViSP_Pipeline.ViSPPipeline.update_args_with_pol">[docs]</a><span class="k">def</span> <span class="nf">update_args_with_pol</span><span class="p">(</span><span class="n">sci_kwargs</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+<div class="viewcode-block" id="generate_polarimetric_objects"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ViSPPipeline.generate_polarimetric_objects.html#ViSP_Pipeline.ViSPPipeline.generate_polarimetric_objects">[docs]</a><span class="k">def</span> <span class="nf">generate_polarimetric_objects</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Generate/load InstrumentPolCal objects and update the main kwarg dict with relevant parameters</span>
 
 <span class="sd">    The is basically the polarization analog of generate_intermediate_objects</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    sci_kwargs : dict</span>
-<span class="sd">        Dictionary containing current kwargs for call to main reduction script</span>
-
 <span class="sd">    config : configparser.ConfigParser</span>
 <span class="sd">        The object containing user-defined reduction options. In this case it should have an</span>
 <span class="sd">        &quot;InstrumentPolarizationCalibration&quot; section</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    bool</span>
-<span class="sd">        For convenience this function returns whether or not the user wants to save M12 maps for use by PA&amp;C Modules</span>
+<span class="sd">    dict</span>
+<span class="sd">        Dictionary containing kwargs to Science Calibration that specify polarimetric options and Calibration products</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">from</span> <span class="nn">ViSP_Pipeline</span> <span class="k">import</span> <span class="n">InstrumentPolCalibration</span>
 
-    <span class="n">sci_kwargs</span><span class="p">[</span><span class="s1">&#39;pol&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">pol_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;pol&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
 
     <span class="n">inst_pol_name</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;instrument_pol_cal&#39;</span><span class="p">]</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">inst_pol_name</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Could not find </span><span class="si">{}</span><span class="s1">, attempting to generate with InstrumentPolCalibration&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span>
                                                                                                    <span class="n">inst_pol_name</span><span class="p">))</span>
-        <span class="n">pol_args</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;InstrumentPolarimetricCalibration&#39;</span><span class="p">])</span>
-        <span class="n">convert_config_to_int</span><span class="p">(</span><span class="n">pol_args</span><span class="p">)</span>
-        <span class="n">pol_args</span><span class="p">[</span><span class="s1">&#39;output&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">inst_pol_name</span>
-        <span class="n">InstPolCal</span> <span class="o">=</span> <span class="n">InstrumentPolCalibration</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="o">**</span><span class="n">pol_args</span><span class="p">)</span>
+        <span class="n">inst_pol_args</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;InstrumentPolarimetricCalibration&#39;</span><span class="p">])</span>
+        <span class="n">convert_config_to_int</span><span class="p">(</span><span class="n">inst_pol_args</span><span class="p">)</span>
+        <span class="n">inst_pol_args</span><span class="p">[</span><span class="s1">&#39;output&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">inst_pol_name</span>
+        <span class="n">InstPolCal</span> <span class="o">=</span> <span class="n">InstrumentPolCalibration</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="o">**</span><span class="n">inst_pol_args</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Loaded </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">inst_pol_name</span><span class="p">))</span>
         <span class="n">InstPolCal</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">DemodulationData</span><span class="p">()</span>
         <span class="n">InstPolCal</span><span class="o">.</span><span class="n">load_from_file</span><span class="p">(</span><span class="n">inst_pol_name</span><span class="p">)</span>
 
-    <span class="n">sci_kwargs</span><span class="p">[</span><span class="s1">&#39;demodulation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">InstPolCal</span>
-
-    <span class="n">sci_kwargs</span><span class="p">[</span><span class="s1">&#39;telescope_db&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;telescope_pol_db&#39;</span><span class="p">]</span>
+    <span class="n">pol_kwargs</span><span class="p">[</span><span class="s1">&#39;demodulation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">InstPolCal</span>
+    <span class="n">pol_kwargs</span><span class="p">[</span><span class="s1">&#39;telescope_db&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;telescope_pol_db&#39;</span><span class="p">]</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">cont_lims</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;continuum_lims&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)]</span>
     <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;continuum_lims option is either missing or malformed&#39;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">sci_kwargs</span><span class="p">[</span><span class="s1">&#39;continuum_lims&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cont_lims</span>
+        <span class="n">pol_kwargs</span><span class="p">[</span><span class="s1">&#39;continuum_lims&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cont_lims</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">save_M12</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;Main&#39;</span><span class="p">,</span> <span class="s1">&#39;save_M12_map&#39;</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">configparser</span><span class="o">.</span><span class="n">NoOptionError</span><span class="p">:</span>
         <span class="n">save_M12</span> <span class="o">=</span> <span class="kc">False</span>
 
-    <span class="n">sci_kwargs</span><span class="p">[</span><span class="s1">&#39;save_M12_map&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">save_M12</span>
+    <span class="n">pol_kwargs</span><span class="p">[</span><span class="s1">&#39;save_M12_map&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">save_M12</span>
     <span class="k">if</span> <span class="n">save_M12</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">sci_kwargs</span><span class="p">[</span><span class="s1">&#39;M12_line_lims&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;M12_line_lims&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)]</span>
+            <span class="n">pol_kwargs</span><span class="p">[</span><span class="s1">&#39;M12_line_lims&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;M12_line_lims&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)]</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;M12_line_lims options is either missing or malformed&#39;</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">save_M12</span></div>
+    <span class="k">return</span> <span class="n">pol_kwargs</span></div>
 
 <div class="viewcode-block" id="get_pol_mode"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ViSPPipeline.get_pol_mode.html#ViSP_Pipeline.ViSPPipeline.get_pol_mode">[docs]</a><span class="k">def</span> <span class="nf">get_pol_mode</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="n">dataset_ID</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;.fits&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Determine if the Science data corresponds to polarimetric observations or just basic intensity.</span>
@@ -724,7 +728,7 @@
     </div>
    
     <div class="right-footer">
-      Last updated on 25 Feb 2019.
+      Last updated on 26 Feb 2019.
     </div>
     <div class="centre-footer">
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.4

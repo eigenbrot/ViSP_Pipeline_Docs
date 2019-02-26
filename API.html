@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Reference/API &#8212; ViSP_Pipeline v0.14.1</title>
+    <title>Reference/API &#8212; ViSP_Pipeline v0.15.0</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
@@ -172,11 +172,11 @@
 <li class="toctree-l4"><a class="reference internal" href="api/ViSP_Pipeline.ViSPPipeline.gen_errname.html">gen_errname</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/ViSP_Pipeline.ViSPPipeline.gen_sensible_config.html">gen_sensible_config</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/ViSP_Pipeline.ViSPPipeline.generate_intermediate_objects.html">generate_intermediate_objects</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/ViSP_Pipeline.ViSPPipeline.generate_polarimetric_objects.html">generate_polarimetric_objects</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/ViSP_Pipeline.ViSPPipeline.get_pol_mode.html">get_pol_mode</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/ViSP_Pipeline.ViSPPipeline.main.html">main</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/ViSP_Pipeline.ViSPPipeline.start_science_multiproc.html">start_science_multiproc</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/ViSP_Pipeline.ViSPPipeline.strip_fits.html">strip_fits</a></li>
-<li class="toctree-l4"><a class="reference internal" href="api/ViSP_Pipeline.ViSPPipeline.update_args_with_pol.html">update_args_with_pol</a></li>
 </ul>
 </li>
 </ul>
@@ -291,20 +291,20 @@
 <tr class="row-even"><td><a class="reference internal" href="api/ViSP_Pipeline.ViSPPipeline.generate_intermediate_objects.html#ViSP_Pipeline.ViSPPipeline.generate_intermediate_objects" title="ViSP_Pipeline.ViSPPipeline.generate_intermediate_objects"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_intermediate_objects</span></code></a>(config)</td>
 <td>Generate/collect the intermediate Calibration Objects needed by the Science Calibration module.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="api/ViSP_Pipeline.ViSPPipeline.get_pol_mode.html#ViSP_Pipeline.ViSPPipeline.get_pol_mode" title="ViSP_Pipeline.ViSPPipeline.get_pol_mode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_pol_mode</span></code></a>(data_dir,&nbsp;dataset_ID[,&nbsp;suffix])</td>
+<tr class="row-odd"><td><a class="reference internal" href="api/ViSP_Pipeline.ViSPPipeline.generate_polarimetric_objects.html#ViSP_Pipeline.ViSPPipeline.generate_polarimetric_objects" title="ViSP_Pipeline.ViSPPipeline.generate_polarimetric_objects"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_polarimetric_objects</span></code></a>(config)</td>
+<td>Generate/load InstrumentPolCal objects and update the main kwarg dict with relevant parameters</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="api/ViSP_Pipeline.ViSPPipeline.get_pol_mode.html#ViSP_Pipeline.ViSPPipeline.get_pol_mode" title="ViSP_Pipeline.ViSPPipeline.get_pol_mode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_pol_mode</span></code></a>(data_dir,&nbsp;dataset_ID[,&nbsp;suffix])</td>
 <td>Determine if the Science data corresponds to polarimetric observations or just basic intensity.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="api/ViSP_Pipeline.ViSPPipeline.main.html#ViSP_Pipeline.ViSPPipeline.main" title="ViSP_Pipeline.ViSPPipeline.main"><code class="xref py py-obj docutils literal notranslate"><span class="pre">main</span></code></a>(config_file)</td>
+<tr class="row-odd"><td><a class="reference internal" href="api/ViSP_Pipeline.ViSPPipeline.main.html#ViSP_Pipeline.ViSPPipeline.main" title="ViSP_Pipeline.ViSPPipeline.main"><code class="xref py py-obj docutils literal notranslate"><span class="pre">main</span></code></a>(config_file)</td>
 <td>The main, runner script for the entire ViSP Pipeline.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="api/ViSP_Pipeline.ViSPPipeline.start_science_multiproc.html#ViSP_Pipeline.ViSPPipeline.start_science_multiproc" title="ViSP_Pipeline.ViSPPipeline.start_science_multiproc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">start_science_multiproc</span></code></a>(config,&nbsp;sci_kwargs,&nbsp;…)</td>
+<tr class="row-even"><td><a class="reference internal" href="api/ViSP_Pipeline.ViSPPipeline.start_science_multiproc.html#ViSP_Pipeline.ViSPPipeline.start_science_multiproc" title="ViSP_Pipeline.ViSPPipeline.start_science_multiproc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">start_science_multiproc</span></code></a>(config,&nbsp;sci_kwargs,&nbsp;…)</td>
 <td>Manage a set of Science Calibration processes using multiprocessing.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="api/ViSP_Pipeline.ViSPPipeline.strip_fits.html#ViSP_Pipeline.ViSPPipeline.strip_fits" title="ViSP_Pipeline.ViSPPipeline.strip_fits"><code class="xref py py-obj docutils literal notranslate"><span class="pre">strip_fits</span></code></a>(filename)</td>
+<tr class="row-odd"><td><a class="reference internal" href="api/ViSP_Pipeline.ViSPPipeline.strip_fits.html#ViSP_Pipeline.ViSPPipeline.strip_fits" title="ViSP_Pipeline.ViSPPipeline.strip_fits"><code class="xref py py-obj docutils literal notranslate"><span class="pre">strip_fits</span></code></a>(filename)</td>
 <td>Strip the ‘.fits’ extension from a filename</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="api/ViSP_Pipeline.ViSPPipeline.update_args_with_pol.html#ViSP_Pipeline.ViSPPipeline.update_args_with_pol" title="ViSP_Pipeline.ViSPPipeline.update_args_with_pol"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_args_with_pol</span></code></a>(sci_kwargs,&nbsp;config)</td>
-<td>Generate/load InstrumentPolCal objects and update the main kwarg dict with relevant parameters</td>
 </tr>
 </tbody>
 </table>
@@ -515,7 +515,7 @@
     </div>
    
     <div class="right-footer">
-      Last updated on 25 Feb 2019.
+      Last updated on 26 Feb 2019.
     </div>
     <div class="centre-footer">
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.4
