@@ -1,0 +1,6 @@
+check_files
+===========
+
+.. currentmodule:: ViSP_Pipeline.ViSPPipeline
+
+.. autofunction:: check_files

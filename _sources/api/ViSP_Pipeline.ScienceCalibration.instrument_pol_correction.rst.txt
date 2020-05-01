@@ -1,0 +1,6 @@
+instrument_pol_correction
+=========================
+
+.. currentmodule:: ViSP_Pipeline.ScienceCalibration
+
+.. autofunction:: instrument_pol_correction

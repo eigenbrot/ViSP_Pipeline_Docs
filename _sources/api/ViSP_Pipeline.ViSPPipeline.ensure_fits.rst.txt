@@ -1,0 +1,6 @@
+ensure_fits
+===========
+
+.. currentmodule:: ViSP_Pipeline.ViSPPipeline
+
+.. autofunction:: ensure_fits

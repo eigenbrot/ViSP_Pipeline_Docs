@@ -1,0 +1,6 @@
+run_PAC_CUpar
+=============
+
+.. currentmodule:: ViSP_Pipeline.InstrumentPolCalibration
+
+.. autofunction:: run_PAC_CUpar

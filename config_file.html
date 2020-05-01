@@ -1,25 +1,20 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Configuration File Format &#8212; ViSP_Pipeline v0.15.0</title>
+    <meta charset="utf-8" />
+    <title>Configuration File Format &#8212; ViSP_Pipeline v0.20.0</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
-    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:400,600,700" />
-    <link rel="stylesheet" type="text/css" href="_static/dkist.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
-    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,600,700" type="text/css" />
+    <link rel="stylesheet" href="_static/dkist.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
     <link rel="shortcut icon" href="_static/favico.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -29,6 +24,10 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="_static/bootstrap-sphinx.js "></script>
 
   </head><body>
 
@@ -160,15 +159,15 @@
         </div>
     </div>
 
-    <div class="col-md-9 content">
+    <div class="body col-md-9 content" role="main">
       
   <div class="section" id="configuration-file-format">
 <h1>Configuration File Format<a class="headerlink" href="#configuration-file-format" title="Permalink to this headline">¶</a></h1>
 <p>The ViSP Pipeline configuration file is in the standard INI format and contains the following sections and options. Any
 options in <em>italics</em> are optional.</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">It is OK to put science and calibration data all into the same directory. The specific task (Dark, Gain, Observation,
+<p class="admonition-title">Note</p>
+<p>It is OK to put science and calibration data all into the same directory. The specific task (Dark, Gain, Observation,
 etc.) is determined from the <code class="xref py py-obj docutils literal notranslate"><span class="pre">DKIST004</span></code> header value.</p>
 </div>
 <div class="section" id="main">
@@ -177,163 +176,149 @@ etc.) is determined from the <code class="xref py py-obj docutils literal notran
 on the first run of the pipeline. Once these objects have been created a lot of time can be saved by reusing them for
 any other science runs that have the same setup. It is also possible to regenerate only a subset of the intermediate
 Calibration Objects by simply pointing the corresponding option to a file that doesn’t exist.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">raw_sci_dir:</th><td class="field-body"><p class="first">Path to the directory containing raw ViSP frames to be reduced. Note that <em>all</em> slit positions found in
+<dl class="field-list simple">
+<dt class="field-odd">raw_sci_dir</dt>
+<dd class="field-odd"><p>Path to the directory containing raw ViSP frames to be reduced. Note that <em>all</em> slit positions found in
 this directory will be reduced. If you only want to reduce a subset of slit positions then move them into a separate
 folder or use the <code class="docutils literal notranslate"><span class="pre">slit_pos</span></code> option.</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">data_set_id:</th><td class="field-body"><p class="first">Only reduce files with this <code class="xref py py-obj docutils literal notranslate"><span class="pre">ID_004</span></code> header value. Can be left blank to reduce all files in <code class="docutils literal notranslate"><span class="pre">raw_sci_dir</span></code>.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">output_prefix:</th><td class="field-body"><p class="first">The prefix to apply to all Level-1 science products. This string can also include a path structure.</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">dark_cal:</th><td class="field-body"><p class="first">The location of a processed Dark Calibration object. If this file does not exist it will be generated.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">lamp_gain_cal:</th><td class="field-body"><p class="first">The location of a processed Lamp Gain Calibration object. If this file does not exist it will be generated.</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">solar_gain_cal:</th><td class="field-body"><p class="first">The location of a processed Solar Gain Calibration object. If this files does not exist it will be generated.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">geometric_cal:</th><td class="field-body"><p class="first">The location of a processed Geometric Calibration object. If this file does not exist it will be generated.</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">instrumen_pol_cal:</th></tr>
-<tr class="field-even field"><td>&#160;</td><td class="field-body"><p class="first">The location of a processed Instrument Pol Calibration object. If this file does not exist it will be generated.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">telescope_pol_db:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body"><p class="first">The location of the telescope mirror parameter database.</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">gen_noise_frames:</th></tr>
-<tr class="field-even field"><td>&#160;</td><td class="field-body"><p class="first">If True then uncertainty frames (suffixed “_err.fits”) will be generated from the raw data and propagated through the pipeline. <strong>NOTE</strong> This more than doubles the total processing time.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">continuum_lims:</th><td class="field-body"><p class="first">The pixel range (in reduced images) that contains only continuum signal. The format is <code class="xref py py-obj docutils literal notranslate"><span class="pre">NNN:MMM</span></code>. This information is used to compute QU/I cross-talk. This option is required if the data are polarimetric.</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">threads:</th><td class="field-body"><p class="first"><strong>(int)</strong> The number of separate processes to spawn when reducing the raw science data.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2"><em>include_parallactic</em>:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body"><p class="first">If False, do NOT apply a correction to bring data in to common DKIST reference frame.</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">save_M12_map:</th><td class="field-body"><p class="first">If True then save a full spatial map Stokes map of all slit positions for use by PA&amp;C in determining M12 parameters</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name"><em>M12_lin_lims</em>:</th><td class="field-body"><p class="first">Pixel range containing features of high polarization signal (i.e., spectral lines). Format is <code class="xref py py-obj docutils literal notranslate"><span class="pre">NNN:MMM</span></code>. If <code class="docutils literal notranslate"><span class="pre">save_M12_map</span></code> is True then this option is required.</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name"><em>slit_pos</em>:</th><td class="field-body"><p class="first">If present, this option is used to specify a subset of slit positions to reduce. This option can have one of three forms:</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">int:</th><td class="field-body">Just reduce a single slit position. Ex: <code class="xref py py-obj docutils literal notranslate"><span class="pre">423</span></code></td>
-</tr>
-<tr class="field-even field"><th class="field-name">list:</th><td class="field-body">Reduce the exact list of slit positions specified. Ex: <code class="xref py py-obj docutils literal notranslate"><span class="pre">[423,</span> <span class="pre">890,</span> <span class="pre">132]</span></code></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">NNN:MMM:</th><td class="field-body">Reduce the slit positions specified by <code class="xref py py-obj docutils literal notranslate"><span class="pre">range(NNN,</span> <span class="pre">MMM)</span></code>. Ex: <code class="xref py py-obj docutils literal notranslate"><span class="pre">14:423</span></code></td>
-</tr>
-</tbody>
-</table>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2"><em>remove_tele_pol</em>:</th></tr>
-<tr class="field-even field"><td>&#160;</td><td class="field-body"><p class="first">If False, do NOT apply the inverse Telescope Model. Useful for synthetic data that were created without a TM.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name"><em>tmp_dir</em>:</th><td class="field-body"><p class="first last">Directory to use for intermediate, temporary files. If not specified it will default to wherever the Level-1 Science Products are saved (see <code class="docutils literal notranslate"><span class="pre">output_prefix</span></code>).</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">data_set_id</dt>
+<dd class="field-even"><p>Only reduce files with this <code class="xref py py-obj docutils literal notranslate"><span class="pre">ID_004</span></code> header value. Can be left blank to reduce all files in <code class="docutils literal notranslate"><span class="pre">raw_sci_dir</span></code>.</p>
+</dd>
+<dt class="field-odd">output_prefix</dt>
+<dd class="field-odd"><p>The prefix to apply to all Level-1 science products. This string can also include a path structure.</p>
+</dd>
+<dt class="field-even">dark_cal</dt>
+<dd class="field-even"><p>The location of a processed Dark Calibration object. If this file does not exist it will be generated.</p>
+</dd>
+<dt class="field-odd">lamp_gain_cal</dt>
+<dd class="field-odd"><p>The location of a processed Lamp Gain Calibration object. If this file does not exist it will be generated.</p>
+</dd>
+<dt class="field-even">solar_gain_cal</dt>
+<dd class="field-even"><p>The location of a processed Solar Gain Calibration object. If this files does not exist it will be generated.</p>
+</dd>
+<dt class="field-odd">geometric_cal</dt>
+<dd class="field-odd"><p>The location of a processed Geometric Calibration object. If this file does not exist it will be generated.</p>
+</dd>
+<dt class="field-even">instrumen_pol_cal</dt>
+<dd class="field-even"><p>The location of a processed Instrument Pol Calibration object. If this file does not exist it will be generated.</p>
+</dd>
+<dt class="field-odd">gen_noise_frames</dt>
+<dd class="field-odd"><p>If True then uncertainty frames (suffixed “_err.fits”) will be generated from the raw data and propagated through the pipeline. <strong>NOTE</strong> This more than doubles the total processing time.</p>
+</dd>
+<dt class="field-even">continuum_lims</dt>
+<dd class="field-even"><p>The pixel range (in reduced images) that contains only continuum signal. The format is <code class="xref py py-obj docutils literal notranslate"><span class="pre">NNN:MMM</span></code>. This information is used to compute QU/I cross-talk. This option is required if the data are polarimetric.</p>
+</dd>
+<dt class="field-odd">threads</dt>
+<dd class="field-odd"><p><strong>(int)</strong> The number of separate processes to spawn when reducing the raw science data.</p>
+</dd>
+<dt class="field-even">save_M12_map</dt>
+<dd class="field-even"><p>If True then save a full spatial map Stokes map of all slit positions for use by PA&amp;C in determining M12 parameters</p>
+</dd>
+<dt class="field-odd"><em>suffix</em></dt>
+<dd class="field-odd"><p>File to use when looking for/loading/generating FITS files</p>
+</dd>
+<dt class="field-even"><em>M12_lin_lims</em></dt>
+<dd class="field-even"><p>Pixel range containing features of high polarization signal (i.e., spectral lines). Format is <code class="xref py py-obj docutils literal notranslate"><span class="pre">NNN:MMM</span></code>. If <code class="docutils literal notranslate"><span class="pre">save_M12_map</span></code> is True then this option is required.</p>
+</dd>
+<dt class="field-odd"><em>slit_pos</em></dt>
+<dd class="field-odd"><p>If present, this option is used to specify a subset of slit positions to reduce. This option can have one of three forms:</p>
+<dl class="field-list simple">
+<dt class="field-odd">int</dt>
+<dd class="field-odd"><p>Just reduce a single slit position. Ex: <code class="xref py py-obj docutils literal notranslate"><span class="pre">423</span></code></p>
+</dd>
+<dt class="field-even">list</dt>
+<dd class="field-even"><p>Reduce the exact list of slit positions specified. Ex: <code class="xref py py-obj docutils literal notranslate"><span class="pre">[423,</span> <span class="pre">890,</span> <span class="pre">132]</span></code></p>
+</dd>
+<dt class="field-odd">NNN:MMM</dt>
+<dd class="field-odd"><p>Reduce the slit positions specified by <code class="xref py py-obj docutils literal notranslate"><span class="pre">range(NNN,</span> <span class="pre">MMM)</span></code>. Ex: <code class="xref py py-obj docutils literal notranslate"><span class="pre">14:423</span></code></p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even"><em>telescope_pol_db</em></dt>
+<dd class="field-even"><p>The location of the telescope mirror parameter database.</p>
+</dd>
+<dt class="field-odd"><em>remove_tele_pol</em></dt>
+<dd class="field-odd"><p>If False, do NOT apply the inverse Telescope Model. Useful for synthetic data that were created without a TM.</p>
+</dd>
+<dt class="field-even"><em>include_parallactic</em></dt>
+<dd class="field-even"><p>If False, do NOT apply a correction to bring data in to common DKIST reference frame.</p>
+</dd>
+<dt class="field-odd"><em>tmp_dir</em></dt>
+<dd class="field-odd"><p>Directory to use for intermediate, temporary files. If not specified it will default to wherever the Level-1 Science Products are saved (see <code class="docutils literal notranslate"><span class="pre">output_prefix</span></code>).</p>
+</dd>
+</dl>
 </div>
 <div class="section" id="darkcalibration">
 <h2>DarkCalibration<a class="headerlink" href="#darkcalibration" title="Permalink to this headline">¶</a></h2>
 <p>This section will only be used if the file specified by <code class="docutils literal notranslate"><span class="pre">Main.dark_cal</span></code> does not exist.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">raw_dark_dir:</th><td class="field-body">The location of a directory containing raw dark frames. If <code class="docutils literal notranslate"><span class="pre">dark_cal</span></code> does not exist then this
-directory must contain dark frames or an error will be thrown.</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">raw_dark_dir</dt>
+<dd class="field-odd"><p>The location of a directory containing raw dark frames. If <code class="docutils literal notranslate"><span class="pre">dark_cal</span></code> does not exist then this
+directory must contain dark frames or an error will be thrown.</p>
+</dd>
+</dl>
 </div>
 <div class="section" id="lampgaincalibration">
 <h2>LampGainCalibration<a class="headerlink" href="#lampgaincalibration" title="Permalink to this headline">¶</a></h2>
 <p>This section will only be used if the file specified by <code class="docutils literal notranslate"><span class="pre">Main.lamp_gain_cal</span></code> does not exist.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">raw_lamp_gain:</th><td class="field-body">The location of a directory containing raw dark frames. If <code class="docutils literal notranslate"><span class="pre">lamp_gain_cal</span></code> does not exist then this
-directory must contain lamp gain frames or an error will be thrown.</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">raw_lamp_gain</dt>
+<dd class="field-odd"><p>The location of a directory containing raw dark frames. If <code class="docutils literal notranslate"><span class="pre">lamp_gain_cal</span></code> does not exist then this
+directory must contain lamp gain frames or an error will be thrown.</p>
+</dd>
+</dl>
 </div>
 <div class="section" id="solargaincalibration">
 <h2>SolarGainCalibration<a class="headerlink" href="#solargaincalibration" title="Permalink to this headline">¶</a></h2>
 <p>This section will only be used if the file specified by <code class="docutils literal notranslate"><span class="pre">Main.solar_gain_cal</span></code> does not exist.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">raw_solar_gain:</th><td class="field-body">The location of a directory containing raw dark frames. If <code class="docutils literal notranslate"><span class="pre">solar_gain_cal</span></code> does not exist then this
-directory must contain solar gain frames or an error will be thrown.</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">raw_solar_gain</dt>
+<dd class="field-odd"><p>The location of a directory containing raw dark frames. If <code class="docutils literal notranslate"><span class="pre">solar_gain_cal</span></code> does not exist then this
+directory must contain solar gain frames or an error will be thrown.</p>
+</dd>
+</dl>
 </div>
 <div class="section" id="instrumentpolarimetriccalibration">
 <h2>InstrumentPolarimetricCalibration<a class="headerlink" href="#instrumentpolarimetriccalibration" title="Permalink to this headline">¶</a></h2>
 <p>These options essentially define a separate ViSP reduction; the reduction of a polarimetric Calibration Sequence (CS).
 The software will automatically decide the names for the output prefix and Calibration Objects. These will all be saved
 to <code class="docutils literal notranslate"><span class="pre">raw_pol_dir</span></code>/proc.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">raw_pol_dir:</th><td class="field-body">Path to a directory containing the raw ViSP files for a CS</td>
-</tr>
-<tr class="field-even field"><th class="field-name">raw_dark_dir:</th><td class="field-body">Path to the raw dark files associated with the CS</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">raw_lamp_gain_dir:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">Path to the raw lamp gain files associated with the CS</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">raw_solar_gain_dir:</th></tr>
-<tr class="field-even field"><td>&#160;</td><td class="field-body">Path to the raw solar gain files associated with the CS</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">gen_noise_frames:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">If True then uncertainty frames (suffixed “_err.fits”) will be generated from the raw data and propagated through the pipeline. <strong>NOTE</strong> This more than doubles the total processing time.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">telescope_db:</th><td class="field-body">Path to the file containing telescope mirror parameters as a function of time and wavelength</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">cu_numbins_x:</th><td class="field-body"><strong>(int)</strong> The number of x-dimensions macropixels in the down-sampled CS data used for CU parameter fitting</td>
-</tr>
-<tr class="field-even field"><th class="field-name">cu_numbins_y:</th><td class="field-body"><strong>(int)</strong> The number of y-dimensions macropixels in the down-sampled CS data used for CU parameter fitting</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">demod_numbins_x:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body"><strong>(int)</strong> The number of x-dimensions macropixels in the down-sampled CS data used for demodulation matrix calculation</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">demod_numbins_y:</th></tr>
-<tr class="field-even field"><td>&#160;</td><td class="field-body"><strong>(int)</strong> The number of y-dimensions macropixels in the down-sampled CS data used for demodulation matrix calculation</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">threads:</th><td class="field-body"><strong>(int)</strong> The number of separate processes to use when reducing the CS data</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">raw_pol_dir</dt>
+<dd class="field-odd"><p>Path to a directory containing the raw ViSP files for a CS</p>
+</dd>
+<dt class="field-even">raw_dark_dir</dt>
+<dd class="field-even"><p>Path to the raw dark files associated with the CS</p>
+</dd>
+<dt class="field-odd">raw_lamp_gain_dir</dt>
+<dd class="field-odd"><p>Path to the raw lamp gain files associated with the CS</p>
+</dd>
+<dt class="field-even">raw_solar_gain_dir</dt>
+<dd class="field-even"><p>Path to the raw solar gain files associated with the CS</p>
+</dd>
+<dt class="field-odd">gen_noise_frames</dt>
+<dd class="field-odd"><p>If True then uncertainty frames (suffixed “_err.fits”) will be generated from the raw data and propagated through the pipeline. <strong>NOTE</strong> This more than doubles the total processing time.</p>
+</dd>
+<dt class="field-even">cu_numbins_x</dt>
+<dd class="field-even"><p><strong>(int)</strong> The number of x-dimensions macropixels in the down-sampled CS data used for CU parameter fitting</p>
+</dd>
+<dt class="field-odd">cu_numbins_y</dt>
+<dd class="field-odd"><p><strong>(int)</strong> The number of y-dimensions macropixels in the down-sampled CS data used for CU parameter fitting</p>
+</dd>
+<dt class="field-even">demod_numbins_x</dt>
+<dd class="field-even"><p><strong>(int)</strong> The number of x-dimensions macropixels in the down-sampled CS data used for demodulation matrix calculation</p>
+</dd>
+<dt class="field-odd">demod_numbins_y</dt>
+<dd class="field-odd"><p><strong>(int)</strong> The number of y-dimensions macropixels in the down-sampled CS data used for demodulation matrix calculation</p>
+</dd>
+<dt class="field-even">threads</dt>
+<dd class="field-even"><p><strong>(int)</strong> The number of separate processes to use when reducing the CS data</p>
+</dd>
+<dt class="field-odd"><em>telescope_db</em></dt>
+<dd class="field-odd"><p>Path to the file containing telescope mirror parameters as a function of time and wavelength</p>
+</dd>
+</dl>
 </div>
 <div class="section" id="example-config-file">
 <h2>Example Config File<a class="headerlink" href="#example-config-file" title="Permalink to this headline">¶</a></h2>
@@ -389,15 +374,15 @@ to <code class="docutils literal notranslate"><span class="pre">raw_pol_dir</spa
 <footer class="footer">
   <div class="container">
     <div class="left-footer">
-         &copy; 2019, Arthur Eigenbrot
+         &copy; 2020, Arthur Eigenbrot
        <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png" /></a>
     </div>
    
     <div class="right-footer">
-      Last updated on 26 Feb 2019.
+      Last updated on 01 May 2020.
     </div>
     <div class="centre-footer">
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.4
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.3
     </div>
   </div>
 </footer>

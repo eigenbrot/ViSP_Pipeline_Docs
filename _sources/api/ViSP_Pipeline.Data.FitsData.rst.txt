@@ -10,7 +10,8 @@ FitsData
 
    .. autosummary::
 
-      ~FitsData.data_hdus
+      ~FitsData.data
+      ~FitsData.hdulist
       ~FitsData.headers
 
    .. rubric:: Methods Summary
@@ -31,7 +32,8 @@ FitsData
 
    .. rubric:: Attributes Documentation
 
-   .. autoattribute:: data_hdus
+   .. autoattribute:: data
+   .. autoattribute:: hdulist
    .. autoattribute:: headers
 
    .. rubric:: Methods Documentation

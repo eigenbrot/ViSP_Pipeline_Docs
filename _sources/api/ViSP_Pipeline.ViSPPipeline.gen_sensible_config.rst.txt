@@ -1,0 +1,6 @@
+gen_sensible_config
+===================
+
+.. currentmodule:: ViSP_Pipeline.ViSPPipeline
+
+.. autofunction:: gen_sensible_config

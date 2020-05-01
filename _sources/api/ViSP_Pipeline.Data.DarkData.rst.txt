@@ -10,8 +10,8 @@ DarkData
 
    .. autosummary::
 
-      ~DarkData.task
+      ~DarkData.task_dict
 
    .. rubric:: Attributes Documentation
 
-   .. autoattribute:: task
+   .. autoattribute:: task_dict

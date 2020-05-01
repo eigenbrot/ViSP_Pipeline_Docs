@@ -10,8 +10,8 @@ CalibrationCurveData
 
    .. autosummary::
 
-      ~CalibrationCurveData.load_from_directory
+      ~CalibrationCurveData.load_from_filelist
 
    .. rubric:: Methods Documentation
 
-   .. automethod:: load_from_directory
+   .. automethod:: load_from_filelist

@@ -10,8 +10,8 @@ AlignmentData
 
    .. autosummary::
 
-      ~AlignmentData.task
+      ~AlignmentData.task_dict
 
    .. rubric:: Attributes Documentation
 
-   .. autoattribute:: task
+   .. autoattribute:: task_dict

@@ -33,17 +33,15 @@ Calibration Objects by simply pointing the corresponding option to a file that d
 
 :instrumen_pol_cal: The location of a processed Instrument Pol Calibration object. If this file does not exist it will be generated.
 
-:telescope_pol_db: The location of the telescope mirror parameter database.
-
 :gen_noise_frames: If True then uncertainty frames (suffixed "_err.fits") will be generated from the raw data and propagated through the pipeline. **NOTE** This more than doubles the total processing time.
 
 :continuum_lims: The pixel range (in reduced images) that contains only continuum signal. The format is `NNN:MMM`. This information is used to compute QU/I cross-talk. This option is required if the data are polarimetric.
 
 :threads: **(int)** The number of separate processes to spawn when reducing the raw science data.
 
-:*include_parallactic*: If False, do NOT apply a correction to bring data in to common DKIST reference frame.
-
 :save_M12_map: If True then save a full spatial map Stokes map of all slit positions for use by PA&C in determining M12 parameters
+
+:*suffix*: File to use when looking for/loading/generating FITS files
 
 :*M12_lin_lims*: Pixel range containing features of high polarization signal (i.e., spectral lines). Format is `NNN:MMM`. If ``save_M12_map`` is True then this option is required.
 
@@ -55,7 +53,11 @@ Calibration Objects by simply pointing the corresponding option to a file that d
 
       :NNN\:MMM: Reduce the slit positions specified by `range(NNN, MMM)`. Ex: `14:423`
 
+:*telescope_pol_db*: The location of the telescope mirror parameter database.
+
 :*remove_tele_pol*: If False, do NOT apply the inverse Telescope Model. Useful for synthetic data that were created without a TM.
+
+:*include_parallactic*: If False, do NOT apply a correction to bring data in to common DKIST reference frame.
 
 :*tmp_dir*: Directory to use for intermediate, temporary files. If not specified it will default to wherever the Level-1 Science Products are saved (see ``output_prefix``).
 
@@ -96,8 +98,6 @@ to ``raw_pol_dir``/proc.
 
 :gen_noise_frames: If True then uncertainty frames (suffixed "_err.fits") will be generated from the raw data and propagated through the pipeline. **NOTE** This more than doubles the total processing time.
 
-:telescope_db: Path to the file containing telescope mirror parameters as a function of time and wavelength
-
 :cu_numbins_x: **(int)** The number of x-dimensions macropixels in the down-sampled CS data used for CU parameter fitting
 
 :cu_numbins_y: **(int)** The number of y-dimensions macropixels in the down-sampled CS data used for CU parameter fitting
@@ -107,6 +107,8 @@ to ``raw_pol_dir``/proc.
 :demod_numbins_y: **(int)** The number of y-dimensions macropixels in the down-sampled CS data used for demodulation matrix calculation
 
 :threads: **(int)** The number of separate processes to use when reducing the CS data
+
+:*telescope_db*: Path to the file containing telescope mirror parameters as a function of time and wavelength
 
 Example Config File
 -------------------

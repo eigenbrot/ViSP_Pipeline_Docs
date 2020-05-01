@@ -1,0 +1,17 @@
+LampGainData
+============
+
+.. currentmodule:: ViSP_Pipeline.Data
+
+.. autoclass:: LampGainData
+   :show-inheritance:
+
+   .. rubric:: Attributes Summary
+
+   .. autosummary::
+
+      ~LampGainData.task_dict
+
+   .. rubric:: Attributes Documentation
+
+   .. autoattribute:: task_dict

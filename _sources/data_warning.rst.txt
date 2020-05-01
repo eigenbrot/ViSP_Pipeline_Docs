@@ -18,7 +18,7 @@ with
   1024
 
 In this case the limit is 1024 open files. If you have more than 1024 slit positions and are trying to, for example,
-extract a spatial map then your call to `load_polarimetric_fitsData` will file with something like this:
+extract a spatial map then your call to `load_polarimetric_fitsData` will fail with something like this:
 
 .. code-block:: python
 

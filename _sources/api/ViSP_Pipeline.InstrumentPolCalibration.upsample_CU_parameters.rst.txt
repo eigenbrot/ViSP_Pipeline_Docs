@@ -1,0 +1,6 @@
+upsample_CU_parameters
+======================
+
+.. currentmodule:: ViSP_Pipeline.InstrumentPolCalibration
+
+.. autofunction:: upsample_CU_parameters

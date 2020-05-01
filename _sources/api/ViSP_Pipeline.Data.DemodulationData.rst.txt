@@ -11,7 +11,9 @@ DemodulationData
    .. autosummary::
 
       ~DemodulationData.beam1
+      ~DemodulationData.beam1_header
       ~DemodulationData.beam2
+      ~DemodulationData.beam2_header
 
    .. rubric:: Methods Summary
 
@@ -23,7 +25,9 @@ DemodulationData
    .. rubric:: Attributes Documentation
 
    .. autoattribute:: beam1
+   .. autoattribute:: beam1_header
    .. autoattribute:: beam2
+   .. autoattribute:: beam2_header
 
    .. rubric:: Methods Documentation
 

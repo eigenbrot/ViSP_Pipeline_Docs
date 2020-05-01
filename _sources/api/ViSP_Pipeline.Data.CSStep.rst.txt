@@ -1,0 +1,7 @@
+CSStep
+======
+
+.. currentmodule:: ViSP_Pipeline.Data
+
+.. autoclass:: CSStep
+   :show-inheritance:

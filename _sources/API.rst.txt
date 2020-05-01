@@ -23,11 +23,9 @@ Reference/API
 
 .. automodapi:: ViSP_Pipeline.Data
    :headings: #^
-   :no-inheritance-diagram:
    :skip: tag
    :skip: glob
 
 .. automodapi:: ViSP_Pipeline.generic
    :headings: #^
-   :no-inheritance-diagram:
    :skip: tag

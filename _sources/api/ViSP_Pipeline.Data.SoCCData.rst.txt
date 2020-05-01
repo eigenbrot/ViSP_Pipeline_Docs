@@ -1,0 +1,29 @@
+SoCCData
+========
+
+.. currentmodule:: ViSP_Pipeline.Data
+
+.. autoclass:: SoCCData
+   :show-inheritance:
+
+   .. rubric:: Attributes Summary
+
+   .. autosummary::
+
+      ~SoCCData.num_CS_steps
+
+   .. rubric:: Methods Summary
+
+   .. autosummary::
+
+      ~SoCCData.get_CC_data
+      ~SoCCData.read_directory
+
+   .. rubric:: Attributes Documentation
+
+   .. autoattribute:: num_CS_steps
+
+   .. rubric:: Methods Documentation
+
+   .. automethod:: get_CC_data
+   .. automethod:: read_directory
