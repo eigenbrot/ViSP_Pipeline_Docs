@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>ViSP_Pipeline.InstrumentPolCalibration &#8212; ViSP_Pipeline v0.20.0</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ViSP_Pipeline.InstrumentPolCalibration &#8212; ViSP_Pipeline v0.20.2</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
@@ -22,9 +23,9 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../_static/js/jquery-1.12.4.min.js "></script>
 <script type="text/javascript" src="../../_static/js/jquery-fix.js "></script>
-<script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.4.1/js/bootstrap.min.js "></script>
 <script type="text/javascript" src="../../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
@@ -205,7 +206,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">pol_rdx_dir</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/proc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">raw_pol_dir</span><span class="p">)</span>
+    <span class="n">pol_rdx_dir</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/polcal_proc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">Data</span><span class="o">.</span><span class="n">TMPDIR</span><span class="p">)</span>
     <span class="n">dmod1_name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/DMOD_beam1.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pol_rdx_dir</span><span class="p">,</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s1">&#39;Data&#39;</span><span class="p">][</span><span class="s1">&#39;suffix&#39;</span><span class="p">])</span>
     <span class="n">dmod2_name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/DMOD_beam2.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pol_rdx_dir</span><span class="p">,</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s1">&#39;Data&#39;</span><span class="p">][</span><span class="s1">&#39;suffix&#39;</span><span class="p">])</span>
     <span class="n">cmp1_name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/CUpars_beam1.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pol_rdx_dir</span><span class="p">,</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s1">&#39;Data&#39;</span><span class="p">][</span><span class="s1">&#39;suffix&#39;</span><span class="p">])</span>
@@ -327,7 +328,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">outdir</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/proc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">raw_pol_dir</span><span class="p">)</span>
+    <span class="n">outdir</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/polcal_proc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">Data</span><span class="o">.</span><span class="n">TMPDIR</span><span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/cu_RCUH&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outdir</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/demod_RCUH&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outdir</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -392,10 +393,14 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">numthread</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;threads&#39;</span><span class="p">])</span>
+    <span class="n">raw_pol_dir</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;raw_pol_dir&#39;</span><span class="p">]</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Running ViSP reduction on all files with </span><span class="si">{}</span><span class="s1"> threads&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">numthread</span><span class="p">))</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Scanning polcal files in </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;raw_pol_dir&#39;</span><span class="p">]))</span>
-    <span class="n">SoCCData</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">SoCCData</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;raw_pol_dir&#39;</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Scanning polcal files in </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">raw_pol_dir</span><span class="p">))</span>
+    <span class="n">SoCCData</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">SoCCData</span><span class="p">(</span><span class="n">raw_pol_dir</span><span class="p">)</span>
     <span class="n">num_steps</span> <span class="o">=</span> <span class="n">SoCCData</span><span class="o">.</span><span class="n">num_CS_steps</span>
+    <span class="k">if</span> <span class="n">num_steps</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s1">&#39;Did not find any calibration sequence steps in </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">raw_pol_dir</span><span class="p">))</span>
+
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Found </span><span class="si">{}</span><span class="s1"> calibration sequence steps&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">num_steps</span><span class="p">))</span>
 
     <span class="c1"># This loop sets up a list of mp processes. They have not been started.</span>
@@ -687,6 +692,7 @@
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nummod</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: modulator state </span><span class="si">{}</span><span class="s1">:&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">i</span><span class="p">))</span>
         <span class="n">idx</span> <span class="o">=</span> <span class="n">fitsData</span><span class="o">.</span><span class="n">find_data_keyword_idx</span><span class="p">(</span><span class="n">S122</span><span class="p">[</span><span class="s1">&#39;CurrentState&#39;</span><span class="p">],</span> <span class="n">i</span><span class="p">)</span>
+        <span class="c1">#TODO: is len(idx) ever &gt; 1? If it is, should it be?</span>
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">idx</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">:  extracting from data HDU </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">j</span><span class="p">))</span>
             <span class="n">data</span> <span class="o">=</span> <span class="n">fitsData</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
@@ -1045,10 +1051,10 @@
     </div>
    
     <div class="right-footer">
-      Last updated on 01 May 2020.
+      Last updated on 26 Oct 2020.
     </div>
     <div class="centre-footer">
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.3
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1
     </div>
   </div>
 </footer>

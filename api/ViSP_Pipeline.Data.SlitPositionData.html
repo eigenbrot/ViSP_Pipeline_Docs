@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>SlitPositionData &#8212; ViSP_Pipeline v0.20.0</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SlitPositionData &#8212; ViSP_Pipeline v0.20.2</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -24,9 +25,9 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-1.12.4.min.js "></script>
 <script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
-<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.4.1/js/bootstrap.min.js "></script>
 <script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
@@ -205,10 +206,10 @@ figure it out for you (recommended).</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ViSP_Pipeline.Data.SlitPositionData.load_from_directory" title="ViSP_Pipeline.Data.SlitPositionData.load_from_directory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_from_directory</span></code></a>(self, data_dir[, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ViSP_Pipeline.Data.SlitPositionData.load_from_directory" title="ViSP_Pipeline.Data.SlitPositionData.load_from_directory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_from_directory</span></code></a>(data_dir[, dataset_ID, …])</p></td>
 <td><p>Load DHS-style data from a directory.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ViSP_Pipeline.Data.SlitPositionData.load_from_filelist" title="ViSP_Pipeline.Data.SlitPositionData.load_from_filelist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_from_filelist</span></code></a>(self, file_list)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ViSP_Pipeline.Data.SlitPositionData.load_from_filelist" title="ViSP_Pipeline.Data.SlitPositionData.load_from_filelist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_from_filelist</span></code></a>(file_list)</p></td>
 <td><p>Load files from a list of file names</p></td>
 </tr>
 </tbody>
@@ -216,7 +217,7 @@ figure it out for you (recommended).</p>
 <p class="rubric">Methods Documentation</p>
 <dl class="py method">
 <dt id="ViSP_Pipeline.Data.SlitPositionData.load_from_directory">
-<code class="sig-name descname">load_from_directory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">data_dir</span></em>, <em class="sig-param"><span class="n">dataset_ID</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">suffix</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#SlitPositionData.load_from_directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.SlitPositionData.load_from_directory" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">load_from_directory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_dir</span></em>, <em class="sig-param"><span class="n">dataset_ID</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">suffix</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#SlitPositionData.load_from_directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.SlitPositionData.load_from_directory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load DHS-style data from a directory.</p>
 <p>It is assumed that all relevant files in the directory have SPEC-0122 headers and a single HDU. In other words,
 each file is exactly one SysOutput. Only files whose InstrumentProgramTask (DKIST004) is ‘Observation’ and whose
@@ -238,7 +239,7 @@ all data sets.</p>
 
 <dl class="py method">
 <dt id="ViSP_Pipeline.Data.SlitPositionData.load_from_filelist">
-<code class="sig-name descname">load_from_filelist</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">file_list</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#SlitPositionData.load_from_filelist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.SlitPositionData.load_from_filelist" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">load_from_filelist</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_list</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#SlitPositionData.load_from_filelist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.SlitPositionData.load_from_filelist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load files from a list of file names</p>
 <p>Each file is checked to make sure it is from the correct spatial step (the one that this class was initialized
 with), but no checks are made against program task or dataset ID.</p>
@@ -269,10 +270,10 @@ with), but no checks are made against program task or dataset ID.</p>
     </div>
    
     <div class="right-footer">
-      Last updated on 01 May 2020.
+      Last updated on 26 Oct 2020.
     </div>
     <div class="centre-footer">
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.3
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1
     </div>
   </div>
 </footer>

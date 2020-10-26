@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>ViSP_Pipeline.ScienceCalibration &#8212; ViSP_Pipeline v0.20.0</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ViSP_Pipeline.ScienceCalibration &#8212; ViSP_Pipeline v0.20.2</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
@@ -22,9 +23,9 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../_static/js/jquery-1.12.4.min.js "></script>
 <script type="text/javascript" src="../../_static/js/jquery-fix.js "></script>
-<script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.4.1/js/bootstrap.min.js "></script>
 <script type="text/javascript" src="../../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
@@ -315,7 +316,10 @@
     <span class="k">if</span> <span class="n">pol</span> <span class="ow">and</span> <span class="n">remove_tele</span><span class="p">:</span>
         <span class="c1"># The x-talk measurements will only be useful if the TM was applied</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Reporting continuum cross-talk to PA&amp;C Modules&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
-        <span class="n">PolarimetricUtils</span><span class="o">.</span><span class="n">report_continuum_xtalk</span><span class="p">(</span><span class="n">outData</span><span class="p">,</span> <span class="n">continuum_lims</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">PolarimetricUtils</span><span class="o">.</span><span class="n">report_continuum_xtalk</span><span class="p">(</span><span class="n">outData</span><span class="p">,</span> <span class="n">continuum_lims</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Could not report cross-talk. Error was: &quot;</span><span class="si">{}</span><span class="s1">&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">e</span><span class="p">))</span>
 
     <span class="k">return</span> <span class="n">ViSPData</span><span class="p">,</span> <span class="n">ViSPErr</span></div>
 
@@ -1040,10 +1044,10 @@
     </div>
    
     <div class="right-footer">
-      Last updated on 01 May 2020.
+      Last updated on 26 Oct 2020.
     </div>
     <div class="centre-footer">
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.3
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1
     </div>
   </div>
 </footer>

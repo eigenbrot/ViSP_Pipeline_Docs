@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>reduce_single_step &#8212; ViSP_Pipeline v0.20.0</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>reduce_single_step &#8212; ViSP_Pipeline v0.20.2</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -24,9 +25,9 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-1.12.4.min.js "></script>
 <script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
-<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.4.1/js/bootstrap.min.js "></script>
 <script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
@@ -173,7 +174,7 @@
 <h1>reduce_single_step<a class="headerlink" href="#reduce-single-step" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt id="ViSP_Pipeline.InstrumentPolCalibration.reduce_single_step">
-<code class="sig-prename descclassname">ViSP_Pipeline.InstrumentPolCalibration.</code><code class="sig-name descname">reduce_single_step</code><span class="sig-paren">(</span><em class="sig-param">SoCCData</em>, <em class="sig-param">CS_step</em>, <em class="sig-param">outpre</em>, <em class="sig-param">dark_cal=None</em>, <em class="sig-param">solar_gain_cal=None</em>, <em class="sig-param">geometric_cal=None</em>, <em class="sig-param">dark_cal_err=None</em>, <em class="sig-param">solar_gain_cal_err=None</em>, <em class="sig-param">gen_err=False</em>, <em class="sig-param">cu_numbins_x=1</em>, <em class="sig-param">cu_numbins_y=1</em>, <em class="sig-param">demod_numbins_x=1</em>, <em class="sig-param">demod_numbins_y=1</em>, <em class="sig-param">dark_lock=&lt;contextlib.nullcontext object at 0x7f5d8a08e340&gt;</em>, <em class="sig-param">gain_lock=&lt;contextlib.nullcontext object at 0x7f5d8a08e340&gt;</em>, <em class="sig-param">geo_lock=&lt;contextlib.nullcontext object at 0x7f5d8a08e340&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/InstrumentPolCalibration.html#reduce_single_step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.InstrumentPolCalibration.reduce_single_step" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">ViSP_Pipeline.InstrumentPolCalibration.</code><code class="sig-name descname">reduce_single_step</code><span class="sig-paren">(</span><em class="sig-param">SoCCData</em>, <em class="sig-param">CS_step</em>, <em class="sig-param">outpre</em>, <em class="sig-param">dark_cal=None</em>, <em class="sig-param">solar_gain_cal=None</em>, <em class="sig-param">geometric_cal=None</em>, <em class="sig-param">dark_cal_err=None</em>, <em class="sig-param">solar_gain_cal_err=None</em>, <em class="sig-param">gen_err=False</em>, <em class="sig-param">cu_numbins_x=1</em>, <em class="sig-param">cu_numbins_y=1</em>, <em class="sig-param">demod_numbins_x=1</em>, <em class="sig-param">demod_numbins_y=1</em>, <em class="sig-param">dark_lock=&lt;contextlib.nullcontext object&gt;</em>, <em class="sig-param">gain_lock=&lt;contextlib.nullcontext object&gt;</em>, <em class="sig-param">geo_lock=&lt;contextlib.nullcontext object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/InstrumentPolCalibration.html#reduce_single_step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.InstrumentPolCalibration.reduce_single_step" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform full ViSP reduction on a single step from a PolCal Calibration Sequence (CS)</p>
 <p>Dark, gain, and geometric effects are removed and the two beams are split into two separate objects/files. An
 arbitrary amount of binning of the final data is also possible. Binning the data results in faster PA&amp;C analysis,
@@ -250,10 +251,10 @@ weirdness in astropy’s FITS containers when accessing the same data at the sam
     </div>
    
     <div class="right-footer">
-      Last updated on 01 May 2020.
+      Last updated on 26 Oct 2020.
     </div>
     <div class="centre-footer">
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.3
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1
     </div>
   </div>
 </footer>
