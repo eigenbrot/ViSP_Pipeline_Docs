@@ -1,0 +1,6 @@
+update_header_noise_floor
+=========================
+
+.. currentmodule:: ViSP_Pipeline.InstrumentPolCalibration
+
+.. autofunction:: update_header_noise_floor

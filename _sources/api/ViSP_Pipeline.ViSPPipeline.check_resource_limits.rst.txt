@@ -1,0 +1,6 @@
+check_resource_limits
+=====================
+
+.. currentmodule:: ViSP_Pipeline.ViSPPipeline
+
+.. autofunction:: check_resource_limits

@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>polarimetric_multiplication &#8212; ViSP_Pipeline v0.20.2</title>
-    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <title>polarimetric_multiplication &#8212; ViSP_Pipeline v0.21.0</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,600,700" type="text/css" />
     <link rel="stylesheet" href="../_static/dkist.css" type="text/css" />
@@ -25,9 +25,9 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<script type="text/javascript" src="../_static/js/jquery-1.12.4.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
 <script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
-<script type="text/javascript" src="../_static/bootstrap-3.4.1/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
 <script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
@@ -61,6 +61,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../index.html">ViSP Pipeline Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../config_file.html">Configuration File Format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../walkthrough.html">Data Reduction Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../IPA_access.html">Instrument Partner Testing Access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../data_warning.html">A Word About Data, RAM, and Disk Space</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../API.html">Reference/API</a></li>
 </ul>
@@ -102,9 +103,6 @@
           
             <ul class="nav navbar-nav navbar-left">
               <li><a href="http://dkist.nso.edu/">DKIST</a></li>
-              <li><a href="http://docs.cadair.com/devdocs">DC Developer Guide</a></li>
-              <li><a href="http://docs.cadair.com/datarate">DKIST Data Rate</a></li>
-              <li><a href="http://docs.cadair.com/datamodel">DKIST Data Model</a></li>
             </ul>
           
           
@@ -136,6 +134,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../index.html">ViSP Pipeline Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../config_file.html">Configuration File Format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../walkthrough.html">Data Reduction Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../IPA_access.html">Instrument Partner Testing Access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../data_warning.html">A Word About Data, RAM, and Disk Space</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../API.html">Reference/API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ViSPPipeline">ViSP_Pipeline.ViSPPipeline Module</a></li>
@@ -144,6 +143,8 @@
 <li class="toctree-l3 current"><a class="reference internal" href="../API.html#id2">Functions</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ScienceCalibration.average_beams.html">average_beams</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ScienceCalibration.average_polarimetric_beams.html">average_polarimetric_beams</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ScienceCalibration.command_line.html">command_line</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ScienceCalibration.command_line_list.html">command_line_list</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ScienceCalibration.extract_geometric_numbers.html">extract_geometric_numbers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ScienceCalibration.generate_science_calibration.html">generate_science_calibration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ScienceCalibration.geometric_correction.html">geometric_correction</a></li>
@@ -176,7 +177,7 @@
 <h1>polarimetric_multiplication<a class="headerlink" href="#polarimetric-multiplication" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt id="ViSP_Pipeline.ScienceCalibration.polarimetric_multiplication">
-<code class="sig-prename descclassname">ViSP_Pipeline.ScienceCalibration.</code><code class="sig-name descname">polarimetric_multiplication</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">demod</span></em>, <em class="sig-param"><span class="n">err_data</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">demod_err</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/ScienceCalibration.html#polarimetric_multiplication"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.ScienceCalibration.polarimetric_multiplication" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">ViSP_Pipeline.ScienceCalibration.</code><code class="sig-name descname">polarimetric_multiplication</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span><span class="p">:</span> <span class="n">Union<span class="p">[</span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a><span class="p">, </span>dask.array.core.Array<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">demod</span><span class="p">:</span> <span class="n">Union<span class="p">[</span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a><span class="p">, </span>dask.array.core.Array<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">err_data</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Union<span class="p">[</span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a><span class="p">, </span>dask.array.core.Array<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">demod_err</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Union<span class="p">[</span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a><span class="p">, </span>dask.array.core.Array<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>Union<span class="p">[</span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a><span class="p">, </span>dask.array.core.Array<span class="p">]</span><span class="p">, </span>Union<span class="p">[</span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a><span class="p">, </span>dask.array.core.Array<span class="p">]</span><span class="p">]</span><a class="reference internal" href="../_modules/ViSP_Pipeline/ScienceCalibration.html#polarimetric_multiplication"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.ScienceCalibration.polarimetric_multiplication" title="Permalink to this definition">¶</a></dt>
 <dd><p>Matrix multiply the input data by a polarization demodulation matrix.</p>
 <p>This is a general-purpose function that requires good understanding of the input parameters. The important thing
 is that the demodulation matrix’s last dimension is equal to the number of data HDU’s in the input data.</p>
@@ -208,10 +209,10 @@ and the length of the last dimension is equal to the number of data HDUs in the 
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl class="simple">
-<dt>Data.FitsData</dt><dd><p>Demodulated/corrected polarization data. Regardless of the inputs, the output will have 4 data HDUs,
+<dt><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></dt><dd><p>Demodulated/corrected polarization data. Regardless of the inputs, the output will have 4 data HDUs,
 corresponding to the 4 Stokes parameters.</p>
 </dd>
-<dt>Data.FitsData</dt><dd><p>If errData is provided, the uncertainty associated with the output data.</p>
+<dt><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></dt><dd><p>If errData is provided, the uncertainty associated with the output data.</p>
 </dd>
 </dl>
 </dd>
@@ -228,15 +229,15 @@ corresponding to the 4 Stokes parameters.</p>
 <footer class="footer">
   <div class="container">
     <div class="left-footer">
-         &copy; 2020, Arthur Eigenbrot
+         &copy; 2021, Arthur Eigenbrot
        <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png" /></a>
     </div>
    
     <div class="right-footer">
-      Last updated on 26 Oct 2020.
+      Last updated on 22 Jan 2021.
     </div>
     <div class="centre-footer">
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1
     </div>
   </div>
 </footer>

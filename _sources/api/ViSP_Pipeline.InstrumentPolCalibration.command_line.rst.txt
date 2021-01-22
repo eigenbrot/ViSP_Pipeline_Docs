@@ -1,0 +1,6 @@
+command_line
+============
+
+.. currentmodule:: ViSP_Pipeline.InstrumentPolCalibration
+
+.. autofunction:: command_line

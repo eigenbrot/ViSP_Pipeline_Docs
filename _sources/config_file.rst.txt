@@ -55,7 +55,7 @@ Calibration Objects by simply pointing the corresponding option to a file that d
 
 :*telescope_pol_db*: The location of the telescope mirror parameter database.
 
-:*remove_tele_pol*: If False, do NOT apply the inverse Telescope Model. Useful for synthetic data that were created without a TM.
+:*remove_tele*: If False, do NOT apply the inverse Telescope Model. Useful for synthetic data that were created without a TM.
 
 :*include_parallactic*: If False, do NOT apply a correction to bring data in to common DKIST reference frame.
 
@@ -85,16 +85,8 @@ This section will only be used if the file specified by ``Main.solar_gain_cal`` 
 InstrumentPolarimetricCalibration
 ---------------------------------
 These options essentially define a separate ViSP reduction; the reduction of a polarimetric Calibration Sequence (CS).
-The software will automatically decide the names for the output prefix and Calibration Objects. These will all be saved
-to ``raw_pol_dir``/proc.
 
 :raw_pol_dir: Path to a directory containing the raw ViSP files for a CS
-
-:raw_dark_dir: Path to the raw dark files associated with the CS
-
-:raw_lamp_gain_dir: Path to the raw lamp gain files associated with the CS
-
-:raw_solar_gain_dir: Path to the raw solar gain files associated with the CS
 
 :gen_noise_frames: If True then uncertainty frames (suffixed "_err.fits") will be generated from the raw data and propagated through the pipeline. **NOTE** This more than doubles the total processing time.
 
@@ -124,14 +116,10 @@ Example Config File
   solar_gain_cal = SolarGainCal.fits
   geometric_cal = GeoCal.fits
   instrument_pol_cal = InstPolCal.fits
-  telescope_pol_db = /media/database/telescope_db.txt
-  gen_noise_frames = True
-  remove_tele_pol = False
+  gen_noise_frames = False
+  remove_tele_pol = True
   slit_pos = [0, 458, 111]
   threads = 3
-  save_M12_map = True
-  M12_lin_lims = 565:602
-  continuum_lims = 0:400
   include_parallactic = True
 
   [DarkCalibration]
@@ -144,11 +132,7 @@ Example Config File
   raw_solar_gain_dir = visp_run_1
 
   [PolarimetricCalibration]
-  raw_pol_dir = ~/CS_runs/visp_CS_4
-  raw_dark_dir = ~/CS_runs/visp_CS_4
-  raw_lamp_gain_dir = ~/CS_runs/visp_CS_4
-  raw_solar_gain_dir = ~/CS_runs/visp_CS_4
-  telescope_db = ~/telescope_db.txt
+  raw_pol_dir = visp_run_1
   cu_numbins_x = 1
   cu_numbins_y = 1
   demod_numbins_x = 4

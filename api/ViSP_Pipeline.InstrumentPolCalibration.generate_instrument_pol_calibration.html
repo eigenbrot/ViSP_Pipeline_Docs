@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>generate_instrument_pol_calibration &#8212; ViSP_Pipeline v0.20.2</title>
-    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <title>generate_instrument_pol_calibration &#8212; ViSP_Pipeline v0.21.0</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,600,700" type="text/css" />
     <link rel="stylesheet" href="../_static/dkist.css" type="text/css" />
@@ -25,9 +25,9 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<script type="text/javascript" src="../_static/js/jquery-1.12.4.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
 <script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
-<script type="text/javascript" src="../_static/bootstrap-3.4.1/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
 <script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
@@ -61,6 +61,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../index.html">ViSP Pipeline Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../config_file.html">Configuration File Format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../walkthrough.html">Data Reduction Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../IPA_access.html">Instrument Partner Testing Access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../data_warning.html">A Word About Data, RAM, and Disk Space</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../API.html">Reference/API</a></li>
 </ul>
@@ -102,9 +103,6 @@
           
             <ul class="nav navbar-nav navbar-left">
               <li><a href="http://dkist.nso.edu/">DKIST</a></li>
-              <li><a href="http://docs.cadair.com/devdocs">DC Developer Guide</a></li>
-              <li><a href="http://docs.cadair.com/datarate">DKIST Data Rate</a></li>
-              <li><a href="http://docs.cadair.com/datamodel">DKIST Data Model</a></li>
             </ul>
           
           
@@ -136,6 +134,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../index.html">ViSP Pipeline Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../config_file.html">Configuration File Format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../walkthrough.html">Data Reduction Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../IPA_access.html">Instrument Partner Testing Access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../data_warning.html">A Word About Data, RAM, and Disk Space</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../API.html">Reference/API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ViSPPipeline">ViSP_Pipeline.ViSPPipeline Module</a></li>
@@ -143,6 +142,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ScienceCalibration">ViSP_Pipeline.ScienceCalibration Module</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.InstrumentPolCalibration">ViSP_Pipeline.InstrumentPolCalibration Module</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="../API.html#id3">Functions</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.InstrumentPolCalibration.command_line.html">command_line</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.InstrumentPolCalibration.extract_macropixels.html">extract_macropixels</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">generate_instrument_pol_calibration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.InstrumentPolCalibration.main.html">main</a></li>
@@ -151,6 +151,7 @@
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.InstrumentPolCalibration.reduce_single_step.html">reduce_single_step</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.InstrumentPolCalibration.run_PAC_CUpar.html">run_PAC_CUpar</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.InstrumentPolCalibration.run_PAC_demod.html">run_PAC_demod</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.InstrumentPolCalibration.update_header_noise_floor.html">update_header_noise_floor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.InstrumentPolCalibration.upsample_CU_parameters.html">upsample_CU_parameters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.InstrumentPolCalibration.upsample_demodulation.html">upsample_demodulation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.InstrumentPolCalibration.write_reduced_CS_step.html">write_reduced_CS_step</a></li>
@@ -208,15 +209,15 @@ unique modulator states.</p>
 <footer class="footer">
   <div class="container">
     <div class="left-footer">
-         &copy; 2020, Arthur Eigenbrot
+         &copy; 2021, Arthur Eigenbrot
        <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png" /></a>
     </div>
    
     <div class="right-footer">
-      Last updated on 26 Oct 2020.
+      Last updated on 22 Jan 2021.
     </div>
     <div class="centre-footer">
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1
     </div>
   </div>
 </footer>

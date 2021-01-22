@@ -1,0 +1,218 @@
+Instrument Partner Testing Access
+=================================
+
+As of version 0.21.1 the pipeline also provides command-line level access to the individual modules of the ViSP Pipeline.
+These scripts are useful for testing and debugging each step of the ViSP Pipeline individually. In each case they provide
+complete access to each step's `main()` function, with all optional parameters exposed as command line options. Unless
+set by the user the optional parameters fall back on the package defaults (the same as when running the main
+``visp_pipeline`` program).
+
+Dark Calibration
+----------------
+
+Usage
+*****
+
+.. code-block:: console
+
+  usage: visp_dark [-h] [-f] [-E] dark_dir output
+
+  Run the ViSP Pipeline's Dark Calibration module (i.e., generate a dark frame). This is a direct hook into DarkCalibration.main() and all keyword options are exposed as command line options.
+
+  positional arguments:
+    dark_dir       Location of directory holding raw Dark frames
+    output         Name of FITS output file. A FITS suffix will be enforced
+
+  optional arguments:
+    -h, --help     show this help message and exit
+    -f, --force    Overwrite output if it already exists
+    -E, --gen-err  Also generate a sigma uncertainty frame
+
+Example
+*******
+
+.. code-block:: console
+
+  $ visp_dark ../raw DarkCal
+
+Lamp Gain Calibration
+---------------------
+
+Usage
+*****
+
+.. code-block:: console
+
+  usage: visp_lamp [-h] [-D DARK_CAL] [-d DARK_CAL_ERR] [-f] [-E] lamp_dir output
+
+  Run the ViSP Pipeline's Lamp Gain Calibration module (i.e., generate a lamp gain frame). This is a direct hook into LampGainCalibration.main() and all keyword options are exposed as command
+  line options.
+
+  positional arguments:
+    lamp_dir              Location of directory holding raw Lamp Gain frames
+    output                Name of FITS output file. A FITS suffix will be enforced
+
+  optional arguments:
+    -h, --help            show this help message and exit
+    -D DARK_CAL, --dark-cal DARK_CAL
+                          Location of previously computed Dark Calibration FITS file
+    -d DARK_CAL_ERR, --dark-cal-err DARK_CAL_ERR
+                          FITS file containing errors on provided Dark. This doesn't do anything unless -E is also set.
+    -f, --force           Overwrite output if it already exists
+    -E, --gen-err         Also generate a sigma uncertainty frame
+
+Example
+*******
+
+.. code-block:: console
+
+  $ visp_lamp -D DarkCal.FITS ../raw LampCal
+
+Solar Gain/Geometric Calibration
+--------------------------------
+
+Usage
+*****
+
+.. code-block:: console
+
+  usage: visp_solar [-h] [-D DARK_CAL] [-d DARK_CAL_ERR] [-L LAMP_CAL] [-l LAMP_CAL_ERR] [-f] [-E] solar_dir output geo_output
+
+  Run the ViSP Pipeline's Solar Gain Calibration module (i.e., generate a solar gain frame and a geometric calibration). This is a direct hook into SolarGainCalibration.main() and all keyword
+  options are exposed as command line options.
+
+  positional arguments:
+    solar_dir             Location of directory holding raw Solar Gain frames
+    output                Name of FITS SolarGain output file. A FITS suffix will be enforced
+    geo_output            Name of the FITS geometric cal output file. A FITS suffix will be enforced
+
+  optional arguments:
+    -h, --help            show this help message and exit
+    -D DARK_CAL, --dark-cal DARK_CAL
+                          Location of previously computed Dark Calibration FITS file
+    -d DARK_CAL_ERR, --dark-cal-err DARK_CAL_ERR
+                          FITS file containing errors on provided Dark. This doesn't do anything unless -E is also set.
+    -L LAMP_CAL, --lamp-cal LAMP_CAL
+                          Location of previously computed Lamp Gain Calibration FITS file
+    -l LAMP_CAL_ERR, --lamp-cal-err LAMP_CAL_ERR
+                          FITS file containing errors on provided Lamp Gain. This doesn't do anything unless -E is also set.
+    -f, --force           Overwrite output if it already exists
+    -E, --gen-err         Also generate a sigma uncertainty frame
+
+Example
+*******
+
+.. code-block:: console
+
+  $ visp_solar -D DarkCal.FITS -L LampCal.FITS ../raw SolarCal GeoCal
+
+Instrument Polarization Calibration (i.e., Demodulation Matrix)
+---------------------------------------------------------------
+
+Usage
+*****
+
+.. code-block:: console
+
+  usage: visp_polcal [-h] [-D DARK_CAL] [-d DARK_CAL_ERR] [-S SOLAR_CAL] [-s SOLAR_CAL_ERR] [-G GEO_CAL] [-X CU_NUMBINS_X] [-Y CU_NUMBINS_Y] [-x DEMOD_NUMBINS_X] [-y DEMOD_NUMBINS_Y]
+                     [-t TELESCOPE_DB] [-E] [-j THREADS] [-f]
+                     pol_dir output
+
+  Run the ViSP Pipeline's Polarization Calibration module (i.e., generate a demodulation matrix). This is a direct hook into InstrumentPolCalibration.main() and all keyword options are
+  exposed as command line options.
+
+  positional arguments:
+    pol_dir               Location of directory holding raw PolCal frames
+    output                Name of FITS output file. A FITS suffix will be enforced
+
+  optional arguments:
+    -h, --help            show this help message and exit
+    -D DARK_CAL, --dark-cal DARK_CAL
+                          Location of previously computed Dark Calibration FITS file
+    -d DARK_CAL_ERR, --dark-cal-err DARK_CAL_ERR
+                          FITS file containing errors on provided Dark. This doesn't do anything unless -E is also set.
+    -S SOLAR_CAL, --solar-cal SOLAR_CAL
+                          Location of previously computed Solar Gain Calibration FITS file
+    -s SOLAR_CAL_ERR, --solar-cal-err SOLAR_CAL_ERR
+                          FITS file containing errors on provided Solar Gain. This doesn't do anything unless -E is also set.
+    -G GEO_CAL, --geo-cal GEO_CAL
+                          Location of previously computed Geometric Calibration FITS file
+    -X CU_NUMBINS_X, --cu_numbins_x CU_NUMBINS_X
+                          Number of spatial bins to use for fitting CU parameters
+    -Y CU_NUMBINS_Y, --cu_numbins_y CU_NUMBINS_Y
+                          Number of spectral bins to use for fitting CU parameters
+    -x DEMOD_NUMBINS_X, --demod_numbins_x DEMOD_NUMBINS_X
+                          Number of spatial bins to use for computing demodulation matrix
+    -y DEMOD_NUMBINS_Y, --demod_numbins_y DEMOD_NUMBINS_Y
+                          Number of spectral bins to use for computing demodulation matrix
+    -t TELESCOPE_DB, --telescope-db TELESCOPE_DB
+                          Location of custom telescope mirror database
+    -E, --gen-err         Also generate a sigma uncertainty frame
+    -j THREADS, --threads THREADS
+                          Max number of CPU cores to use
+    -f, --force           Overwrite output if it already exists
+
+Example
+*******
+
+.. code-block::
+
+  $ visp_polcal -D DarkCal.FITS -S SolarCal.FITS -G GeoCal.FITS -j 4 ../raw IPC
+
+Science Calibration
+-------------------
+
+Usage
+*****
+
+.. code-block:: console
+
+  usage: visp_science [-h] [-D DARK_CAL] [-d DARK_CAL_ERR] [-S SOLAR_CAL] [-s SOLAR_CAL_ERR] [-G GEO_CAL] [-P DEMOD] [-t TELESCOPE_DB] [-n] [-p] [-E] [-f] raw_dir pos output
+
+  Run the ViSP Pipeline's Science Calibration module (i.e., reduce science data). This is almost a direct hook into ScienceCalibration.main() and the keyword options are exposed as command
+  line options. Note that this command only reduces a single slit position ata time and is single-threaded. For the full set of reduction features use 'visp_pipeline'.
+
+  positional arguments:
+    raw_dir               Location of directory holding raw Observation frames
+    pos                   Slit position (VISP_020) to reduce
+    output                Name of FITS output file. A FITS suffix will be enforced
+
+  optional arguments:
+    -h, --help            show this help message and exit
+    -D DARK_CAL, --dark-cal DARK_CAL
+                          Location of previously computed Dark Calibration FITS file
+    -d DARK_CAL_ERR, --dark-cal-err DARK_CAL_ERR
+                          FITS file containing errors on provided Dark. This doesn't do anything unless -E is also set.
+    -S SOLAR_CAL, --solar-cal SOLAR_CAL
+                          Location of previously computed Solar Gain Calibration FITS file
+    -s SOLAR_CAL_ERR, --solar-cal-err SOLAR_CAL_ERR
+                          FITS file containing errors on provided Solar Gain. This doesn't do anything unless -E is also set.
+    -G GEO_CAL, --geo-cal GEO_CAL
+                          Location of previously computed Geometric Calibration FITS file
+    -P DEMOD, --demod DEMOD
+                          Location of previously computed demodulation matrix
+    -t TELESCOPE_DB, --telescope-db TELESCOPE_DB
+                          Location of custom telescope mirror database
+    -n, --no-telescope-correction
+                          Do NOT include a correction for M1 - M7
+    -p, --no-parallactic  Do NOT include a correction for parallactic rotation
+    -E, --gen-err         Also generate a sigma uncertainty frame
+    -f, --force           Overwrite output if it already exists
+
+Example
+*******
+
+.. code-block:: console
+
+  $ visp_science -D DarkCal.FITS -S SolarCal.FITS -G GeoCal.FITS -P IPC.FITS ../raw 1 Sci
+
+Slit Positions
+**************
+
+``visp_science`` requires a slit position number. To see what slit positions are available, use the ``visp_list`` command:
+
+.. code-block:: console
+
+ $ visp_list ../raw
+  Found the following slit positions in ../raw/:
+    1

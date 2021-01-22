@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Configuration File Format &#8212; ViSP_Pipeline v0.20.2</title>
-    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    <title>Configuration File Format &#8212; ViSP_Pipeline v0.21.0</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,600,700" type="text/css" />
     <link rel="stylesheet" href="_static/dkist.css" type="text/css" />
@@ -25,9 +25,9 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<script type="text/javascript" src="_static/js/jquery-1.12.4.min.js "></script>
+<script type="text/javascript" src="_static/js/jquery-1.11.0.min.js "></script>
 <script type="text/javascript" src="_static/js/jquery-fix.js "></script>
-<script type="text/javascript" src="_static/bootstrap-3.4.1/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
 <script type="text/javascript" src="_static/bootstrap-sphinx.js "></script>
 
   </head><body>
@@ -61,6 +61,7 @@
 <li class="toctree-l1"><a class="reference internal" href="index.html">ViSP Pipeline Documentation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Configuration File Format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="walkthrough.html">Data Reduction Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="IPA_access.html">Instrument Partner Testing Access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="data_warning.html">A Word About Data, RAM, and Disk Space</a></li>
 <li class="toctree-l1"><a class="reference internal" href="API.html">Reference/API</a></li>
 </ul>
@@ -110,9 +111,6 @@
           
             <ul class="nav navbar-nav navbar-left">
               <li><a href="http://dkist.nso.edu/">DKIST</a></li>
-              <li><a href="http://docs.cadair.com/devdocs">DC Developer Guide</a></li>
-              <li><a href="http://docs.cadair.com/datarate">DKIST Data Rate</a></li>
-              <li><a href="http://docs.cadair.com/datamodel">DKIST Data Model</a></li>
             </ul>
           
           
@@ -152,6 +150,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="walkthrough.html">Data Reduction Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="IPA_access.html">Instrument Partner Testing Access</a></li>
 <li class="toctree-l1"><a class="reference internal" href="data_warning.html">A Word About Data, RAM, and Disk Space</a></li>
 <li class="toctree-l1"><a class="reference internal" href="API.html">Reference/API</a></li>
 </ul>
@@ -239,7 +238,7 @@ folder or use the <code class="docutils literal notranslate"><span class="pre">s
 <dt class="field-even"><em>telescope_pol_db</em></dt>
 <dd class="field-even"><p>The location of the telescope mirror parameter database.</p>
 </dd>
-<dt class="field-odd"><em>remove_tele_pol</em></dt>
+<dt class="field-odd"><em>remove_tele</em></dt>
 <dd class="field-odd"><p>If False, do NOT apply the inverse Telescope Model. Useful for synthetic data that were created without a TM.</p>
 </dd>
 <dt class="field-even"><em>include_parallactic</em></dt>
@@ -282,42 +281,31 @@ directory must contain solar gain frames or an error will be thrown.</p>
 </div>
 <div class="section" id="instrumentpolarimetriccalibration">
 <h2>InstrumentPolarimetricCalibration<a class="headerlink" href="#instrumentpolarimetriccalibration" title="Permalink to this headline">¶</a></h2>
-<p>These options essentially define a separate ViSP reduction; the reduction of a polarimetric Calibration Sequence (CS).
-The software will automatically decide the names for the output prefix and Calibration Objects. These will all be saved
-to <code class="docutils literal notranslate"><span class="pre">raw_pol_dir</span></code>/proc.</p>
+<p>These options essentially define a separate ViSP reduction; the reduction of a polarimetric Calibration Sequence (CS).</p>
 <dl class="field-list simple">
 <dt class="field-odd">raw_pol_dir</dt>
 <dd class="field-odd"><p>Path to a directory containing the raw ViSP files for a CS</p>
 </dd>
-<dt class="field-even">raw_dark_dir</dt>
-<dd class="field-even"><p>Path to the raw dark files associated with the CS</p>
+<dt class="field-even">gen_noise_frames</dt>
+<dd class="field-even"><p>If True then uncertainty frames (suffixed “_err.fits”) will be generated from the raw data and propagated through the pipeline. <strong>NOTE</strong> This more than doubles the total processing time.</p>
 </dd>
-<dt class="field-odd">raw_lamp_gain_dir</dt>
-<dd class="field-odd"><p>Path to the raw lamp gain files associated with the CS</p>
+<dt class="field-odd">cu_numbins_x</dt>
+<dd class="field-odd"><p><strong>(int)</strong> The number of x-dimensions macropixels in the down-sampled CS data used for CU parameter fitting</p>
 </dd>
-<dt class="field-even">raw_solar_gain_dir</dt>
-<dd class="field-even"><p>Path to the raw solar gain files associated with the CS</p>
+<dt class="field-even">cu_numbins_y</dt>
+<dd class="field-even"><p><strong>(int)</strong> The number of y-dimensions macropixels in the down-sampled CS data used for CU parameter fitting</p>
 </dd>
-<dt class="field-odd">gen_noise_frames</dt>
-<dd class="field-odd"><p>If True then uncertainty frames (suffixed “_err.fits”) will be generated from the raw data and propagated through the pipeline. <strong>NOTE</strong> This more than doubles the total processing time.</p>
+<dt class="field-odd">demod_numbins_x</dt>
+<dd class="field-odd"><p><strong>(int)</strong> The number of x-dimensions macropixels in the down-sampled CS data used for demodulation matrix calculation</p>
 </dd>
-<dt class="field-even">cu_numbins_x</dt>
-<dd class="field-even"><p><strong>(int)</strong> The number of x-dimensions macropixels in the down-sampled CS data used for CU parameter fitting</p>
+<dt class="field-even">demod_numbins_y</dt>
+<dd class="field-even"><p><strong>(int)</strong> The number of y-dimensions macropixels in the down-sampled CS data used for demodulation matrix calculation</p>
 </dd>
-<dt class="field-odd">cu_numbins_y</dt>
-<dd class="field-odd"><p><strong>(int)</strong> The number of y-dimensions macropixels in the down-sampled CS data used for CU parameter fitting</p>
+<dt class="field-odd">threads</dt>
+<dd class="field-odd"><p><strong>(int)</strong> The number of separate processes to use when reducing the CS data</p>
 </dd>
-<dt class="field-even">demod_numbins_x</dt>
-<dd class="field-even"><p><strong>(int)</strong> The number of x-dimensions macropixels in the down-sampled CS data used for demodulation matrix calculation</p>
-</dd>
-<dt class="field-odd">demod_numbins_y</dt>
-<dd class="field-odd"><p><strong>(int)</strong> The number of y-dimensions macropixels in the down-sampled CS data used for demodulation matrix calculation</p>
-</dd>
-<dt class="field-even">threads</dt>
-<dd class="field-even"><p><strong>(int)</strong> The number of separate processes to use when reducing the CS data</p>
-</dd>
-<dt class="field-odd"><em>telescope_db</em></dt>
-<dd class="field-odd"><p>Path to the file containing telescope mirror parameters as a function of time and wavelength</p>
+<dt class="field-even"><em>telescope_db</em></dt>
+<dd class="field-even"><p>Path to the file containing telescope mirror parameters as a function of time and wavelength</p>
 </dd>
 </dl>
 </div>
@@ -332,14 +320,10 @@ to <code class="docutils literal notranslate"><span class="pre">raw_pol_dir</spa
 <span class="na">solar_gain_cal</span> <span class="o">=</span> <span class="s">SolarGainCal.fits</span>
 <span class="na">geometric_cal</span> <span class="o">=</span> <span class="s">GeoCal.fits</span>
 <span class="na">instrument_pol_cal</span> <span class="o">=</span> <span class="s">InstPolCal.fits</span>
-<span class="na">telescope_pol_db</span> <span class="o">=</span> <span class="s">/media/database/telescope_db.txt</span>
-<span class="na">gen_noise_frames</span> <span class="o">=</span> <span class="s">True</span>
-<span class="na">remove_tele_pol</span> <span class="o">=</span> <span class="s">False</span>
+<span class="na">gen_noise_frames</span> <span class="o">=</span> <span class="s">False</span>
+<span class="na">remove_tele_pol</span> <span class="o">=</span> <span class="s">True</span>
 <span class="na">slit_pos</span> <span class="o">=</span> <span class="s">[0, 458, 111]</span>
 <span class="na">threads</span> <span class="o">=</span> <span class="s">3</span>
-<span class="na">save_M12_map</span> <span class="o">=</span> <span class="s">True</span>
-<span class="na">M12_lin_lims</span> <span class="o">=</span> <span class="s">565:602</span>
-<span class="na">continuum_lims</span> <span class="o">=</span> <span class="s">0:400</span>
 <span class="na">include_parallactic</span> <span class="o">=</span> <span class="s">True</span>
 
 <span class="k">[DarkCalibration]</span>
@@ -352,11 +336,7 @@ to <code class="docutils literal notranslate"><span class="pre">raw_pol_dir</spa
 <span class="na">raw_solar_gain_dir</span> <span class="o">=</span> <span class="s">visp_run_1</span>
 
 <span class="k">[PolarimetricCalibration]</span>
-<span class="na">raw_pol_dir</span> <span class="o">=</span> <span class="s">~/CS_runs/visp_CS_4</span>
-<span class="na">raw_dark_dir</span> <span class="o">=</span> <span class="s">~/CS_runs/visp_CS_4</span>
-<span class="na">raw_lamp_gain_dir</span> <span class="o">=</span> <span class="s">~/CS_runs/visp_CS_4</span>
-<span class="na">raw_solar_gain_dir</span> <span class="o">=</span> <span class="s">~/CS_runs/visp_CS_4</span>
-<span class="na">telescope_db</span> <span class="o">=</span> <span class="s">~/telescope_db.txt</span>
+<span class="na">raw_pol_dir</span> <span class="o">=</span> <span class="s">visp_run_1</span>
 <span class="na">cu_numbins_x</span> <span class="o">=</span> <span class="s">1</span>
 <span class="na">cu_numbins_y</span> <span class="o">=</span> <span class="s">1</span>
 <span class="na">demod_numbins_x</span> <span class="o">=</span> <span class="s">4</span>
@@ -375,15 +355,15 @@ to <code class="docutils literal notranslate"><span class="pre">raw_pol_dir</spa
 <footer class="footer">
   <div class="container">
     <div class="left-footer">
-         &copy; 2020, Arthur Eigenbrot
+         &copy; 2021, Arthur Eigenbrot
        <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png" /></a>
     </div>
    
     <div class="right-footer">
-      Last updated on 26 Oct 2020.
+      Last updated on 22 Jan 2021.
     </div>
     <div class="centre-footer">
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1
     </div>
   </div>
 </footer>

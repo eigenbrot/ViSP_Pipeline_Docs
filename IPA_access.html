@@ -1,0 +1,432 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Instrument Partner Testing Access &#8212; ViSP_Pipeline v0.21.0</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,600,700" type="text/css" />
+    <link rel="stylesheet" href="_static/dkist.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="shortcut icon" href="_static/favico.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="A Word About Data, RAM, and Disk Space" href="data_warning.html" />
+    <link rel="prev" title="Data Reduction Walkthrough" href="walkthrough.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="col-md-3 navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="http://nso.edu"><img src="_static/img/NSOlogo.gif">
+        </a>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav hidden">
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">ViSP Pipeline Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config_file.html">Configuration File Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="walkthrough.html">Data Reduction Walkthrough</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Instrument Partner Testing Access</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_warning.html">A Word About Data, RAM, and Disk Space</a></li>
+<li class="toctree-l1"><a class="reference internal" href="API.html">Reference/API</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Instrument Partner Testing Access</a><ul>
+<li><a class="reference internal" href="#dark-calibration">Dark Calibration</a><ul>
+<li><a class="reference internal" href="#usage">Usage</a></li>
+<li><a class="reference internal" href="#example">Example</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#lamp-gain-calibration">Lamp Gain Calibration</a><ul>
+<li><a class="reference internal" href="#id1">Usage</a></li>
+<li><a class="reference internal" href="#id2">Example</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#solar-gain-geometric-calibration">Solar Gain/Geometric Calibration</a><ul>
+<li><a class="reference internal" href="#id3">Usage</a></li>
+<li><a class="reference internal" href="#id4">Example</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#instrument-polarization-calibration-i-e-demodulation-matrix">Instrument Polarization Calibration (i.e., Demodulation Matrix)</a><ul>
+<li><a class="reference internal" href="#id5">Usage</a></li>
+<li><a class="reference internal" href="#id6">Example</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#science-calibration">Science Calibration</a><ul>
+<li><a class="reference internal" href="#id7">Usage</a></li>
+<li><a class="reference internal" href="#id8">Example</a></li>
+<li><a class="reference internal" href="#slit-positions">Slit Positions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="walkthrough.html" title="Previous Chapter: Data Reduction Walkthrough"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Data Reductio...</span>
+    </a>
+  </li>
+  <li>
+    <a href="data_warning.html" title="Next Chapter: A Word About Data, RAM, and Disk Space"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">A Word About ... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+          </ul>
+          
+            <ul class="nav navbar-nav navbar-left">
+              <li><a href="http://dkist.nso.edu/">DKIST</a></li>
+            </ul>
+          
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+
+    <div class="col-md-3"><div id="side-logo" >
+            <a href="http://dkist.nso.edu">
+                <img src="_static/img/DKISTLogo-Medium.jpg">
+            </a>
+        </div><div id="sidebar" class="bs-sidenav" role="complementary">
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">ViSP Pipeline Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config_file.html">Configuration File Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="walkthrough.html">Data Reduction Walkthrough</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Instrument Partner Testing Access</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#dark-calibration">Dark Calibration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#usage">Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#lamp-gain-calibration">Lamp Gain Calibration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#solar-gain-geometric-calibration">Solar Gain/Geometric Calibration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id3">Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#instrument-polarization-calibration-i-e-demodulation-matrix">Instrument Polarization Calibration (i.e., Demodulation Matrix)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id5">Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#science-calibration">Science Calibration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id7">Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id8">Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#slit-positions">Slit Positions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="data_warning.html">A Word About Data, RAM, and Disk Space</a></li>
+<li class="toctree-l1"><a class="reference internal" href="API.html">Reference/API</a></li>
+</ul>
+
+            
+        </div>
+    </div>
+
+    <div class="body col-md-9 content" role="main">
+      
+  <div class="section" id="instrument-partner-testing-access">
+<h1>Instrument Partner Testing Access<a class="headerlink" href="#instrument-partner-testing-access" title="Permalink to this headline">¶</a></h1>
+<p>As of version 0.21.1 the pipeline also provides command-line level access to the individual modules of the ViSP Pipeline.
+These scripts are useful for testing and debugging each step of the ViSP Pipeline individually. In each case they provide
+complete access to each step’s <code class="xref py py-obj docutils literal notranslate"><span class="pre">main()</span></code> function, with all optional parameters exposed as command line options. Unless
+set by the user the optional parameters fall back on the package defaults (the same as when running the main
+<code class="docutils literal notranslate"><span class="pre">visp_pipeline</span></code> program).</p>
+<div class="section" id="dark-calibration">
+<h2>Dark Calibration<a class="headerlink" href="#dark-calibration" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="usage">
+<h3>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: visp_dark [-h] [-f] [-E] dark_dir output</span>
+
+<span class="go">Run the ViSP Pipeline&#39;s Dark Calibration module (i.e., generate a dark frame). This is a direct hook into DarkCalibration.main() and all keyword options are exposed as command line options.</span>
+
+<span class="go">positional arguments:</span>
+<span class="go">  dark_dir       Location of directory holding raw Dark frames</span>
+<span class="go">  output         Name of FITS output file. A FITS suffix will be enforced</span>
+
+<span class="go">optional arguments:</span>
+<span class="go">  -h, --help     show this help message and exit</span>
+<span class="go">  -f, --force    Overwrite output if it already exists</span>
+<span class="go">  -E, --gen-err  Also generate a sigma uncertainty frame</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="example">
+<h3>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> visp_dark ../raw DarkCal
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="lamp-gain-calibration">
+<h2>Lamp Gain Calibration<a class="headerlink" href="#lamp-gain-calibration" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id1">
+<h3>Usage<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: visp_lamp [-h] [-D DARK_CAL] [-d DARK_CAL_ERR] [-f] [-E] lamp_dir output</span>
+
+<span class="go">Run the ViSP Pipeline&#39;s Lamp Gain Calibration module (i.e., generate a lamp gain frame). This is a direct hook into LampGainCalibration.main() and all keyword options are exposed as command</span>
+<span class="go">line options.</span>
+
+<span class="go">positional arguments:</span>
+<span class="go">  lamp_dir              Location of directory holding raw Lamp Gain frames</span>
+<span class="go">  output                Name of FITS output file. A FITS suffix will be enforced</span>
+
+<span class="go">optional arguments:</span>
+<span class="go">  -h, --help            show this help message and exit</span>
+<span class="go">  -D DARK_CAL, --dark-cal DARK_CAL</span>
+<span class="go">                        Location of previously computed Dark Calibration FITS file</span>
+<span class="go">  -d DARK_CAL_ERR, --dark-cal-err DARK_CAL_ERR</span>
+<span class="go">                        FITS file containing errors on provided Dark. This doesn&#39;t do anything unless -E is also set.</span>
+<span class="go">  -f, --force           Overwrite output if it already exists</span>
+<span class="go">  -E, --gen-err         Also generate a sigma uncertainty frame</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id2">
+<h3>Example<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> visp_lamp -D DarkCal.FITS ../raw LampCal
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="solar-gain-geometric-calibration">
+<h2>Solar Gain/Geometric Calibration<a class="headerlink" href="#solar-gain-geometric-calibration" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id3">
+<h3>Usage<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: visp_solar [-h] [-D DARK_CAL] [-d DARK_CAL_ERR] [-L LAMP_CAL] [-l LAMP_CAL_ERR] [-f] [-E] solar_dir output geo_output</span>
+
+<span class="go">Run the ViSP Pipeline&#39;s Solar Gain Calibration module (i.e., generate a solar gain frame and a geometric calibration). This is a direct hook into SolarGainCalibration.main() and all keyword</span>
+<span class="go">options are exposed as command line options.</span>
+
+<span class="go">positional arguments:</span>
+<span class="go">  solar_dir             Location of directory holding raw Solar Gain frames</span>
+<span class="go">  output                Name of FITS SolarGain output file. A FITS suffix will be enforced</span>
+<span class="go">  geo_output            Name of the FITS geometric cal output file. A FITS suffix will be enforced</span>
+
+<span class="go">optional arguments:</span>
+<span class="go">  -h, --help            show this help message and exit</span>
+<span class="go">  -D DARK_CAL, --dark-cal DARK_CAL</span>
+<span class="go">                        Location of previously computed Dark Calibration FITS file</span>
+<span class="go">  -d DARK_CAL_ERR, --dark-cal-err DARK_CAL_ERR</span>
+<span class="go">                        FITS file containing errors on provided Dark. This doesn&#39;t do anything unless -E is also set.</span>
+<span class="go">  -L LAMP_CAL, --lamp-cal LAMP_CAL</span>
+<span class="go">                        Location of previously computed Lamp Gain Calibration FITS file</span>
+<span class="go">  -l LAMP_CAL_ERR, --lamp-cal-err LAMP_CAL_ERR</span>
+<span class="go">                        FITS file containing errors on provided Lamp Gain. This doesn&#39;t do anything unless -E is also set.</span>
+<span class="go">  -f, --force           Overwrite output if it already exists</span>
+<span class="go">  -E, --gen-err         Also generate a sigma uncertainty frame</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id4">
+<h3>Example<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> visp_solar -D DarkCal.FITS -L LampCal.FITS ../raw SolarCal GeoCal
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="instrument-polarization-calibration-i-e-demodulation-matrix">
+<h2>Instrument Polarization Calibration (i.e., Demodulation Matrix)<a class="headerlink" href="#instrument-polarization-calibration-i-e-demodulation-matrix" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id5">
+<h3>Usage<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: visp_polcal [-h] [-D DARK_CAL] [-d DARK_CAL_ERR] [-S SOLAR_CAL] [-s SOLAR_CAL_ERR] [-G GEO_CAL] [-X CU_NUMBINS_X] [-Y CU_NUMBINS_Y] [-x DEMOD_NUMBINS_X] [-y DEMOD_NUMBINS_Y]</span>
+<span class="go">                   [-t TELESCOPE_DB] [-E] [-j THREADS] [-f]</span>
+<span class="go">                   pol_dir output</span>
+
+<span class="go">Run the ViSP Pipeline&#39;s Polarization Calibration module (i.e., generate a demodulation matrix). This is a direct hook into InstrumentPolCalibration.main() and all keyword options are</span>
+<span class="go">exposed as command line options.</span>
+
+<span class="go">positional arguments:</span>
+<span class="go">  pol_dir               Location of directory holding raw PolCal frames</span>
+<span class="go">  output                Name of FITS output file. A FITS suffix will be enforced</span>
+
+<span class="go">optional arguments:</span>
+<span class="go">  -h, --help            show this help message and exit</span>
+<span class="go">  -D DARK_CAL, --dark-cal DARK_CAL</span>
+<span class="go">                        Location of previously computed Dark Calibration FITS file</span>
+<span class="go">  -d DARK_CAL_ERR, --dark-cal-err DARK_CAL_ERR</span>
+<span class="go">                        FITS file containing errors on provided Dark. This doesn&#39;t do anything unless -E is also set.</span>
+<span class="go">  -S SOLAR_CAL, --solar-cal SOLAR_CAL</span>
+<span class="go">                        Location of previously computed Solar Gain Calibration FITS file</span>
+<span class="go">  -s SOLAR_CAL_ERR, --solar-cal-err SOLAR_CAL_ERR</span>
+<span class="go">                        FITS file containing errors on provided Solar Gain. This doesn&#39;t do anything unless -E is also set.</span>
+<span class="go">  -G GEO_CAL, --geo-cal GEO_CAL</span>
+<span class="go">                        Location of previously computed Geometric Calibration FITS file</span>
+<span class="go">  -X CU_NUMBINS_X, --cu_numbins_x CU_NUMBINS_X</span>
+<span class="go">                        Number of spatial bins to use for fitting CU parameters</span>
+<span class="go">  -Y CU_NUMBINS_Y, --cu_numbins_y CU_NUMBINS_Y</span>
+<span class="go">                        Number of spectral bins to use for fitting CU parameters</span>
+<span class="go">  -x DEMOD_NUMBINS_X, --demod_numbins_x DEMOD_NUMBINS_X</span>
+<span class="go">                        Number of spatial bins to use for computing demodulation matrix</span>
+<span class="go">  -y DEMOD_NUMBINS_Y, --demod_numbins_y DEMOD_NUMBINS_Y</span>
+<span class="go">                        Number of spectral bins to use for computing demodulation matrix</span>
+<span class="go">  -t TELESCOPE_DB, --telescope-db TELESCOPE_DB</span>
+<span class="go">                        Location of custom telescope mirror database</span>
+<span class="go">  -E, --gen-err         Also generate a sigma uncertainty frame</span>
+<span class="go">  -j THREADS, --threads THREADS</span>
+<span class="go">                        Max number of CPU cores to use</span>
+<span class="go">  -f, --force           Overwrite output if it already exists</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id6">
+<h3>Example<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span>$ visp_polcal -D DarkCal.FITS -S SolarCal.FITS -G GeoCal.FITS -j 4 ../raw IPC
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="science-calibration">
+<h2>Science Calibration<a class="headerlink" href="#science-calibration" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id7">
+<h3>Usage<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: visp_science [-h] [-D DARK_CAL] [-d DARK_CAL_ERR] [-S SOLAR_CAL] [-s SOLAR_CAL_ERR] [-G GEO_CAL] [-P DEMOD] [-t TELESCOPE_DB] [-n] [-p] [-E] [-f] raw_dir pos output</span>
+
+<span class="go">Run the ViSP Pipeline&#39;s Science Calibration module (i.e., reduce science data). This is almost a direct hook into ScienceCalibration.main() and the keyword options are exposed as command</span>
+<span class="go">line options. Note that this command only reduces a single slit position ata time and is single-threaded. For the full set of reduction features use &#39;visp_pipeline&#39;.</span>
+
+<span class="go">positional arguments:</span>
+<span class="go">  raw_dir               Location of directory holding raw Observation frames</span>
+<span class="go">  pos                   Slit position (VISP_020) to reduce</span>
+<span class="go">  output                Name of FITS output file. A FITS suffix will be enforced</span>
+
+<span class="go">optional arguments:</span>
+<span class="go">  -h, --help            show this help message and exit</span>
+<span class="go">  -D DARK_CAL, --dark-cal DARK_CAL</span>
+<span class="go">                        Location of previously computed Dark Calibration FITS file</span>
+<span class="go">  -d DARK_CAL_ERR, --dark-cal-err DARK_CAL_ERR</span>
+<span class="go">                        FITS file containing errors on provided Dark. This doesn&#39;t do anything unless -E is also set.</span>
+<span class="go">  -S SOLAR_CAL, --solar-cal SOLAR_CAL</span>
+<span class="go">                        Location of previously computed Solar Gain Calibration FITS file</span>
+<span class="go">  -s SOLAR_CAL_ERR, --solar-cal-err SOLAR_CAL_ERR</span>
+<span class="go">                        FITS file containing errors on provided Solar Gain. This doesn&#39;t do anything unless -E is also set.</span>
+<span class="go">  -G GEO_CAL, --geo-cal GEO_CAL</span>
+<span class="go">                        Location of previously computed Geometric Calibration FITS file</span>
+<span class="go">  -P DEMOD, --demod DEMOD</span>
+<span class="go">                        Location of previously computed demodulation matrix</span>
+<span class="go">  -t TELESCOPE_DB, --telescope-db TELESCOPE_DB</span>
+<span class="go">                        Location of custom telescope mirror database</span>
+<span class="go">  -n, --no-telescope-correction</span>
+<span class="go">                        Do NOT include a correction for M1 - M7</span>
+<span class="go">  -p, --no-parallactic  Do NOT include a correction for parallactic rotation</span>
+<span class="go">  -E, --gen-err         Also generate a sigma uncertainty frame</span>
+<span class="go">  -f, --force           Overwrite output if it already exists</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id8">
+<h3>Example<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> visp_science -D DarkCal.FITS -S SolarCal.FITS -G GeoCal.FITS -P IPC.FITS ../raw <span class="m">1</span> Sci
+</pre></div>
+</div>
+</div>
+<div class="section" id="slit-positions">
+<h3>Slit Positions<a class="headerlink" href="#slit-positions" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">visp_science</span></code> requires a slit position number. To see what slit positions are available, use the <code class="docutils literal notranslate"><span class="pre">visp_list</span></code> command:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> visp_list ../raw
+<span class="go"> Found the following slit positions in ../raw/:</span>
+<span class="go">   1</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <div class="left-footer">
+         &copy; 2021, Arthur Eigenbrot
+       <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png" /></a>
+    </div>
+   
+    <div class="right-footer">
+      Last updated on 22 Jan 2021.
+    </div>
+    <div class="centre-footer">
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

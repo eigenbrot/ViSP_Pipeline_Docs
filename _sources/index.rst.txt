@@ -20,10 +20,9 @@ with:
 
 .. code-block:: console
 
-  $ visp_pipeline -b config.ini
+  $ visp_pipeline -d PATH_TO_RAW_DIR config.ini
 
-The file ``config.ini`` is editable with any standard editor. Once this file has been correctly populated the data can
-be reduced with
+This makes a default input configuration file with sensible values. The data can then be reduced with
 
 .. code-block:: console
 
@@ -39,5 +38,6 @@ More information on the format/options of the configuration file can be found in
   self
   config_file
   walkthrough
+  IPA_access
   data_warning
   API
