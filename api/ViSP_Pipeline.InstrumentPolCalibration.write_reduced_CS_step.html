@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>write_reduced_CS_step &#8212; ViSP_Pipeline v0.21.0</title>
+    <title>write_reduced_CS_step &#8212; ViSP_Pipeline v1.0.0</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -19,7 +19,7 @@
     <link rel="shortcut icon" href="../_static/favico.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="AlignmentData" href="ViSP_Pipeline.Data.AlignmentData.html" />
+    <link rel="next" title="average_spectrum" href="ViSP_Pipeline.SolarGainCalibration.average_spectrum.html" />
     <link rel="prev" title="upsample_demodulation" href="ViSP_Pipeline.InstrumentPolCalibration.upsample_demodulation.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -91,7 +91,7 @@
     </a>
   </li>
   <li>
-    <a href="ViSP_Pipeline.Data.AlignmentData.html" title="Next Chapter: AlignmentData"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">AlignmentData &raquo;</span>
+    <a href="ViSP_Pipeline.SolarGainCalibration.average_spectrum.html" title="Next Chapter: average_spectrum"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">average_spectrum &raquo;</span>
     </a>
   </li>
               
@@ -138,11 +138,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../data_warning.html">A Word About Data, RAM, and Disk Space</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../API.html">Reference/API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ViSPPipeline">ViSP_Pipeline.ViSPPipeline Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ViSPPolCalPipeline">ViSP_Pipeline.ViSPPolCalPipeline Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ScienceCalibration">ViSP_Pipeline.ScienceCalibration Module</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.InstrumentPolCalibration">ViSP_Pipeline.InstrumentPolCalibration Module</a><ul class="current">
-<li class="toctree-l3 current"><a class="reference internal" href="../API.html#id3">Functions</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.InstrumentPolCalibration.command_line.html">command_line</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../API.html#id2">Functions</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.InstrumentPolCalibration.extract_macropixels.html">extract_macropixels</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.InstrumentPolCalibration.generate_instrument_pol_calibration.html">generate_instrument_pol_calibration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.InstrumentPolCalibration.main.html">main</a></li>
@@ -155,8 +153,14 @@
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.InstrumentPolCalibration.upsample_CU_parameters.html">upsample_CU_parameters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.InstrumentPolCalibration.upsample_demodulation.html">upsample_demodulation</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">write_reduced_CS_step</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.SolarGainCalibration">ViSP_Pipeline.SolarGainCalibration Module</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../API.html#id3">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../API.html#id4">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../API.html#id5">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../API.html#id6">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../API.html#id7">Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.Data">ViSP_Pipeline.Data Module</a></li>
@@ -175,7 +179,7 @@
 <h1>write_reduced_CS_step<a class="headerlink" href="#write-reduced-cs-step" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt id="ViSP_Pipeline.InstrumentPolCalibration.write_reduced_CS_step">
-<code class="sig-prename descclassname">ViSP_Pipeline.InstrumentPolCalibration.</code><code class="sig-name descname">write_reduced_CS_step</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">binData_1</span></em>, <em class="sig-param"><span class="n">binData_2</span></em>, <em class="sig-param"><span class="n">outpre</span></em>, <em class="sig-param"><span class="n">CS_step</span></em>, <em class="sig-param"><span class="n">err_1</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">err_2</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/InstrumentPolCalibration.html#write_reduced_CS_step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.InstrumentPolCalibration.write_reduced_CS_step" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">ViSP_Pipeline.InstrumentPolCalibration.</code><code class="sig-name descname">write_reduced_CS_step</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">binData_1</span><span class="p">:</span> <span class="n"><a class="reference internal" href="ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData" title="ViSP_Pipeline.Data.FitsData">ViSP_Pipeline.Data.FitsData</a></span></em>, <em class="sig-param"><span class="n">binData_2</span><span class="p">:</span> <span class="n"><a class="reference internal" href="ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData" title="ViSP_Pipeline.Data.FitsData">ViSP_Pipeline.Data.FitsData</a></span></em>, <em class="sig-param"><span class="n">outpre</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em>, <em class="sig-param"><span class="n">CS_step</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a></span></em>, <em class="sig-param"><span class="n">err_1</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData" title="ViSP_Pipeline.Data.FitsData">ViSP_Pipeline.Data.FitsData</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">err_2</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData" title="ViSP_Pipeline.Data.FitsData">ViSP_Pipeline.Data.FitsData</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)">None</a><a class="reference internal" href="../_modules/ViSP_Pipeline/InstrumentPolCalibration.html#write_reduced_CS_step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.InstrumentPolCalibration.write_reduced_CS_step" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write reduced PolCal to a sensible place.</p>
 <p>The sensible place is DIR/beam[1|2]/VISP_CS_STEP.PAC.beam[1|2].fits where DIR and STEP are defined by inputs.</p>
 <dl class="field-list simple">
@@ -213,7 +217,7 @@
     </div>
    
     <div class="right-footer">
-      Last updated on 22 Jan 2021.
+      Last updated on 06 Jul 2021.
     </div>
     <div class="centre-footer">
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1

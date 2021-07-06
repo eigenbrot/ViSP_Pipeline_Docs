@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AlignmentData &#8212; ViSP_Pipeline v0.21.0</title>
+    <title>AlignmentData &#8212; ViSP_Pipeline v1.0.0</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -20,7 +20,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="CSStep" href="ViSP_Pipeline.Data.CSStep.html" />
-    <link rel="prev" title="write_reduced_CS_step" href="ViSP_Pipeline.InstrumentPolCalibration.write_reduced_CS_step.html" />
+    <link rel="prev" title="save_M12_map_frame" href="ViSP_Pipeline.PolarimetricUtils.save_M12_map_frame.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -87,7 +87,7 @@
               
                 
   <li>
-    <a href="ViSP_Pipeline.InstrumentPolCalibration.write_reduced_CS_step.html" title="Previous Chapter: write_reduced_CS_step"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; write_reduced_CS_step</span>
+    <a href="ViSP_Pipeline.PolarimetricUtils.save_M12_map_frame.html" title="Previous Chapter: save_M12_map_frame"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; save_M12_map_frame</span>
     </a>
   </li>
   <li>
@@ -138,7 +138,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../data_warning.html">A Word About Data, RAM, and Disk Space</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../API.html">Reference/API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ViSPPipeline">ViSP_Pipeline.ViSPPipeline Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ViSPPolCalPipeline">ViSP_Pipeline.ViSPPolCalPipeline Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ScienceCalibration">ViSP_Pipeline.ScienceCalibration Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.InstrumentPolCalibration">ViSP_Pipeline.InstrumentPolCalibration Module</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.Data">ViSP_Pipeline.Data Module</a><ul class="current">
@@ -174,10 +173,10 @@
 <h1>AlignmentData<a class="headerlink" href="#alignmentdata" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="ViSP_Pipeline.Data.AlignmentData">
-<em class="property">class </em><code class="sig-prename descclassname">ViSP_Pipeline.Data.</code><code class="sig-name descname">AlignmentData</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_dir</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">memmap</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ViSP_Pipeline.Data.AlignmentData" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">ViSP_Pipeline.Data.</code><code class="sig-name descname">AlignmentData</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_dir</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">memmap</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ViSP_Pipeline.Data.AlignmentData" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ViSP_Pipeline.Data._TaskData</span></code></p>
 <p>AlignmentData is an extension of <code class="xref py py-obj docutils literal notranslate"><span class="pre">FitData</span></code> designed to only hold data associated with Alignment. It inherits all of the
-functionality of <a class="reference internal" href="ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData" title="ViSP_Pipeline.Data.FitsData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FitsData</span></code></a> and defines an extra method that loads all data from a directory who’s headers match the 
+functionality of <a class="reference internal" href="ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData" title="ViSP_Pipeline.Data.FitsData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FitsData</span></code></a> and defines an extra method that loads all data from a directory who’s headers match the
 following:</p>
 <blockquote>
 <div><blockquote>
@@ -222,7 +221,7 @@ following:</p>
     </div>
    
     <div class="right-footer">
-      Last updated on 22 Jan 2021.
+      Last updated on 06 Jul 2021.
     </div>
     <div class="centre-footer">
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1

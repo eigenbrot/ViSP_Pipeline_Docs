@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ViSP_Pipeline.ViSPPipeline &#8212; ViSP_Pipeline v0.21.0</title>
+    <title>ViSP_Pipeline.ViSPPipeline &#8212; ViSP_Pipeline v1.0.0</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
@@ -134,21 +134,29 @@
       
   <h1>Source code for ViSP_Pipeline.ViSPPipeline</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">ast</span>
+<span class="kn">import</span> <span class="nn">configparser</span>
+<span class="kn">import</span> <span class="nn">multiprocessing</span> <span class="k">as</span> <span class="nn">mp</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">resource</span>
 <span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">import</span> <span class="nn">multiprocessing</span> <span class="k">as</span> <span class="nn">mp</span>
-<span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
-<span class="kn">import</span> <span class="nn">configparser</span>
 <span class="kn">from</span> <span class="nn">configparser</span> <span class="kn">import</span> <span class="n">ConfigParser</span>
+<span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
+
 <span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span> <span class="k">as</span> <span class="n">pyfits</span>
-<span class="kn">from</span> <span class="nn">ViSP_Pipeline</span> <span class="kn">import</span> <span class="n">Data</span><span class="p">,</span> <span class="n">DarkCalibration</span><span class="p">,</span> <span class="n">LampGainCalibration</span><span class="p">,</span> <span class="n">SolarGainCalibration</span><span class="p">,</span> <span class="n">ScienceCalibration</span><span class="p">,</span> <span class="n">InstrumentPolCalibration</span>
+
+<span class="kn">from</span> <span class="nn">ViSP_Pipeline</span> <span class="kn">import</span> <span class="n">DarkCalibration</span>
+<span class="kn">from</span> <span class="nn">ViSP_Pipeline</span> <span class="kn">import</span> <span class="n">Data</span>
+<span class="kn">from</span> <span class="nn">ViSP_Pipeline</span> <span class="kn">import</span> <span class="n">InstrumentPolCalibration</span>
+<span class="kn">from</span> <span class="nn">ViSP_Pipeline</span> <span class="kn">import</span> <span class="n">LampGainCalibration</span>
+<span class="kn">from</span> <span class="nn">ViSP_Pipeline</span> <span class="kn">import</span> <span class="n">ScienceCalibration</span>
+<span class="kn">from</span> <span class="nn">ViSP_Pipeline</span> <span class="kn">import</span> <span class="n">SolarGainCalibration</span>
+<span class="kn">from</span> <span class="nn">ViSP_Pipeline.data</span> <span class="kn">import</span> <span class="n">CONSTANTS</span>
+<span class="kn">from</span> <span class="nn">ViSP_Pipeline.data</span> <span class="kn">import</span> <span class="n">S122</span>
 <span class="kn">from</span> <span class="nn">ViSP_Pipeline.tag</span> <span class="kn">import</span> <span class="n">tag</span>
-<span class="kn">from</span> <span class="nn">ViSP_Pipeline.data</span> <span class="kn">import</span> <span class="n">S122</span><span class="p">,</span> <span class="n">CONSTANTS</span>
 
 
-<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ViSPPipeline.main.html#ViSP_Pipeline.ViSPPipeline.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">config_file</span><span class="p">):</span>
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ViSPPipeline.main.html#ViSP_Pipeline.ViSPPipeline.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">config_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;The main, runner script for the entire ViSP Pipeline.</span>
 
 <span class="sd">    The role of this function is to read in the configuration file and make calls to the appropriate pipeline modules.</span>
@@ -158,7 +166,7 @@
     <span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">ConfigParser</span><span class="p">()</span>
     <span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">config_file</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Loaded configuration file </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">config_file</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: Loaded configuration file </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">config_file</span><span class="p">))</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">check_files</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
         <span class="k">return</span> <span class="mi">1</span>
@@ -166,17 +174,17 @@
     <span class="c1"># Decide where to save any FitsData tmp files. This is here so that we never try to write anything to the directory</span>
     <span class="c1"># from which the code is run with explicate orders. On the DC there is no write access on the process machines.</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">tmpdir</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;tmp_dir&#39;</span><span class="p">]</span>
+        <span class="n">tmpdir</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;Main&quot;</span><span class="p">][</span><span class="s2">&quot;tmp_dir&quot;</span><span class="p">]</span>
     <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-        <span class="c1">#TODO: This is actually the first place the existence of output_prefix is checked. Probably shouldn&#39;t be in a KeyError try/except!</span>
-        <span class="n">tmpdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;output_prefix&#39;</span><span class="p">])</span> <span class="ow">or</span> <span class="s1">&#39;.&#39;</span>
+        <span class="c1"># TODO: This is actually the first place the existence of output_prefix is checked. Probably shouldn&#39;t be in a KeyError try/except!</span>
+        <span class="n">tmpdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;Main&quot;</span><span class="p">][</span><span class="s2">&quot;output_prefix&quot;</span><span class="p">])</span> <span class="ow">or</span> <span class="s2">&quot;.&quot;</span>
     <span class="n">Data</span><span class="o">.</span><span class="n">TMPDIR</span> <span class="o">=</span> <span class="n">tmpdir</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">Data</span><span class="o">.</span><span class="n">TMPDIR</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># Set a global suffix, if needed</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">suffix</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;suffix&#39;</span><span class="p">]</span>
-        <span class="n">CONSTANTS</span><span class="p">[</span><span class="s1">&#39;Data&#39;</span><span class="p">][</span><span class="s1">&#39;suffix&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">suffix</span>
+        <span class="n">suffix</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;Main&quot;</span><span class="p">][</span><span class="s2">&quot;suffix&quot;</span><span class="p">]</span>
+        <span class="n">CONSTANTS</span><span class="p">[</span><span class="s2">&quot;Data&quot;</span><span class="p">][</span><span class="s2">&quot;suffix&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">suffix</span>
     <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
         <span class="k">pass</span>
 
@@ -184,40 +192,45 @@
     <span class="n">sci_kwargs</span> <span class="o">=</span> <span class="n">generate_intermediate_objects</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 
     <span class="c1"># Now generate the demodulation matrices, if needed</span>
-    <span class="n">ispol</span> <span class="o">=</span> <span class="n">get_pol_mode</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;raw_sci_dir&#39;</span><span class="p">],</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;data_set_ID&#39;</span><span class="p">])</span>
-    <span class="n">save_M12</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="k">if</span> <span class="n">ispol</span><span class="p">:</span>
-        <span class="n">pol_kwargs</span> <span class="o">=</span> <span class="n">generate_polarimetric_objects</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">sci_kwargs</span><span class="p">)</span>
-        <span class="n">save_M12</span> <span class="o">=</span> <span class="n">pol_kwargs</span><span class="p">[</span><span class="s1">&#39;save_M12_map&#39;</span><span class="p">]</span>
+    <span class="n">pol_kwargs</span> <span class="o">=</span> <span class="n">generate_polarimetric_objects</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">sci_kwargs</span><span class="p">)</span>
+    <span class="n">ispol</span> <span class="o">=</span> <span class="n">pol_kwargs</span><span class="p">[</span><span class="s2">&quot;pol&quot;</span><span class="p">]</span>
+    <span class="n">save_M12</span> <span class="o">=</span> <span class="n">pol_kwargs</span><span class="p">[</span><span class="s2">&quot;save_M12_map&quot;</span><span class="p">]</span>
 
-        <span class="c1"># Merge the two dictionaries together.</span>
-        <span class="n">sci_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">pol_kwargs</span><span class="p">)</span>
+    <span class="c1"># Merge the two dictionaries together.</span>
+    <span class="n">sci_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">pol_kwargs</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Running science data&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Reading files in </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;raw_sci_dir&#39;</span><span class="p">]))</span>
-    <span class="n">all_Data</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">DataSetData</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;raw_sci_dir&#39;</span><span class="p">],</span> <span class="n">dataset_ID</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;data_set_ID&#39;</span><span class="p">])</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Input directory contains </span><span class="si">{}</span><span class="s1"> slit positions&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">all_Data</span><span class="o">.</span><span class="n">num_pos</span><span class="p">))</span>
+    <span class="c1"># Check if this weird, debug-ish keyword has been asked for</span>
+    <span class="n">sci_kwargs</span><span class="p">[</span><span class="s2">&quot;skip_cal_verification&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;Main&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s2">&quot;skip_cal_verification&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: Running science data&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: Reading files in </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;Main&quot;</span><span class="p">][</span><span class="s2">&quot;raw_sci_dir&quot;</span><span class="p">]))</span>
+    <span class="n">all_Data</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">DataSetData</span><span class="p">(</span>
+        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;Main&quot;</span><span class="p">][</span><span class="s2">&quot;raw_sci_dir&quot;</span><span class="p">],</span> <span class="n">dataset_ID</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;Main&quot;</span><span class="p">][</span><span class="s2">&quot;data_set_ID&quot;</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: Input directory contains </span><span class="si">{}</span><span class="s2"> slit positions&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">all_Data</span><span class="o">.</span><span class="n">num_pos</span><span class="p">))</span>
 
     <span class="c1"># If the output prefix specifies a directory we&#39;ll create that now</span>
-    <span class="n">output_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;output_prefix&#39;</span><span class="p">])</span>
+    <span class="n">output_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;Main&quot;</span><span class="p">][</span><span class="s2">&quot;output_prefix&quot;</span><span class="p">])</span>
     <span class="k">if</span> <span class="n">output_dir</span><span class="p">:</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Constructing ScienceCalibration run&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: Constructing ScienceCalibration run&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
     <span class="n">start_science_multiproc</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">sci_kwargs</span><span class="p">,</span> <span class="n">all_Data</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">ispol</span> <span class="ow">and</span> <span class="n">save_M12</span><span class="p">:</span>
         <span class="kn">from</span> <span class="nn">ViSP_Pipeline</span> <span class="kn">import</span> <span class="n">PolarimetricUtils</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Extracting full spatial map for PA&amp;C&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
-        <span class="n">savedir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;output_prefix&#39;</span><span class="p">])</span> <span class="ow">or</span> <span class="s1">&#39;.&#39;</span>
-        <span class="n">M12dir</span> <span class="o">=</span> <span class="n">savedir</span> <span class="o">+</span> <span class="s1">&#39;/M12_map&#39;</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: Extracting full spatial map for PA&amp;C&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
+        <span class="n">savedir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;Main&quot;</span><span class="p">][</span><span class="s2">&quot;output_prefix&quot;</span><span class="p">])</span> <span class="ow">or</span> <span class="s2">&quot;.&quot;</span>
+        <span class="n">M12dir</span> <span class="o">=</span> <span class="n">savedir</span> <span class="o">+</span> <span class="s2">&quot;/M12_map&quot;</span>
         <span class="n">PolarimetricUtils</span><span class="o">.</span><span class="n">extract_M12_map</span><span class="p">(</span><span class="n">M12dir</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: All done in </span><span class="si">{}</span><span class="s1"> s&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t1</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: All done in </span><span class="si">{}</span><span class="s2"> s&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t1</span><span class="p">))</span>
 
     <span class="k">return</span></div>
 
-<div class="viewcode-block" id="check_files"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ViSPPipeline.check_files.html#ViSP_Pipeline.ViSPPipeline.check_files">[docs]</a><span class="k">def</span> <span class="nf">check_files</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+
+<div class="viewcode-block" id="check_files"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ViSPPipeline.check_files.html#ViSP_Pipeline.ViSPPipeline.check_files">[docs]</a><span class="k">def</span> <span class="nf">check_files</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Check that all the files/dirs needed for reduction at least exist.</span>
 
 <span class="sd">    This makes sure we don&#39;t get an error caused by a missing file 30 minutes into reduction.</span>
@@ -235,58 +248,91 @@
 <span class="sd">        True if all files exist. False otherwise.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Check to make sure raw science and calibration exists</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;raw_sci_dir&#39;</span><span class="p">]):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Raw science directory </span><span class="si">{}</span><span class="s1"> does not exist!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;raw_sci_dir&#39;</span><span class="p">]))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;Main&quot;</span><span class="p">][</span><span class="s2">&quot;raw_sci_dir&quot;</span><span class="p">]):</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: Raw science directory </span><span class="si">{}</span><span class="s2"> does not exist!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">tag</span><span class="p">(),</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;Main&quot;</span><span class="p">][</span><span class="s2">&quot;raw_sci_dir&quot;</span><span class="p">]</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="kc">False</span>
 
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;DarkCalibration&#39;</span><span class="p">][</span><span class="s1">&#39;raw_dark_dir&#39;</span><span class="p">])</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;dark_cal&#39;</span><span class="p">]):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Raw dark directory </span><span class="si">{}</span><span class="s1"> does not exist!&#39;</span><span class="o">.</span>\
-              <span class="nb">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;DarkCalibration&#39;</span><span class="p">][</span><span class="s1">&#39;raw_dark_dir&#39;</span><span class="p">]))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;DarkCalibration&quot;</span><span class="p">][</span><span class="s2">&quot;raw_dark_dir&quot;</span><span class="p">])</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span>
+        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;Main&quot;</span><span class="p">][</span><span class="s2">&quot;dark_cal&quot;</span><span class="p">]</span>
+    <span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: Raw dark directory </span><span class="si">{}</span><span class="s2"> does not exist!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">tag</span><span class="p">(),</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;DarkCalibration&quot;</span><span class="p">][</span><span class="s2">&quot;raw_dark_dir&quot;</span><span class="p">]</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="kc">False</span>
 
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;LampGainCalibration&#39;</span><span class="p">][</span><span class="s1">&#39;raw_lamp_gain_dir&#39;</span><span class="p">])</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;lamp_gain_cal&#39;</span><span class="p">]):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Raw lamp gain directory </span><span class="si">{}</span><span class="s1"> does not exist!&#39;</span><span class="o">.</span>\
-              <span class="nb">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;LampGainCalibration&#39;</span><span class="p">][</span><span class="s1">&#39;raw_lamp_gain_dir&#39;</span><span class="p">]))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span>
+        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;LampGainCalibration&quot;</span><span class="p">][</span><span class="s2">&quot;raw_lamp_gain_dir&quot;</span><span class="p">]</span>
+    <span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;Main&quot;</span><span class="p">][</span><span class="s2">&quot;lamp_gain_cal&quot;</span><span class="p">]):</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: Raw lamp gain directory </span><span class="si">{}</span><span class="s2"> does not exist!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">tag</span><span class="p">(),</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;LampGainCalibration&quot;</span><span class="p">][</span><span class="s2">&quot;raw_lamp_gain_dir&quot;</span><span class="p">]</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="kc">False</span>
 
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;SolarGainCalibration&#39;</span><span class="p">][</span><span class="s1">&#39;raw_solar_gain_dir&#39;</span><span class="p">])</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;solar_gain_cal&#39;</span><span class="p">])</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;geometric_cal&#39;</span><span class="p">])):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Raw solar gain directory </span><span class="si">{}</span><span class="s1"> does not exist!&#39;</span><span class="o">.</span>\
-              <span class="nb">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;SolarGainCalibration&#39;</span><span class="p">][</span><span class="s1">&#39;raw_solar_gain_dir&#39;</span><span class="p">]))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;SolarGainCalibration&quot;</span><span class="p">][</span><span class="s2">&quot;raw_solar_gain_dir&quot;</span><span class="p">])</span> <span class="ow">and</span> <span class="p">(</span>
+        <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;Main&quot;</span><span class="p">][</span><span class="s2">&quot;solar_gain_cal&quot;</span><span class="p">])</span>
+        <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;Main&quot;</span><span class="p">][</span><span class="s2">&quot;geometric_cal&quot;</span><span class="p">])</span>
+    <span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: Raw solar gain directory </span><span class="si">{}</span><span class="s2"> does not exist!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">tag</span><span class="p">(),</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;SolarGainCalibration&quot;</span><span class="p">][</span><span class="s2">&quot;raw_solar_gain_dir&quot;</span><span class="p">]</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="kc">False</span>
 
     <span class="c1"># If polarized data is detected, check polcal</span>
-    <span class="n">ispol</span> <span class="o">=</span> <span class="n">get_pol_mode</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;raw_sci_dir&#39;</span><span class="p">],</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;data_set_ID&#39;</span><span class="p">])</span>
+    <span class="n">ispol</span> <span class="o">=</span> <span class="n">get_pol_mode</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;Main&quot;</span><span class="p">][</span><span class="s2">&quot;raw_sci_dir&quot;</span><span class="p">],</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;Main&quot;</span><span class="p">][</span><span class="s2">&quot;data_set_ID&quot;</span><span class="p">])</span>
     <span class="k">if</span> <span class="n">ispol</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;instrument_pol_cal&#39;</span><span class="p">]):</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;InstrumentPolarimetricCalibration&#39;</span><span class="p">][</span><span class="s1">&#39;raw_pol_dir&#39;</span><span class="p">]):</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Raw PolCal data </span><span class="si">{}</span><span class="s1"> does not exist!&#39;</span><span class="o">.</span> \
-                <span class="nb">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;InstrumentPolarimetricCalibration&#39;</span><span class="p">][</span><span class="s1">&#39;raw_pol_dir&#39;</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;Main&quot;</span><span class="p">][</span><span class="s2">&quot;instrument_pol_cal&quot;</span><span class="p">]):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;InstrumentPolarimetricCalibration&quot;</span><span class="p">][</span><span class="s2">&quot;raw_pol_dir&quot;</span><span class="p">]):</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: Raw PolCal data </span><span class="si">{}</span><span class="s2"> does not exist!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">tag</span><span class="p">(),</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;InstrumentPolarimetricCalibration&quot;</span><span class="p">][</span><span class="s2">&quot;raw_pol_dir&quot;</span><span class="p">]</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
                 <span class="k">return</span> <span class="kc">False</span>
 
     <span class="k">return</span> <span class="kc">True</span></div>
 
-<div class="viewcode-block" id="check_resource_limits"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ViSPPipeline.check_resource_limits.html#ViSP_Pipeline.ViSPPipeline.check_resource_limits">[docs]</a><span class="k">def</span> <span class="nf">check_resource_limits</span><span class="p">(</span><span class="n">num_slit_pos</span><span class="p">):</span>
+
+<div class="viewcode-block" id="check_resource_limits"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ViSPPipeline.check_resource_limits.html#ViSP_Pipeline.ViSPPipeline.check_resource_limits">[docs]</a><span class="k">def</span> <span class="nf">check_resource_limits</span><span class="p">(</span><span class="n">num_slit_pos</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Checks that the process resource limits are large enough for the reduction run</span>
 
 <span class="sd">    This really only matters for Science Calibration when there are a large number of slit positions. All of the values</span>
 <span class="sd">    involved are highly empirical based on A. Eigenbrot&#39;s laptop.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">curr_soft_limit</span><span class="p">,</span> <span class="n">curr_hard_limit</span> <span class="o">=</span> <span class="n">resource</span><span class="o">.</span><span class="n">getrlimit</span><span class="p">(</span><span class="n">resource</span><span class="o">.</span><span class="n">RLIMIT_NOFILE</span><span class="p">)</span>
-    <span class="n">needed</span> <span class="o">=</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s1">&#39;Data&#39;</span><span class="p">][</span><span class="s1">&#39;num_open_files_per_pos&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_slit_pos</span>
+    <span class="n">needed</span> <span class="o">=</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s2">&quot;Data&quot;</span><span class="p">][</span><span class="s2">&quot;num_open_files_per_pos&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_slit_pos</span>
 
     <span class="k">if</span> <span class="n">needed</span> <span class="o">&gt;</span> <span class="n">curr_soft_limit</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: The open file descriptor limit (</span><span class="si">{}</span><span class="s1">) might be too low to run all slit positions. &#39;</span>
-              <span class="s1">&#39;Trying to change it to </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">curr_soft_limit</span><span class="p">,</span> <span class="n">needed</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: The open file descriptor limit (</span><span class="si">{}</span><span class="s2">) might be too low to run all slit positions. &quot;</span>
+            <span class="s2">&quot;Trying to change it to </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">curr_soft_limit</span><span class="p">,</span> <span class="n">needed</span><span class="p">)</span>
+        <span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">resource</span><span class="o">.</span><span class="n">setrlimit</span><span class="p">(</span><span class="n">resource</span><span class="o">.</span><span class="n">RLIMIT_NOFILE</span><span class="p">,</span> <span class="p">(</span><span class="n">needed</span><span class="p">,</span> <span class="n">curr_hard_limit</span><span class="p">))</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: WARNING! Could not update limit. Science Cal may fail. Maybe try fewer threads.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: WARNING! Could not update limit. Science Cal may fail. Maybe try fewer threads.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">tag</span><span class="p">()</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">:  Limit exception was &quot;</span><span class="si">{}</span><span class="s1">&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">e</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Successfully changed open file limit to </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">needed</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: Successfully changed open file limit to </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">needed</span><span class="p">))</span>
     <span class="k">return</span></div>
 
-<div class="viewcode-block" id="start_science_multiproc"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ViSPPipeline.start_science_multiproc.html#ViSP_Pipeline.ViSPPipeline.start_science_multiproc">[docs]</a><span class="k">def</span> <span class="nf">start_science_multiproc</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">sci_kwargs</span><span class="p">,</span> <span class="n">datasetData</span><span class="p">):</span>
+
+<div class="viewcode-block" id="start_science_multiproc"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ViSPPipeline.start_science_multiproc.html#ViSP_Pipeline.ViSPPipeline.start_science_multiproc">[docs]</a><span class="k">def</span> <span class="nf">start_science_multiproc</span><span class="p">(</span>
+    <span class="n">config</span><span class="p">:</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">,</span> <span class="n">sci_kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">datasetData</span><span class="p">:</span> <span class="n">Data</span><span class="o">.</span><span class="n">DataSetData</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Manage a set of Science Calibration processes using multiprocessing.</span>
 
 <span class="sd">    Each slit position (i.e., separate file) is assigned its own process and then the processes are started in such</span>
@@ -309,27 +355,27 @@
 <span class="sd">    None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Science kwargs: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">sci_kwargs</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: Science kwargs: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">sci_kwargs</span><span class="p">))</span>
 
-    <span class="n">numthread</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;threads&#39;</span><span class="p">])</span>
+    <span class="n">numthread</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;Main&quot;</span><span class="p">][</span><span class="s2">&quot;threads&quot;</span><span class="p">])</span>
     <span class="n">slit_pos_list</span> <span class="o">=</span> <span class="n">datasetData</span><span class="o">.</span><span class="n">spatial_positions</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">sci_kwargs</span><span class="p">[</span><span class="s1">&#39;remove_tele&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;Main&#39;</span><span class="p">,</span> <span class="s1">&#39;remove_tele_pol&#39;</span><span class="p">)</span>
+        <span class="n">sci_kwargs</span><span class="p">[</span><span class="s2">&quot;remove_tele&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s2">&quot;Main&quot;</span><span class="p">,</span> <span class="s2">&quot;remove_tele&quot;</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">configparser</span><span class="o">.</span><span class="n">NoOptionError</span><span class="p">:</span>
         <span class="k">pass</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">sci_kwargs</span><span class="p">[</span><span class="s1">&#39;include_parallactic&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;Main&#39;</span><span class="p">,</span><span class="s1">&#39;include_parallactic&#39;</span><span class="p">)</span>
+        <span class="n">sci_kwargs</span><span class="p">[</span><span class="s2">&quot;include_parallactic&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s2">&quot;Main&quot;</span><span class="p">,</span> <span class="s2">&quot;include_parallactic&quot;</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">configparser</span><span class="o">.</span><span class="n">NoOptionError</span><span class="p">:</span>
         <span class="k">pass</span>
 
     <span class="c1"># Let&#39;s see if the user wants to reduce only a subset of images</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">sp_str</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;slit_pos&#39;</span><span class="p">]</span>
+        <span class="n">sp_str</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;Main&quot;</span><span class="p">][</span><span class="s2">&quot;slit_pos&quot;</span><span class="p">]</span>
 
         <span class="c1"># They can provide a slice/range with &#39;XXX:YYY&#39;</span>
-        <span class="n">slice_match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s1">&#39;([0-9]*):([0-9]*)&#39;</span><span class="p">,</span> <span class="n">sp_str</span><span class="p">)</span>
+        <span class="n">slice_match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s2">&quot;([0-9]*):([0-9]*)&quot;</span><span class="p">,</span> <span class="n">sp_str</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">slice_match</span><span class="p">:</span>
             <span class="n">pos_subset</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">slice_match</span><span class="o">.</span><span class="n">groups</span><span class="p">()[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">slice_match</span><span class="o">.</span><span class="n">groups</span><span class="p">()[</span><span class="mi">1</span><span class="p">])))</span>
 
@@ -339,17 +385,17 @@
             <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">pos_subset</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">:</span>
                 <span class="n">pos_subset</span> <span class="o">=</span> <span class="p">[</span><span class="n">pos_subset</span><span class="p">]</span>
             <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">pos_subset</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">list</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;slit_pos must be either an int or list of ints&#39;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;slit_pos must be either an int or list of ints&quot;</span><span class="p">)</span>
 
         <span class="c1"># Make sure that the subset actually exists in the full list of slit positions</span>
         <span class="k">if</span> <span class="nb">all</span><span class="p">([</span><span class="n">i</span> <span class="ow">in</span> <span class="n">slit_pos_list</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">pos_subset</span><span class="p">]):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: only reducing slit positions </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">pos_subset</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: only reducing slit positions </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">pos_subset</span><span class="p">))</span>
             <span class="n">slit_pos_list</span> <span class="o">=</span> <span class="n">pos_subset</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;slit position </span><span class="si">{}</span><span class="s1"> is not in input directory&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pos_subset</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;slit position </span><span class="si">{}</span><span class="s2"> is not in input directory&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pos_subset</span><span class="p">))</span>
 
     <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: reducing all slit positions&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: reducing all slit positions&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
         <span class="k">pass</span>
 
     <span class="c1"># TODO: (tons of work) We might be able to improve resource usage if we don&#39;t spawn a new thread for each pos,</span>
@@ -359,20 +405,24 @@
 
     <span class="c1"># This loop sets up a list of mp processes. They have not been started.</span>
     <span class="n">jobs</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">sci_kwargs</span><span class="p">[</span><span class="s1">&#39;dark_lock&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
-    <span class="n">sci_kwargs</span><span class="p">[</span><span class="s1">&#39;gain_lock&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
-    <span class="n">sci_kwargs</span><span class="p">[</span><span class="s1">&#39;geo_lock&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
-    <span class="n">sci_kwargs</span><span class="p">[</span><span class="s1">&#39;pol_lock&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+    <span class="n">sci_kwargs</span><span class="p">[</span><span class="s2">&quot;dark_lock&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+    <span class="n">sci_kwargs</span><span class="p">[</span><span class="s2">&quot;gain_lock&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+    <span class="n">sci_kwargs</span><span class="p">[</span><span class="s2">&quot;geo_lock&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+    <span class="n">sci_kwargs</span><span class="p">[</span><span class="s2">&quot;pol_lock&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">spos</span> <span class="ow">in</span> <span class="n">slit_pos_list</span><span class="p">:</span>
-        <span class="n">outpre</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:}</span><span class="s1">.</span><span class="si">{:04}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;output_prefix&#39;</span><span class="p">],</span> <span class="n">spos</span><span class="p">)</span>
-        <span class="n">jobs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mp</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">ScienceCalibration</span><span class="o">.</span><span class="n">main</span><span class="p">,</span>
-                               <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">datasetData</span><span class="p">,</span> <span class="n">spos</span><span class="p">,</span> <span class="n">outpre</span><span class="p">],</span>
-                               <span class="n">kwargs</span><span class="o">=</span><span class="n">sci_kwargs</span><span class="p">,</span>
-                               <span class="n">name</span><span class="o">=</span><span class="s1">&#39;POS_</span><span class="si">{:04n}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">spos</span><span class="p">)))</span>
+        <span class="n">outpre</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:}</span><span class="s2">.</span><span class="si">{:04}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;Main&quot;</span><span class="p">][</span><span class="s2">&quot;output_prefix&quot;</span><span class="p">],</span> <span class="n">spos</span><span class="p">)</span>
+        <span class="n">jobs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">mp</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span>
+                <span class="n">target</span><span class="o">=</span><span class="n">ScienceCalibration</span><span class="o">.</span><span class="n">main</span><span class="p">,</span>
+                <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">datasetData</span><span class="p">,</span> <span class="n">spos</span><span class="p">,</span> <span class="n">outpre</span><span class="p">],</span>
+                <span class="n">kwargs</span><span class="o">=</span><span class="n">sci_kwargs</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;POS_</span><span class="si">{:04n}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">spos</span><span class="p">),</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
 
     <span class="c1"># Now, start jobs and keep starting jobs until the max number of threads is reached</span>
     <span class="c1">#  Make a check every second to see if any jobs have finished and thus created room for new ones to start.</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Starting ScienceCalibration with </span><span class="si">{}</span><span class="s1"> threads&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">numthread</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: Starting ScienceCalibration with </span><span class="si">{}</span><span class="s2"> threads&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">numthread</span><span class="p">))</span>
     <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">jobs</span><span class="p">):</span>
         <span class="k">while</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">is_alive</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">jobs</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">numthread</span><span class="p">:</span>
@@ -389,7 +439,7 @@
     <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="generate_intermediate_objects"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ViSPPipeline.generate_intermediate_objects.html#ViSP_Pipeline.ViSPPipeline.generate_intermediate_objects">[docs]</a><span class="k">def</span> <span class="nf">generate_intermediate_objects</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+<div class="viewcode-block" id="generate_intermediate_objects"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ViSPPipeline.generate_intermediate_objects.html#ViSP_Pipeline.ViSPPipeline.generate_intermediate_objects">[docs]</a><span class="k">def</span> <span class="nf">generate_intermediate_objects</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Generate/collect the intermediate Calibration Objects needed by the Science Calibration module.</span>
 
 <span class="sd">    If the an individual object already exists on disk, simply read it. Otherwise, call that object&#39;s generating module.</span>
@@ -405,86 +455,145 @@
 <span class="sd">        The Science Calibration keyword arguments that contain the intermediate calibration objects.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">mkerr</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;Main&#39;</span><span class="p">,</span> <span class="s1">&#39;gen_noise_frames&#39;</span><span class="p">)</span>
+    <span class="n">mkerr</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s2">&quot;Main&quot;</span><span class="p">,</span> <span class="s2">&quot;gen_noise_frames&quot;</span><span class="p">)</span>
 
     <span class="c1"># Dark</span>
     <span class="c1">######</span>
-    <span class="n">filename</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;dark_cal&#39;</span><span class="p">]</span>
-    <span class="n">no_err_msg</span> <span class="o">=</span> <span class="s2">&quot;gen_noise_frames is True, but I can&#39;t find an uncertainty frame &quot;</span> \
-                 <span class="s2">&quot;associated with </span><span class="si">{}</span><span class="s2">. You probably need to re-generate all Cal objects&quot;</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;Main&quot;</span><span class="p">][</span><span class="s2">&quot;dark_cal&quot;</span><span class="p">]</span>
+    <span class="n">no_err_msg</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;gen_noise_frames is True, but I can&#39;t find an uncertainty frame &quot;</span>
+        <span class="s2">&quot;associated with </span><span class="si">{}</span><span class="s2">. You probably need to re-generate all Cal objects&quot;</span>
+    <span class="p">)</span>
+    <span class="n">no_cal_option_list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;false&quot;</span><span class="p">,</span> <span class="s2">&quot;none&quot;</span><span class="p">]</span>
 
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">ensure_fits</span><span class="p">(</span><span class="n">filename</span><span class="p">)):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Could not find </span><span class="si">{}</span><span class="s1">, attempting to generate with DarkCalibration&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">filename</span><span class="p">))</span>
-        <span class="n">DarkCal</span><span class="p">,</span> <span class="n">DarkErr</span> <span class="o">=</span> <span class="n">DarkCalibration</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;DarkCalibration&#39;</span><span class="p">][</span><span class="s1">&#39;raw_dark_dir&#39;</span><span class="p">],</span> <span class="n">strip_fits</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span>
-                                                <span class="n">gen_err</span><span class="o">=</span><span class="n">mkerr</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">no_cal_option_list</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: NOT Using Dark&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
+        <span class="n">DarkCal</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">DarkErr</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">ensure_fits</span><span class="p">(</span><span class="n">filename</span><span class="p">)):</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: Could not find </span><span class="si">{}</span><span class="s2">, attempting to generate with DarkCalibration&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">tag</span><span class="p">(),</span> <span class="n">filename</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">DarkCal</span><span class="p">,</span> <span class="n">DarkErr</span> <span class="o">=</span> <span class="n">DarkCalibration</span><span class="o">.</span><span class="n">main</span><span class="p">(</span>
+            <span class="n">config</span><span class="p">[</span><span class="s2">&quot;DarkCalibration&quot;</span><span class="p">][</span><span class="s2">&quot;raw_dark_dir&quot;</span><span class="p">],</span> <span class="n">strip_fits</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="n">gen_err</span><span class="o">=</span><span class="n">mkerr</span>
+        <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">DarkCal</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">(</span><span class="n">ensure_fits</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Loaded </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">ensure_fits</span><span class="p">(</span><span class="n">filename</span><span class="p">)))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: Loaded </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">ensure_fits</span><span class="p">(</span><span class="n">filename</span><span class="p">)))</span>
 
         <span class="n">errname</span> <span class="o">=</span> <span class="n">gen_errname</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">DarkErr</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">(</span><span class="n">errname</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">:  and uncertainty </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">errname</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">:  and uncertainty </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">errname</span><span class="p">))</span>
         <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">mkerr</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">no_err_msg</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Could not find </span><span class="si">{}</span><span class="s1">. Setting error to None&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">errname</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: Could not find </span><span class="si">{}</span><span class="s2">. Setting error to None&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">errname</span><span class="p">))</span>
             <span class="n">DarkErr</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="c1"># Lamp Gain</span>
     <span class="c1">###########</span>
-    <span class="n">filename</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;lamp_gain_cal&#39;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">ensure_fits</span><span class="p">(</span><span class="n">filename</span><span class="p">)):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Could not find </span><span class="si">{}</span><span class="s1">, attempting to generate with LampGainCalibration&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">filename</span><span class="p">))</span>
-        <span class="n">LampCal</span><span class="p">,</span> <span class="n">LampErr</span> <span class="o">=</span> <span class="n">LampGainCalibration</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;LampGainCalibration&#39;</span><span class="p">][</span><span class="s1">&#39;raw_lamp_gain_dir&#39;</span><span class="p">],</span>
-                                                    <span class="n">strip_fits</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span>
-                                                    <span class="n">dark_cal</span><span class="o">=</span><span class="n">DarkCal</span><span class="p">,</span> <span class="n">dark_cal_err</span><span class="o">=</span><span class="n">DarkErr</span><span class="p">,</span> <span class="n">gen_err</span><span class="o">=</span><span class="n">mkerr</span><span class="p">)</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;Main&quot;</span><span class="p">][</span><span class="s2">&quot;lamp_gain_cal&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">no_cal_option_list</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: NOT Using Lamp Gain&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
+        <span class="n">LampCal</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">LampErr</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">ensure_fits</span><span class="p">(</span><span class="n">filename</span><span class="p">)):</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: Could not find </span><span class="si">{}</span><span class="s2">, attempting to generate with LampGainCalibration&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">tag</span><span class="p">(),</span> <span class="n">filename</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">LampCal</span><span class="p">,</span> <span class="n">LampErr</span> <span class="o">=</span> <span class="n">LampGainCalibration</span><span class="o">.</span><span class="n">main</span><span class="p">(</span>
+            <span class="n">config</span><span class="p">[</span><span class="s2">&quot;LampGainCalibration&quot;</span><span class="p">][</span><span class="s2">&quot;raw_lamp_gain_dir&quot;</span><span class="p">],</span>
+            <span class="n">strip_fits</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span>
+            <span class="n">dark_cal</span><span class="o">=</span><span class="n">DarkCal</span><span class="p">,</span>
+            <span class="n">dark_cal_err</span><span class="o">=</span><span class="n">DarkErr</span><span class="p">,</span>
+            <span class="n">gen_err</span><span class="o">=</span><span class="n">mkerr</span><span class="p">,</span>
+        <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">LampCal</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">(</span><span class="n">ensure_fits</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Loaded </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">ensure_fits</span><span class="p">(</span><span class="n">filename</span><span class="p">)))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: Loaded </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">ensure_fits</span><span class="p">(</span><span class="n">filename</span><span class="p">)))</span>
         <span class="n">errname</span> <span class="o">=</span> <span class="n">gen_errname</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">LampErr</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">(</span><span class="n">errname</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">:  and uncertainty </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">errname</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">:  and uncertainty </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">errname</span><span class="p">))</span>
         <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">mkerr</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">no_err_msg</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Could not find </span><span class="si">{}</span><span class="s1">. Setting error to None&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">errname</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: Could not find </span><span class="si">{}</span><span class="s2">. Setting error to None&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">errname</span><span class="p">))</span>
             <span class="n">LampErr</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="c1"># Solar Gain / GeoCal</span>
     <span class="c1">#####################</span>
-    <span class="n">filename</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;solar_gain_cal&#39;</span><span class="p">]</span>
-    <span class="n">geoname</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;geometric_cal&#39;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">ensure_fits</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">ensure_fits</span><span class="p">(</span><span class="n">geoname</span><span class="p">)):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Could not find </span><span class="si">{}</span><span class="s1"> and/or </span><span class="si">{}</span><span class="s1">, attempting to generate with SolarGainCalibration&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span>
-                                                                                                         <span class="n">filename</span><span class="p">,</span>
-                                                                                                         <span class="n">geoname</span><span class="p">))</span>
-        <span class="n">SolarCal</span><span class="p">,</span> <span class="n">SolarErr</span><span class="p">,</span> <span class="n">GeoCal</span> <span class="o">=</span> <span class="n">SolarGainCalibration</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;SolarGainCalibration&#39;</span><span class="p">][</span><span class="s1">&#39;raw_solar_gain_dir&#39;</span><span class="p">],</span>
-                                                               <span class="n">strip_fits</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="n">ensure_fits</span><span class="p">(</span><span class="n">geoname</span><span class="p">),</span>
-                                                               <span class="n">dark_cal</span><span class="o">=</span><span class="n">DarkCal</span><span class="p">,</span> <span class="n">lamp_gain_cal</span><span class="o">=</span><span class="n">LampCal</span><span class="p">,</span>
-                                                               <span class="n">dark_cal_err</span><span class="o">=</span><span class="n">DarkErr</span><span class="p">,</span> <span class="n">lamp_cal_err</span><span class="o">=</span><span class="n">LampErr</span><span class="p">,</span>
-                                                               <span class="n">gen_err</span><span class="o">=</span><span class="n">mkerr</span><span class="p">)</span>
+    <span class="c1"># This is kinda janky, but comes from the fact that both solar and geo cal are generated by the same call</span>
+    <span class="c1">#  (Oh man. This is awful. I am so sorry)</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;Main&quot;</span><span class="p">][</span><span class="s2">&quot;solar_gain_cal&quot;</span><span class="p">]</span>
+    <span class="n">geoname</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;Main&quot;</span><span class="p">][</span><span class="s2">&quot;geometric_cal&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">ensure_fits</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span> <span class="ow">and</span> <span class="n">filename</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">no_cal_option_list</span>
+    <span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">ensure_fits</span><span class="p">(</span><span class="n">geoname</span><span class="p">))</span> <span class="ow">and</span> <span class="n">geoname</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">no_cal_option_list</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: Could not find </span><span class="si">{}</span><span class="s2"> and/or </span><span class="si">{}</span><span class="s2">, attempting to generate with SolarGainCalibration&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">tag</span><span class="p">(),</span> <span class="n">filename</span><span class="p">,</span> <span class="n">geoname</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">SolarCal</span><span class="p">,</span> <span class="n">SolarErr</span><span class="p">,</span> <span class="n">GeoCal</span> <span class="o">=</span> <span class="n">SolarGainCalibration</span><span class="o">.</span><span class="n">main</span><span class="p">(</span>
+            <span class="n">config</span><span class="p">[</span><span class="s2">&quot;SolarGainCalibration&quot;</span><span class="p">][</span><span class="s2">&quot;raw_solar_gain_dir&quot;</span><span class="p">],</span>
+            <span class="n">strip_fits</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span>
+            <span class="n">ensure_fits</span><span class="p">(</span><span class="n">geoname</span><span class="p">),</span>
+            <span class="n">dark_cal</span><span class="o">=</span><span class="n">DarkCal</span><span class="p">,</span>
+            <span class="n">lamp_gain_cal</span><span class="o">=</span><span class="n">LampCal</span><span class="p">,</span>
+            <span class="n">dark_cal_err</span><span class="o">=</span><span class="n">DarkErr</span><span class="p">,</span>
+            <span class="n">lamp_cal_err</span><span class="o">=</span><span class="n">LampErr</span><span class="p">,</span>
+            <span class="n">gen_err</span><span class="o">=</span><span class="n">mkerr</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">no_cal_option_list</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: NOT Using Solar Gain&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
+        <span class="n">SolarCal</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">SolarErr</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">geoname</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">no_cal_option_list</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: NOT Using Geometric Calibration&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
+            <span class="n">GeoCal</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">GeoCal</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">(</span><span class="n">ensure_fits</span><span class="p">(</span><span class="n">geoname</span><span class="p">))</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Loaded </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">ensure_fits</span><span class="p">(</span><span class="n">geoname</span><span class="p">)))</span>
-        <span class="n">SolarCal</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">(</span><span class="n">ensure_fits</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Loaded </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">ensure_fits</span><span class="p">(</span><span class="n">filename</span><span class="p">)))</span>
-        <span class="n">errname</span> <span class="o">=</span> <span class="n">gen_errname</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">SolarErr</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">(</span><span class="n">errname</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">:  and uncertainty </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">errname</span><span class="p">))</span>
-        <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">mkerr</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">no_err_msg</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Could not find </span><span class="si">{}</span><span class="s1">. Setting error to None&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">errname</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">geoname</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">no_cal_option_list</span><span class="p">:</span>
+            <span class="n">GeoCal</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">(</span><span class="n">ensure_fits</span><span class="p">(</span><span class="n">geoname</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: Loaded </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">ensure_fits</span><span class="p">(</span><span class="n">geoname</span><span class="p">)))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: NOT Using Geometric Calibration&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
+            <span class="n">GeoCal</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">no_cal_option_list</span><span class="p">:</span>
+            <span class="n">SolarCal</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">(</span><span class="n">ensure_fits</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: Loaded </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">ensure_fits</span><span class="p">(</span><span class="n">filename</span><span class="p">)))</span>
+            <span class="n">errname</span> <span class="o">=</span> <span class="n">gen_errname</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">SolarErr</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">(</span><span class="n">errname</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">:  and uncertainty </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">errname</span><span class="p">))</span>
+            <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">mkerr</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">no_err_msg</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: Could not find </span><span class="si">{}</span><span class="s2">. Setting error to None&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">errname</span><span class="p">))</span>
+                <span class="n">SolarErr</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: NOT Using Solar Gain&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
+            <span class="n">SolarCal</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">SolarErr</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="c1"># Construct the argument lists for the main pipeline</span>
-    <span class="n">sci_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;dark_cal&#39;</span><span class="p">:</span> <span class="n">DarkCal</span><span class="p">,</span> <span class="s1">&#39;solar_gain_cal&#39;</span><span class="p">:</span> <span class="n">SolarCal</span><span class="p">,</span> <span class="s1">&#39;geometric_cal&#39;</span><span class="p">:</span> <span class="n">GeoCal</span><span class="p">,</span>
-                  <span class="s1">&#39;dark_cal_err&#39;</span><span class="p">:</span> <span class="n">DarkErr</span><span class="p">,</span> <span class="s1">&#39;solar_gain_cal_err&#39;</span><span class="p">:</span> <span class="n">SolarErr</span><span class="p">,</span> <span class="s1">&#39;gen_err&#39;</span><span class="p">:</span> <span class="n">mkerr</span><span class="p">}</span>
+    <span class="n">sci_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;dark_cal&quot;</span><span class="p">:</span> <span class="n">DarkCal</span><span class="p">,</span>
+        <span class="s2">&quot;solar_gain_cal&quot;</span><span class="p">:</span> <span class="n">SolarCal</span><span class="p">,</span>
+        <span class="s2">&quot;geometric_cal&quot;</span><span class="p">:</span> <span class="n">GeoCal</span><span class="p">,</span>
+        <span class="s2">&quot;dark_cal_err&quot;</span><span class="p">:</span> <span class="n">DarkErr</span><span class="p">,</span>
+        <span class="s2">&quot;solar_gain_cal_err&quot;</span><span class="p">:</span> <span class="n">SolarErr</span><span class="p">,</span>
+        <span class="s2">&quot;gen_err&quot;</span><span class="p">:</span> <span class="n">mkerr</span><span class="p">,</span>
+    <span class="p">}</span>
 
     <span class="k">return</span> <span class="n">sci_kwargs</span></div>
+
 
 <div class="viewcode-block" id="generate_polarimetric_objects"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ViSPPipeline.generate_polarimetric_objects.html#ViSP_Pipeline.ViSPPipeline.generate_polarimetric_objects">[docs]</a><span class="k">def</span> <span class="nf">generate_polarimetric_objects</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">ConfigParser</span><span class="p">,</span> <span class="n">sci_kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Generate/load InstrumentPolCal objects and update the main kwarg dict with relevant parameters</span>
@@ -505,48 +614,71 @@
 <span class="sd">    dict</span>
 <span class="sd">        Dictionary containing kwargs to Science Calibration that specify polarimetric options and Calibration products</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">filename</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;instrument_pol_cal&#39;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">ensure_fits</span><span class="p">(</span><span class="n">filename</span><span class="p">)):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Could not find </span><span class="si">{}</span><span class="s1">, attempting to generate with InstrumentPolCalibration&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span>
-                                                                                                   <span class="n">filename</span><span class="p">))</span>
-        <span class="n">inst_pol_args</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;InstrumentPolarimetricCalibration&#39;</span><span class="p">])</span>
-        <span class="n">inst_pol_args</span><span class="p">[</span><span class="s1">&#39;output&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ensure_fits</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="n">pol</span> <span class="o">=</span> <span class="n">get_pol_mode</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;Main&quot;</span><span class="p">][</span><span class="s2">&quot;raw_sci_dir&quot;</span><span class="p">],</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;Main&quot;</span><span class="p">][</span><span class="s2">&quot;data_set_ID&quot;</span><span class="p">])</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;Main&quot;</span><span class="p">][</span><span class="s2">&quot;instrument_pol_cal&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;false&quot;</span><span class="p">,</span> <span class="s2">&quot;none&quot;</span><span class="p">]:</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Despite polarimetric data, data will NOT be demodulation (&quot;None&quot; or &quot;False&quot; IPC provided)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">tag</span><span class="p">()</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">InstPolCal</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">pol</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">ensure_fits</span><span class="p">(</span><span class="n">filename</span><span class="p">)):</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: Could not find </span><span class="si">{}</span><span class="s2">, attempting to generate with InstrumentPolCalibration&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">tag</span><span class="p">(),</span> <span class="n">filename</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">inst_pol_args</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;InstrumentPolarimetricCalibration&quot;</span><span class="p">])</span>
+        <span class="n">inst_pol_args</span><span class="p">[</span><span class="s2">&quot;output&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ensure_fits</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
         <span class="n">convert_config_to_int</span><span class="p">(</span><span class="n">inst_pol_args</span><span class="p">)</span>
-        <span class="n">inst_pol_args</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;dark_cal&#39;</span><span class="p">:</span> <span class="n">sci_kwargs</span><span class="p">[</span><span class="s1">&#39;dark_cal&#39;</span><span class="p">],</span>
-                              <span class="s1">&#39;solar_gain_cal&#39;</span><span class="p">:</span> <span class="n">sci_kwargs</span><span class="p">[</span><span class="s1">&#39;solar_gain_cal&#39;</span><span class="p">],</span>
-                              <span class="s1">&#39;gen_err&#39;</span><span class="p">:</span> <span class="n">sci_kwargs</span><span class="p">[</span><span class="s1">&#39;gen_err&#39;</span><span class="p">],</span>
-                              <span class="s1">&#39;dark_cal_err&#39;</span><span class="p">:</span> <span class="n">sci_kwargs</span><span class="p">[</span><span class="s1">&#39;dark_cal_err&#39;</span><span class="p">],</span>
-                              <span class="s1">&#39;solar_gain_cal_err&#39;</span><span class="p">:</span> <span class="n">sci_kwargs</span><span class="p">[</span><span class="s1">&#39;solar_gain_cal_err&#39;</span><span class="p">]})</span>
+        <span class="n">inst_pol_args</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;dark_cal&quot;</span><span class="p">:</span> <span class="n">sci_kwargs</span><span class="p">[</span><span class="s2">&quot;dark_cal&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;solar_gain_cal&quot;</span><span class="p">:</span> <span class="n">sci_kwargs</span><span class="p">[</span><span class="s2">&quot;solar_gain_cal&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;gen_err&quot;</span><span class="p">:</span> <span class="n">sci_kwargs</span><span class="p">[</span><span class="s2">&quot;gen_err&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;dark_cal_err&quot;</span><span class="p">:</span> <span class="n">sci_kwargs</span><span class="p">[</span><span class="s2">&quot;dark_cal_err&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;solar_gain_cal_err&quot;</span><span class="p">:</span> <span class="n">sci_kwargs</span><span class="p">[</span><span class="s2">&quot;solar_gain_cal_err&quot;</span><span class="p">],</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
         <span class="n">InstPolCal</span> <span class="o">=</span> <span class="n">InstrumentPolCalibration</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="o">**</span><span class="n">inst_pol_args</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Loaded </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">ensure_fits</span><span class="p">(</span><span class="n">filename</span><span class="p">)))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: Loaded </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">ensure_fits</span><span class="p">(</span><span class="n">filename</span><span class="p">)))</span>
         <span class="n">InstPolCal</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">DemodulationData</span><span class="p">()</span>
         <span class="n">InstPolCal</span><span class="o">.</span><span class="n">load_from_file</span><span class="p">(</span><span class="n">ensure_fits</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">cont_lims</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;continuum_lims&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)]</span>
+        <span class="n">cont_lims</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;Main&quot;</span><span class="p">][</span><span class="s2">&quot;continuum_lims&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)]</span>
     <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;continuum_lims option is either missing or malformed&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;continuum_lims option is either missing or malformed&quot;</span><span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">save_M12</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;Main&#39;</span><span class="p">,</span> <span class="s1">&#39;save_M12_map&#39;</span><span class="p">)</span>
+        <span class="n">save_M12</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s2">&quot;Main&quot;</span><span class="p">,</span> <span class="s2">&quot;save_M12_map&quot;</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">configparser</span><span class="o">.</span><span class="n">NoOptionError</span><span class="p">:</span>
         <span class="n">save_M12</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="k">if</span> <span class="n">save_M12</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">M12_lims</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">][</span><span class="s1">&#39;M12_line_lims&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)]</span>
+            <span class="n">M12_lims</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;Main&quot;</span><span class="p">][</span><span class="s2">&quot;M12_line_lims&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)]</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;M12_line_lims options is either missing or malformed&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;M12_line_lims options is either missing or malformed&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">M12_lims</span><span class="o">=</span><span class="kc">None</span>
+        <span class="n">M12_lims</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="n">pol_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;demodulation&#39;</span><span class="p">:</span> <span class="n">InstPolCal</span><span class="p">,</span> <span class="s1">&#39;continuum_lims&#39;</span><span class="p">:</span> <span class="n">cont_lims</span><span class="p">,</span>
-                  <span class="s1">&#39;save_M12_map&#39;</span><span class="p">:</span> <span class="n">save_M12</span><span class="p">,</span> <span class="s1">&#39;M12_line_lims&#39;</span><span class="p">:</span> <span class="n">M12_lims</span><span class="p">,</span> <span class="s1">&#39;pol&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+    <span class="n">pol_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;demodulation&quot;</span><span class="p">:</span> <span class="n">InstPolCal</span><span class="p">,</span>
+        <span class="s2">&quot;continuum_lims&quot;</span><span class="p">:</span> <span class="n">cont_lims</span><span class="p">,</span>
+        <span class="s2">&quot;telescope_db&quot;</span><span class="p">:</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;InstrumentPolarimetricCalibration&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;telescope_db&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;save_M12_map&quot;</span><span class="p">:</span> <span class="n">save_M12</span><span class="p">,</span>
+        <span class="s2">&quot;M12_line_lims&quot;</span><span class="p">:</span> <span class="n">M12_lims</span><span class="p">,</span>
+        <span class="s2">&quot;pol&quot;</span><span class="p">:</span> <span class="n">pol</span><span class="p">,</span>
+    <span class="p">}</span>
 
     <span class="k">return</span> <span class="n">pol_kwargs</span></div>
 
-<div class="viewcode-block" id="get_pol_mode"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ViSPPipeline.get_pol_mode.html#ViSP_Pipeline.ViSPPipeline.get_pol_mode">[docs]</a><span class="k">def</span> <span class="nf">get_pol_mode</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="n">dataset_ID</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+
+<div class="viewcode-block" id="get_pol_mode"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ViSPPipeline.get_pol_mode.html#ViSP_Pipeline.ViSPPipeline.get_pol_mode">[docs]</a><span class="k">def</span> <span class="nf">get_pol_mode</span><span class="p">(</span><span class="n">data_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dataset_ID</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Determine if the Science data corresponds to polarimetric observations or just basic intensity.</span>
 
 <span class="sd">    Parameters</span>
@@ -566,56 +698,58 @@
 <span class="sd">        True if the data are polarimetric. False otherwise.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">suffix</span> <span class="o">=</span> <span class="n">suffix</span> <span class="ow">or</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s1">&#39;Data&#39;</span><span class="p">][</span><span class="s1">&#39;suffix&#39;</span><span class="p">]</span>
-    <span class="n">file_list</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/*</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="n">suffix</span><span class="p">))</span>
+    <span class="n">suffix</span> <span class="o">=</span> <span class="n">suffix</span> <span class="ow">or</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s2">&quot;Data&quot;</span><span class="p">][</span><span class="s2">&quot;suffix&quot;</span><span class="p">]</span>
+    <span class="n">file_list</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">/*</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="n">suffix</span><span class="p">))</span>
     <span class="n">pol</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">found</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">file_list</span><span class="p">:</span>
         <span class="n">hdulist</span> <span class="o">=</span> <span class="n">pyfits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
         <span class="n">header</span> <span class="o">=</span> <span class="n">hdulist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">header</span><span class="p">[</span><span class="n">S122</span><span class="p">[</span><span class="s1">&#39;PolarimeterMode&#39;</span><span class="p">]]</span> <span class="o">==</span> <span class="s1">&#39;Full Stokes&#39;</span> <span class="ow">and</span> \
-                    <span class="p">(</span><span class="n">header</span><span class="p">[</span><span class="n">S122</span><span class="p">[</span><span class="s1">&#39;DataSetParametersID&#39;</span><span class="p">]]</span> <span class="o">==</span> <span class="n">dataset_ID</span> <span class="ow">or</span> <span class="n">dataset_ID</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">):</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Polarimetric data detected&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
+            <span class="k">if</span> <span class="n">header</span><span class="p">[</span><span class="n">S122</span><span class="p">[</span><span class="s2">&quot;PolarimeterMode&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">CONSTANTS</span><span class="p">[</span>
+                <span class="s2">&quot;InstrumentPolarizationCalibration&quot;</span>
+            <span class="p">][</span><span class="s2">&quot;polmode_matches&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="p">(</span>
+                <span class="n">dataset_ID</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="ow">or</span> <span class="n">header</span><span class="p">[</span><span class="n">S122</span><span class="p">[</span><span class="s2">&quot;DataSetParametersID&quot;</span><span class="p">]]</span> <span class="o">==</span> <span class="n">dataset_ID</span>
+            <span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: Polarimetric data detected&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
                 <span class="n">pol</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="n">found</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="k">break</span>
-            <span class="k">elif</span> <span class="n">header</span><span class="p">[</span><span class="n">S122</span><span class="p">[</span><span class="s1">&#39;PolarimeterMode&#39;</span><span class="p">]]</span> <span class="o">==</span> <span class="s1">&#39;Stokes-I&#39;</span> <span class="ow">and</span> \
-                    <span class="p">(</span><span class="n">header</span><span class="p">[</span><span class="n">S122</span><span class="p">[</span><span class="s1">&#39;DataSetParametersID&#39;</span><span class="p">]]</span> <span class="o">==</span> <span class="n">dataset_ID</span> <span class="ow">or</span> <span class="n">dataset_ID</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">):</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Basic intensity data detected&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
+            <span class="k">elif</span> <span class="n">header</span><span class="p">[</span><span class="n">S122</span><span class="p">[</span><span class="s2">&quot;PolarimeterMode&quot;</span><span class="p">]]</span> <span class="o">==</span> <span class="s2">&quot;Stokes-I&quot;</span> <span class="ow">and</span> <span class="p">(</span>
+                <span class="n">header</span><span class="p">[</span><span class="n">S122</span><span class="p">[</span><span class="s2">&quot;DataSetParametersID&quot;</span><span class="p">]]</span> <span class="o">==</span> <span class="n">dataset_ID</span> <span class="ow">or</span> <span class="n">dataset_ID</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span>
+            <span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: Basic intensity data detected&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
                 <span class="n">found</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="k">break</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
             <span class="k">pass</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">found</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Could not determine polarimetric mode, assuming basic intensity&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: Could not determine polarimetric mode, assuming basic intensity&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
 
     <span class="k">return</span> <span class="n">pol</span></div>
 
 
-<div class="viewcode-block" id="strip_fits"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ViSPPipeline.strip_fits.html#ViSP_Pipeline.ViSPPipeline.strip_fits">[docs]</a><span class="k">def</span> <span class="nf">strip_fits</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Strip the &#39;.fits&#39; extension from a filename</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="strip_fits"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ViSPPipeline.strip_fits.html#ViSP_Pipeline.ViSPPipeline.strip_fits">[docs]</a><span class="k">def</span> <span class="nf">strip_fits</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Strip the &#39;.fits&#39; extension from a filename&quot;&quot;&quot;</span>
 
-    <span class="k">return</span> <span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s1">&#39;Data&#39;</span><span class="p">][</span><span class="s1">&#39;suffix&#39;</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span></div>
-
-<div class="viewcode-block" id="ensure_fits"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ViSPPipeline.ensure_fits.html#ViSP_Pipeline.ViSPPipeline.ensure_fits">[docs]</a><span class="k">def</span> <span class="nf">ensure_fits</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Make sure that a string has only one &#39;.fits&#39; on the end of it</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">return</span> <span class="n">strip_fits</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s1">&#39;Data&#39;</span><span class="p">][</span><span class="s1">&#39;suffix&#39;</span><span class="p">]</span></div>
-
-<div class="viewcode-block" id="gen_errname"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ViSPPipeline.gen_errname.html#ViSP_Pipeline.ViSPPipeline.gen_errname">[docs]</a><span class="k">def</span> <span class="nf">gen_errname</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Add a &#39;_err&#39; suffix to a filename, before the fits extension</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_err.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">strip_fits</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s1">&#39;Data&#39;</span><span class="p">][</span><span class="s1">&#39;suffix&#39;</span><span class="p">])</span></div>
+    <span class="k">return</span> <span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s2">&quot;Data&quot;</span><span class="p">][</span><span class="s2">&quot;suffix&quot;</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="convert_config_to_int"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ViSPPipeline.convert_config_to_int.html#ViSP_Pipeline.ViSPPipeline.convert_config_to_int">[docs]</a><span class="k">def</span> <span class="nf">convert_config_to_int</span><span class="p">(</span><span class="n">configdict</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Convert configparser-style dictionary of arguments to integers, where appropriate</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ensure_fits"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ViSPPipeline.ensure_fits.html#ViSP_Pipeline.ViSPPipeline.ensure_fits">[docs]</a><span class="k">def</span> <span class="nf">ensure_fits</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Make sure that a string has only one &#39;.fits&#39; on the end of it&quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">strip_fits</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s2">&quot;Data&quot;</span><span class="p">][</span><span class="s2">&quot;suffix&quot;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="gen_errname"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ViSPPipeline.gen_errname.html#ViSP_Pipeline.ViSPPipeline.gen_errname">[docs]</a><span class="k">def</span> <span class="nf">gen_errname</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Add a &#39;_err&#39; suffix to a filename, before the fits extension&quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_err.</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">strip_fits</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s2">&quot;Data&quot;</span><span class="p">][</span><span class="s2">&quot;suffix&quot;</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="convert_config_to_int"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ViSPPipeline.convert_config_to_int.html#ViSP_Pipeline.ViSPPipeline.convert_config_to_int">[docs]</a><span class="k">def</span> <span class="nf">convert_config_to_int</span><span class="p">(</span><span class="n">configdict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Convert configparser-style dictionary of arguments to integers, where appropriate&quot;&quot;&quot;</span>
 
     <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">configdict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
         <span class="k">try</span><span class="p">:</span>
@@ -624,7 +758,7 @@
             <span class="k">pass</span></div>
 
 
-<div class="viewcode-block" id="gen_blank_config"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ViSPPipeline.gen_blank_config.html#ViSP_Pipeline.ViSPPipeline.gen_blank_config">[docs]</a><span class="k">def</span> <span class="nf">gen_blank_config</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+<div class="viewcode-block" id="gen_blank_config"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ViSPPipeline.gen_blank_config.html#ViSP_Pipeline.ViSPPipeline.gen_blank_config">[docs]</a><span class="k">def</span> <span class="nf">gen_blank_config</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Create a blank configuration file.</span>
 
 <span class="sd">    This is useful as a way to see all of the available options.</span>
@@ -639,35 +773,40 @@
 <span class="sd">    None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">ConfigParser</span><span class="p">(</span><span class="n">allow_no_value</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;raw_sci_dir&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;data_set_ID&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;output_prefix&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;dark_cal&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;lamp_gain_cal&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;solar_gain_cal&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;geometric_cal&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;instrument_pol_cal&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;gen_noise_frames&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;continuum_lims&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;save_M12_map&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;M12_line_lims&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;threads&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">}</span>
-    <span class="n">config</span><span class="p">[</span><span class="s1">&#39;DarkCalibration&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;raw_dark_dir&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">}</span>
-    <span class="n">config</span><span class="p">[</span><span class="s1">&#39;LampGainCalibration&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;raw_lamp_gain_dir&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">}</span>
-    <span class="n">config</span><span class="p">[</span><span class="s1">&#39;SolarGainCalibration&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;raw_solar_gain_dir&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">}</span>
-    <span class="n">config</span><span class="p">[</span><span class="s1">&#39;InstrumentPolarimetricCalibration&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;raw_pol_dir&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-                                                   <span class="s1">&#39;cu_numbins_x&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-                                                   <span class="s1">&#39;cu_numbins_y&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-                                                   <span class="s1">&#39;demod_numbins_x&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-                                                   <span class="s1">&#39;demod_numbins_y&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-                                                   <span class="s1">&#39;threads&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">}</span>
+    <span class="n">config</span><span class="p">[</span><span class="s2">&quot;Main&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;raw_sci_dir&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;data_set_ID&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;output_prefix&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;dark_cal&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;lamp_gain_cal&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;solar_gain_cal&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;geometric_cal&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;instrument_pol_cal&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;gen_noise_frames&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;continuum_lims&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;save_M12_map&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;M12_line_lims&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;threads&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">config</span><span class="p">[</span><span class="s2">&quot;DarkCalibration&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;raw_dark_dir&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">}</span>
+    <span class="n">config</span><span class="p">[</span><span class="s2">&quot;LampGainCalibration&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;raw_lamp_gain_dir&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">}</span>
+    <span class="n">config</span><span class="p">[</span><span class="s2">&quot;SolarGainCalibration&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;raw_solar_gain_dir&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">}</span>
+    <span class="n">config</span><span class="p">[</span><span class="s2">&quot;InstrumentPolarimetricCalibration&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;raw_pol_dir&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;cu_numbins_x&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;cu_numbins_y&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;demod_numbins_x&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;demod_numbins_y&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;threads&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
 
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">config</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 
     <span class="k">return</span></div>
 
-<div class="viewcode-block" id="gen_sensible_config"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ViSPPipeline.gen_sensible_config.html#ViSP_Pipeline.ViSPPipeline.gen_sensible_config">[docs]</a><span class="k">def</span> <span class="nf">gen_sensible_config</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">rawdir</span><span class="p">):</span>
+
+<div class="viewcode-block" id="gen_sensible_config"><a class="viewcode-back" href="../../api/ViSP_Pipeline.ViSPPipeline.gen_sensible_config.html#ViSP_Pipeline.ViSPPipeline.gen_sensible_config">[docs]</a><span class="k">def</span> <span class="nf">gen_sensible_config</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">rawdir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Create a default configuration file with values based on provided directory</span>
 
 <span class="sd">    Parameters</span>
@@ -679,48 +818,63 @@
 <span class="sd">        The location of the raw ViSP data</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">ConfigParser</span><span class="p">(</span><span class="n">allow_no_value</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">config</span><span class="p">[</span><span class="s1">&#39;Main&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;raw_sci_dir&#39;</span><span class="p">:</span> <span class="n">rawdir</span><span class="p">,</span>
-                      <span class="s1">&#39;data_set_ID&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;output_prefix&#39;</span><span class="p">:</span> <span class="s1">&#39;Sci&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;dark_cal&#39;</span><span class="p">:</span> <span class="s1">&#39;DarkCal.FITS&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;lamp_gain_cal&#39;</span><span class="p">:</span> <span class="s1">&#39;LampGainCal.FITS&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;solar_gain_cal&#39;</span><span class="p">:</span> <span class="s1">&#39;SolarGainCal.FITS&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;geometric_cal&#39;</span><span class="p">:</span> <span class="s1">&#39;GeoCal.FITS&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;instrument_pol_cal&#39;</span><span class="p">:</span> <span class="s1">&#39;InstPolCal.FITS&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;gen_noise_frames&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-                      <span class="s1">&#39;continuum_lims&#39;</span><span class="p">:</span> <span class="s1">&#39;70:10&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;save_M12_map&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-                      <span class="s1">&#39;M12_line_lims&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;threads&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
-    <span class="n">config</span><span class="p">[</span><span class="s1">&#39;DarkCalibration&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;raw_dark_dir&#39;</span><span class="p">:</span> <span class="n">rawdir</span><span class="p">}</span>
-    <span class="n">config</span><span class="p">[</span><span class="s1">&#39;LampGainCalibration&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;raw_lamp_gain_dir&#39;</span><span class="p">:</span> <span class="n">rawdir</span><span class="p">}</span>
-    <span class="n">config</span><span class="p">[</span><span class="s1">&#39;SolarGainCalibration&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;raw_solar_gain_dir&#39;</span><span class="p">:</span> <span class="n">rawdir</span><span class="p">}</span>
-    <span class="n">config</span><span class="p">[</span><span class="s1">&#39;InstrumentPolarimetricCalibration&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;raw_pol_dir&#39;</span><span class="p">:</span> <span class="n">rawdir</span><span class="p">,</span>
-                                                   <span class="s1">&#39;cu_numbins_x&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-                                                   <span class="s1">&#39;cu_numbins_y&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-                                                   <span class="s1">&#39;demod_numbins_x&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
-                                                   <span class="s1">&#39;demod_numbins_y&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-                                                   <span class="s1">&#39;threads&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
+    <span class="n">config</span><span class="p">[</span><span class="s2">&quot;Main&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;raw_sci_dir&quot;</span><span class="p">:</span> <span class="n">rawdir</span><span class="p">,</span>
+        <span class="s2">&quot;data_set_ID&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;output_prefix&quot;</span><span class="p">:</span> <span class="s2">&quot;Sci&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;dark_cal&quot;</span><span class="p">:</span> <span class="s2">&quot;DarkCal.FITS&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;lamp_gain_cal&quot;</span><span class="p">:</span> <span class="s2">&quot;LampGainCal.FITS&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;solar_gain_cal&quot;</span><span class="p">:</span> <span class="s2">&quot;SolarGainCal.FITS&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;geometric_cal&quot;</span><span class="p">:</span> <span class="s2">&quot;GeoCal.FITS&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;instrument_pol_cal&quot;</span><span class="p">:</span> <span class="s2">&quot;InstPolCal.FITS&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;gen_noise_frames&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;continuum_lims&quot;</span><span class="p">:</span> <span class="s2">&quot;70:10&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;save_M12_map&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;M12_line_lims&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;threads&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">config</span><span class="p">[</span><span class="s2">&quot;DarkCalibration&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;raw_dark_dir&quot;</span><span class="p">:</span> <span class="n">rawdir</span><span class="p">}</span>
+    <span class="n">config</span><span class="p">[</span><span class="s2">&quot;LampGainCalibration&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;raw_lamp_gain_dir&quot;</span><span class="p">:</span> <span class="n">rawdir</span><span class="p">}</span>
+    <span class="n">config</span><span class="p">[</span><span class="s2">&quot;SolarGainCalibration&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;raw_solar_gain_dir&quot;</span><span class="p">:</span> <span class="n">rawdir</span><span class="p">}</span>
+    <span class="n">config</span><span class="p">[</span><span class="s2">&quot;InstrumentPolarimetricCalibration&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;raw_pol_dir&quot;</span><span class="p">:</span> <span class="n">rawdir</span><span class="p">,</span>
+        <span class="s2">&quot;cu_numbins_x&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s2">&quot;cu_numbins_y&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="s2">&quot;demod_numbins_x&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="s2">&quot;demod_numbins_y&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="s2">&quot;threads&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="p">}</span>
 
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">config</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 
     <span class="k">return</span></div>
 
 
-<span class="k">def</span> <span class="nf">command_line</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">command_line</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">argparse</span>
     <span class="kn">import</span> <span class="nn">sys</span>
 
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
-            <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Run the ViSP Pipeline using the parameters specified in a config file. Config files follow &#39;</span>
-                        <span class="s1">&#39;the &#39;</span>
-                        <span class="s1">&#39;standard INI format&#39;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;config_file&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;INI-style file containing pipeline options. Default is &#39;config.ini&#39;.&quot;</span><span class="p">,</span>
-                        <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;?&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;config.ini&#39;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-b&#39;</span><span class="p">,</span> <span class="s1">&#39;--blank&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Generate a blank configuration file&#39;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-d&#39;</span><span class="p">,</span> <span class="s1">&#39;--default&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Generate a config file with sensible defaults for specified directory&#39;</span><span class="p">,</span>
-                        <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;raw_dir&#39;</span><span class="p">)</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Run the ViSP Pipeline using the parameters specified in a config file. Config files follow &quot;</span>
+        <span class="s2">&quot;the &quot;</span>
+        <span class="s2">&quot;standard INI format&quot;</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;config_file&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;INI-style file containing pipeline options. Default is &#39;config.ini&#39;.&quot;</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;config.ini&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-b&quot;</span><span class="p">,</span> <span class="s2">&quot;--blank&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Generate a blank configuration file&quot;</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-d&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--default&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Generate a config file with sensible defaults for specified directory&quot;</span><span class="p">,</span>
+        <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;raw_dir&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">blank</span><span class="p">:</span>
@@ -737,7 +891,7 @@
         <span class="n">parser</span><span class="o">.</span><span class="n">print_usage</span><span class="p">()</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Could not load config file </span><span class="si">{}</span><span class="s1">. Aborting.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">config_file</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Could not load config file </span><span class="si">{}</span><span class="s2">. Aborting.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">config_file</span><span class="p">))</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 
@@ -753,7 +907,7 @@
     </div>
    
     <div class="right-footer">
-      Last updated on 22 Jan 2021.
+      Last updated on 06 Jul 2021.
     </div>
     <div class="centre-footer">
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1

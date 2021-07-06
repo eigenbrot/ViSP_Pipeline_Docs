@@ -15,6 +15,9 @@ on the first run of the pipeline. Once these objects have been created a lot of 
 any other science runs that have the same setup. It is also possible to regenerate only a subset of the intermediate
 Calibration Objects by simply pointing the corresponding option to a file that doesn't exist.
 
+.. note::
+   If any of the \*_cal options are set to either "False" or "None" then that particular calibration step will be skipped
+
 :raw_sci_dir: Path to the directory containing raw ViSP frames to be reduced. Note that *all* slit positions found in
     this directory will be reduced. If you only want to reduce a subset of slit positions then move them into a separate
     folder or use the ``slit_pos`` option.
@@ -61,6 +64,8 @@ Calibration Objects by simply pointing the corresponding option to a file that d
 
 :*tmp_dir*: Directory to use for intermediate, temporary files. If not specified it will default to wherever the Level-1 Science Products are saved (see ``output_prefix``).
 
+:*skip_cal_verification*: If True then any "\*_cal" objects provided will not be verified that they are valid for use on the provided science data. Useful if you just want to run the damn thing.
+
 DarkCalibration
 ---------------
 This section will only be used if the file specified by ``Main.dark_cal`` does not exist.
@@ -100,7 +105,8 @@ These options essentially define a separate ViSP reduction; the reduction of a p
 
 :threads: **(int)** The number of separate processes to use when reducing the CS data
 
-:*telescope_db*: Path to the file containing telescope mirror parameters as a function of time and wavelength
+:*telescope_db*: Path to the file containing telescope mirror parameters as a function of time and wavelength. This
+    file is also used for generating the telescope model when reducing Science data.
 
 Example Config File
 -------------------

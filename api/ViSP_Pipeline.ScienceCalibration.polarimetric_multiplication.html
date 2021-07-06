@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>polarimetric_multiplication &#8212; ViSP_Pipeline v0.21.0</title>
+    <title>polarimetric_multiplication &#8212; ViSP_Pipeline v1.0.0</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -138,13 +138,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../data_warning.html">A Word About Data, RAM, and Disk Space</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../API.html">Reference/API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ViSPPipeline">ViSP_Pipeline.ViSPPipeline Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ViSPPolCalPipeline">ViSP_Pipeline.ViSPPolCalPipeline Module</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ScienceCalibration">ViSP_Pipeline.ScienceCalibration Module</a><ul class="current">
-<li class="toctree-l3 current"><a class="reference internal" href="../API.html#id2">Functions</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../API.html#id1">Functions</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ScienceCalibration.average_beams.html">average_beams</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ScienceCalibration.average_polarimetric_beams.html">average_polarimetric_beams</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ScienceCalibration.command_line.html">command_line</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ScienceCalibration.command_line_list.html">command_line_list</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ScienceCalibration.extract_geometric_numbers.html">extract_geometric_numbers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ScienceCalibration.generate_science_calibration.html">generate_science_calibration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ScienceCalibration.geometric_correction.html">geometric_correction</a></li>
@@ -177,7 +174,7 @@
 <h1>polarimetric_multiplication<a class="headerlink" href="#polarimetric-multiplication" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt id="ViSP_Pipeline.ScienceCalibration.polarimetric_multiplication">
-<code class="sig-prename descclassname">ViSP_Pipeline.ScienceCalibration.</code><code class="sig-name descname">polarimetric_multiplication</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span><span class="p">:</span> <span class="n">Union<span class="p">[</span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a><span class="p">, </span>dask.array.core.Array<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">demod</span><span class="p">:</span> <span class="n">Union<span class="p">[</span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a><span class="p">, </span>dask.array.core.Array<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">err_data</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Union<span class="p">[</span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a><span class="p">, </span>dask.array.core.Array<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">demod_err</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Union<span class="p">[</span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a><span class="p">, </span>dask.array.core.Array<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>Union<span class="p">[</span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a><span class="p">, </span>dask.array.core.Array<span class="p">]</span><span class="p">, </span>Union<span class="p">[</span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a><span class="p">, </span>dask.array.core.Array<span class="p">]</span><span class="p">]</span><a class="reference internal" href="../_modules/ViSP_Pipeline/ScienceCalibration.html#polarimetric_multiplication"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.ScienceCalibration.polarimetric_multiplication" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">ViSP_Pipeline.ScienceCalibration.</code><code class="sig-name descname">polarimetric_multiplication</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span><span class="p">:</span> <span class="n">Union<span class="p">[</span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)">numpy.ndarray</a><span class="p">, </span>dask.array.core.Array<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">demod</span><span class="p">:</span> <span class="n">Union<span class="p">[</span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)">numpy.ndarray</a><span class="p">, </span>dask.array.core.Array<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">err_data</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Union<span class="p">[</span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)">numpy.ndarray</a><span class="p">, </span>dask.array.core.Array<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">demod_err</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Union<span class="p">[</span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)">numpy.ndarray</a><span class="p">, </span>dask.array.core.Array<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>Union<span class="p">[</span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)">numpy.ndarray</a><span class="p">, </span>dask.array.core.Array<span class="p">]</span><span class="p">, </span>Union<span class="p">[</span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)">numpy.ndarray</a><span class="p">, </span>dask.array.core.Array<span class="p">]</span><span class="p">]</span><a class="reference internal" href="../_modules/ViSP_Pipeline/ScienceCalibration.html#polarimetric_multiplication"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.ScienceCalibration.polarimetric_multiplication" title="Permalink to this definition">¶</a></dt>
 <dd><p>Matrix multiply the input data by a polarization demodulation matrix.</p>
 <p>This is a general-purpose function that requires good understanding of the input parameters. The important thing
 is that the demodulation matrix’s last dimension is equal to the number of data HDU’s in the input data.</p>
@@ -209,10 +206,10 @@ and the length of the last dimension is equal to the number of data HDUs in the 
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></dt><dd><p>Demodulated/corrected polarization data. Regardless of the inputs, the output will have 4 data HDUs,
+<dt><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></dt><dd><p>Demodulated/corrected polarization data. Regardless of the inputs, the output will have 4 data HDUs,
 corresponding to the 4 Stokes parameters.</p>
 </dd>
-<dt><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></dt><dd><p>If errData is provided, the uncertainty associated with the output data.</p>
+<dt><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></dt><dd><p>If errData is provided, the uncertainty associated with the output data.</p>
 </dd>
 </dl>
 </dd>
@@ -234,7 +231,7 @@ corresponding to the 4 Stokes parameters.</p>
     </div>
    
     <div class="right-footer">
-      Last updated on 22 Jan 2021.
+      Last updated on 06 Jul 2021.
     </div>
     <div class="centre-footer">
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1

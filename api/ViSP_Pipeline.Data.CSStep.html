@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CSStep &#8212; ViSP_Pipeline v0.21.0</title>
+    <title>CSStep &#8212; ViSP_Pipeline v1.0.0</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -138,7 +138,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../data_warning.html">A Word About Data, RAM, and Disk Space</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../API.html">Reference/API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ViSPPipeline">ViSP_Pipeline.ViSPPipeline Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ViSPPolCalPipeline">ViSP_Pipeline.ViSPPolCalPipeline Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ScienceCalibration">ViSP_Pipeline.ScienceCalibration Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.InstrumentPolCalibration">ViSP_Pipeline.InstrumentPolCalibration Module</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.Data">ViSP_Pipeline.Data Module</a><ul class="current">
@@ -174,7 +173,7 @@
 <h1>CSStep<a class="headerlink" href="#csstep" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="ViSP_Pipeline.Data.CSStep">
-<em class="property">class </em><code class="sig-prename descclassname">ViSP_Pipeline.Data.</code><code class="sig-name descname">CSStep</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">header</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#CSStep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.CSStep" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">ViSP_Pipeline.Data.</code><code class="sig-name descname">CSStep</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">header</span><span class="p">:</span> <span class="n"><a class="reference internal" href="https://docs.astropy.org/en/stable/io/fits/api/headers.html#astropy.io.fits.Header" title="astropy.io.fits.Header"><code class="docutils literal notranslate"><span class="pre">astropy.io.fits.Header</span></code></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#CSStep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.CSStep" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>This class allows for an easy way to quickly compare SPEC-0122 style headers to determine if they come from the
 same Calibration Sequence (CS) step. Each step in a CS is defined by the configuration of the GOS, namely the
@@ -212,7 +211,7 @@ conflicts with repeated CS steps are avoided.</p>
     </div>
    
     <div class="right-footer">
-      Last updated on 22 Jan 2021.
+      Last updated on 06 Jul 2021.
     </div>
     <div class="centre-footer">
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1

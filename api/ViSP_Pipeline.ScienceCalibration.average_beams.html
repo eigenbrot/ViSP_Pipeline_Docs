@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>average_beams &#8212; ViSP_Pipeline v0.21.0</title>
+    <title>average_beams &#8212; ViSP_Pipeline v1.0.0</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -20,7 +20,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="average_polarimetric_beams" href="ViSP_Pipeline.ScienceCalibration.average_polarimetric_beams.html" />
-    <link rel="prev" title="main" href="ViSP_Pipeline.ViSPPolCalPipeline.main.html" />
+    <link rel="prev" title="strip_fits" href="ViSP_Pipeline.ViSPPipeline.strip_fits.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -87,7 +87,7 @@
               
                 
   <li>
-    <a href="ViSP_Pipeline.ViSPPolCalPipeline.main.html" title="Previous Chapter: main"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; main</span>
+    <a href="ViSP_Pipeline.ViSPPipeline.strip_fits.html" title="Previous Chapter: strip_fits"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; strip_fits</span>
     </a>
   </li>
   <li>
@@ -138,13 +138,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../data_warning.html">A Word About Data, RAM, and Disk Space</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../API.html">Reference/API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ViSPPipeline">ViSP_Pipeline.ViSPPipeline Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ViSPPolCalPipeline">ViSP_Pipeline.ViSPPolCalPipeline Module</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ScienceCalibration">ViSP_Pipeline.ScienceCalibration Module</a><ul class="current">
-<li class="toctree-l3 current"><a class="reference internal" href="../API.html#id2">Functions</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../API.html#id1">Functions</a><ul class="current">
 <li class="toctree-l4 current"><a class="current reference internal" href="#">average_beams</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ScienceCalibration.average_polarimetric_beams.html">average_polarimetric_beams</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ScienceCalibration.command_line.html">command_line</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ScienceCalibration.command_line_list.html">command_line_list</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ScienceCalibration.extract_geometric_numbers.html">extract_geometric_numbers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ScienceCalibration.generate_science_calibration.html">generate_science_calibration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.ScienceCalibration.geometric_correction.html">geometric_correction</a></li>
@@ -177,7 +174,7 @@
 <h1>average_beams<a class="headerlink" href="#average-beams" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt id="ViSP_Pipeline.ScienceCalibration.average_beams">
-<code class="sig-prename descclassname">ViSP_Pipeline.ScienceCalibration.</code><code class="sig-name descname">average_beams</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fitsData</span></em>, <em class="sig-param"><span class="n">errData</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">preserve_modulator</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/ScienceCalibration.html#average_beams"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.ScienceCalibration.average_beams" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">ViSP_Pipeline.ScienceCalibration.</code><code class="sig-name descname">average_beams</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fitsData</span><span class="p">:</span> <span class="n"><a class="reference internal" href="ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData" title="ViSP_Pipeline.Data.FitsData">ViSP_Pipeline.Data.FitsData</a></span></em>, <em class="sig-param"><span class="n">errData</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData" title="ViSP_Pipeline.Data.FitsData">ViSP_Pipeline.Data.FitsData</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">preserve_modulator</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span><a class="reference internal" href="ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData" title="ViSP_Pipeline.Data.FitsData">ViSP_Pipeline.Data.FitsData</a><span class="p">, </span>Optional<span class="p">[</span><a class="reference internal" href="ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData" title="ViSP_Pipeline.Data.FitsData">ViSP_Pipeline.Data.FitsData</a><span class="p">]</span><span class="p">]</span><a class="reference internal" href="../_modules/ViSP_Pipeline/ScienceCalibration.html#average_beams"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.ScienceCalibration.average_beams" title="Permalink to this definition">¶</a></dt>
 <dd><p>Average the two beams together. Real simple.</p>
 <p>This function is modulator state aware, although I’m not sure why.</p>
 <dl class="field-list simple">
@@ -219,7 +216,7 @@ each modulator state, or just one HDU containing the global average.</p>
     </div>
    
     <div class="right-footer">
-      Last updated on 22 Jan 2021.
+      Last updated on 06 Jul 2021.
     </div>
     <div class="centre-footer">
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1

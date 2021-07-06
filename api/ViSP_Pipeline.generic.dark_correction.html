@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>dark_correction &#8212; ViSP_Pipeline v0.21.0</title>
+    <title>dark_correction &#8212; ViSP_Pipeline v1.0.0</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -138,12 +138,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../data_warning.html">A Word About Data, RAM, and Disk Space</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../API.html">Reference/API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ViSPPipeline">ViSP_Pipeline.ViSPPipeline Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ViSPPolCalPipeline">ViSP_Pipeline.ViSPPolCalPipeline Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ScienceCalibration">ViSP_Pipeline.ScienceCalibration Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.InstrumentPolCalibration">ViSP_Pipeline.InstrumentPolCalibration Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.Data">ViSP_Pipeline.Data Module</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.generic">ViSP_Pipeline.generic Module</a><ul class="current">
-<li class="toctree-l3 current"><a class="reference internal" href="../API.html#id4">Functions</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../API.html#id8">Functions</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.generic.average_FitsData.html">average_FitsData</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">dark_correction</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.generic.extract_map.html">extract_map</a></li>
@@ -167,7 +166,7 @@
 <h1>dark_correction<a class="headerlink" href="#dark-correction" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt id="ViSP_Pipeline.generic.dark_correction">
-<code class="sig-prename descclassname">ViSP_Pipeline.generic.</code><code class="sig-name descname">dark_correction</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fitsData</span></em>, <em class="sig-param"><span class="n">dark_calibration</span></em>, <em class="sig-param"><span class="n">errData</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">dark_calibration_err</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/generic.html#dark_correction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.generic.dark_correction" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">ViSP_Pipeline.generic.</code><code class="sig-name descname">dark_correction</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fitsData</span><span class="p">:</span> <span class="n"><a class="reference internal" href="ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData" title="ViSP_Pipeline.Data.FitsData">ViSP_Pipeline.Data.FitsData</a></span></em>, <em class="sig-param"><span class="n">dark_calibration</span><span class="p">:</span> <span class="n"><a class="reference internal" href="ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData" title="ViSP_Pipeline.Data.FitsData">ViSP_Pipeline.Data.FitsData</a></span></em>, <em class="sig-param"><span class="n">errData</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData" title="ViSP_Pipeline.Data.FitsData">ViSP_Pipeline.Data.FitsData</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">dark_calibration_err</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData" title="ViSP_Pipeline.Data.FitsData">ViSP_Pipeline.Data.FitsData</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)">None</a><a class="reference internal" href="../_modules/ViSP_Pipeline/generic.html#dark_correction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.generic.dark_correction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Subtract dark data from every HDU (probably a modulation state) in the input data.</p>
 <p>If uncertainty estimates are provided then the uncertainty on the input data will be updated to be the quadrature
 sum of itself and the provided dark uncertainty.</p>
@@ -209,7 +208,7 @@ only the first data HDU is used.</p>
     </div>
    
     <div class="right-footer">
-      Last updated on 22 Jan 2021.
+      Last updated on 06 Jul 2021.
     </div>
     <div class="centre-footer">
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1

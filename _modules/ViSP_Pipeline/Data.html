@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ViSP_Pipeline.Data &#8212; ViSP_Pipeline v0.21.0</title>
+    <title>ViSP_Pipeline.Data &#8212; ViSP_Pipeline v1.0.0</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
@@ -133,19 +133,30 @@
     <div class="body col-md-9 content" role="main">
       
   <h1>Source code for ViSP_Pipeline.Data</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span> <span class="k">as</span> <span class="n">pyfits</span>
 <span class="kn">from</span> <span class="nn">astropy.time</span> <span class="kn">import</span> <span class="n">Time</span>
+
+<span class="kn">from</span> <span class="nn">ViSP_Pipeline.data</span> <span class="kn">import</span> <span class="n">CONSTANTS</span>
+<span class="kn">from</span> <span class="nn">ViSP_Pipeline.data</span> <span class="kn">import</span> <span class="n">S122</span>
+<span class="kn">from</span> <span class="nn">ViSP_Pipeline.data</span> <span class="kn">import</span> <span class="n">TASK_DATA_DICTS</span>
 <span class="kn">from</span> <span class="nn">ViSP_Pipeline.tag</span> <span class="kn">import</span> <span class="n">tag</span>
-<span class="kn">from</span> <span class="nn">ViSP_Pipeline.data</span> <span class="kn">import</span> <span class="n">S122</span><span class="p">,</span> <span class="n">TASK_DATA_DICTS</span><span class="p">,</span> <span class="n">CONSTANTS</span>
 
 <span class="n">TMPDIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
 
-<div class="viewcode-block" id="FitsData"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData">[docs]</a><span class="k">class</span> <span class="nc">FitsData</span><span class="p">():</span>
+
+<div class="viewcode-block" id="FitsData"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData">[docs]</a><span class="k">class</span> <span class="nc">FitsData</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;FitsData is a basically a wrapper for astropy.io.fits, with some extra methods and properties to aid the</span>
 <span class="sd">    reduction of DKIST data.</span>
 
@@ -159,7 +170,12 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fitsfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">memmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ignore_shape_check</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">fitsfile</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">memmap</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">ignore_shape_check</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialize an empty object and maybe load a FITS file.</span>
 
 <span class="sd">        Parameters</span>
@@ -169,27 +185,61 @@
 
 <span class="sd">        memmap : bool or None</span>
 <span class="sd">            Whether to use astropy.io.fits&#39; memmap functionality. Set to None to let astropy figure it out for you.</span>
+
+<span class="sd">        ignore_shape_check : bool</span>
+<span class="sd">            If True then a dummy dimension will not be enforced on read</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Set some default properties that other methods expect to exist</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">is_tmp</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_hdulist</span> <span class="o">=</span> <span class="n">pyfits</span><span class="o">.</span><span class="n">HDUList</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data_hdus</span> <span class="o">=</span> <span class="n">pyfits</span><span class="o">.</span><span class="n">HDUList</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_data_list</span> <span class="o">=</span> <span class="n">_DataList</span><span class="p">(</span><span class="n">ignore_shape_check</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data_list</span> <span class="o">=</span> <span class="n">_DataList</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ignore_shape_check</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tmp_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tmp_file</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="n">fitsfile</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">load_from_file</span><span class="p">(</span><span class="n">fitsfile</span><span class="p">,</span> <span class="n">memmap</span><span class="o">=</span><span class="n">memmap</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s1">&#39;FitsData from </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">origin</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;FitsData from </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">origin</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Only overloaded so that any temp FITS files can be deleted.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_tmp</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Closing </span><span class="si">{}</span><span class="s1"> and deleting associated tmp file.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp_file</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cleanup</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="c1"># If we already cleaned up manually</span>
+            <span class="k">pass</span>
 
-<div class="viewcode-block" id="FitsData.load_from_file"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData.load_from_file">[docs]</a>    <span class="k">def</span> <span class="nf">load_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fitsfile</span><span class="p">,</span> <span class="n">memmap</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_understand_that_this_is_probably_a_bad_idea</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;For manually cleaning tmp files because python is weird when multi-threaded&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">i_understand_that_this_is_probably_a_bad_idea</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;You don&#39;t know what you&#39;re doing and, as your friend, I must stop you&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">all_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tmp_list</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmp_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">all_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp_file</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: Closing </span><span class="si">{}</span><span class="s2"> and deleting associated tmp files: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">tag</span><span class="p">(),</span> <span class="bp">self</span><span class="p">,</span> <span class="n">all_list</span>
+                <span class="p">),</span>
+                <span class="n">flush</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">all_list</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+<div class="viewcode-block" id="FitsData.copy"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FitsData</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Create a copy of this object &quot;&quot;&quot;</span>
+        <span class="n">new_self</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">new_self</span><span class="o">.</span><span class="n">_update_data_hdus</span><span class="p">()</span>  <span class="c1"># This is why this function is needed.</span>
+        <span class="k">return</span> <span class="n">new_self</span></div>
+
+<div class="viewcode-block" id="FitsData.load_from_file"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData.load_from_file">[docs]</a>    <span class="k">def</span> <span class="nf">load_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fitsfile</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">memmap</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Load data/metadata from a FITS file and make the resulting HDU list accessable to the rest of the class</span>
 
 <span class="sd">        Parameters</span>
@@ -203,7 +253,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">hdulist</span> <span class="o">=</span> <span class="n">pyfits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">fitsfile</span><span class="p">,</span> <span class="n">memmap</span><span class="o">=</span><span class="n">memmap</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="n">fitsfile</span></div>
 
-<div class="viewcode-block" id="FitsData.load_from_directory"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData.load_from_directory">[docs]</a>    <span class="k">def</span> <span class="nf">load_from_directory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">searchstr</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">max_open</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">datahdu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">memmap</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="FitsData.load_from_directory"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData.load_from_directory">[docs]</a>    <span class="k">def</span> <span class="nf">load_from_directory</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">directory</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">searchstr</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">max_open</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+        <span class="n">datahdu</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">memmap</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Load a series of FITS files from a directory.</span>
 
 <span class="sd">        Each separate file will become a single HDU in this object&#39;s data_hdus. A blank PrimaryHDU is provided.</span>
@@ -229,24 +286,31 @@
 <span class="sd">            Use astropy.io.fits&#39; memmap functionality? If None then astropy will make this choice for you.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">hdulist</span> <span class="o">=</span> <span class="p">[</span><span class="n">pyfits</span><span class="o">.</span><span class="n">PrimaryHDU</span><span class="p">()]</span>
-        <span class="n">searchstr</span> <span class="o">=</span> <span class="n">searchstr</span> <span class="ow">or</span> <span class="s1">&#39;*</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">CONSTANTS</span><span class="p">[</span><span class="s1">&#39;Data&#39;</span><span class="p">][</span><span class="s1">&#39;suffix&#39;</span><span class="p">])</span>
-        <span class="n">file_list</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">searchstr</span><span class="p">)))</span>
+        <span class="n">searchstr</span> <span class="o">=</span> <span class="n">searchstr</span> <span class="ow">or</span> <span class="s2">&quot;*</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">CONSTANTS</span><span class="p">[</span><span class="s2">&quot;Data&quot;</span><span class="p">][</span><span class="s2">&quot;suffix&quot;</span><span class="p">])</span>
+        <span class="n">file_list</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">/</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">searchstr</span><span class="p">)))</span>
         <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">file_list</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="n">max_open</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">hdulist</span> <span class="o">=</span> <span class="n">hdulist</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
                 <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Loading file </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Loading file </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
             <span class="n">hdus</span> <span class="o">=</span> <span class="n">pyfits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">memmap</span><span class="o">=</span><span class="n">memmap</span><span class="p">)</span>
             <span class="n">hdulist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">hdus</span><span class="p">[</span><span class="n">datahdu</span><span class="p">])</span>
             <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
 
         <span class="n">hdulist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">hdulist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hdulist</span> <span class="o">=</span> <span class="n">hdulist</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">searchstr</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">/</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">searchstr</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="FitsData.load_polarimetric_fitsData"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData.load_polarimetric_fitsData">[docs]</a>    <span class="k">def</span> <span class="nf">load_polarimetric_fitsData</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">searchstr</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">stokes</span><span class="o">=</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="n">max_open</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">memmap</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="FitsData.load_polarimetric_fitsData"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData.load_polarimetric_fitsData">[docs]</a>    <span class="k">def</span> <span class="nf">load_polarimetric_fitsData</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">directory</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">searchstr</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">stokes</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;I&quot;</span><span class="p">,</span>
+        <span class="n">max_open</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+        <span class="n">memmap</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Load a single Stokes component from all files in a directory.</span>
 
 <span class="sd">        Each separate file will become a single HDU in this object&#39;s data_hdus. A blank PrimaryHDU is provided.</span>
@@ -274,26 +338,28 @@
 <span class="sd">            Use astropy.io.fits&#39; memmap functionality? If None then astropy will make this choice for you.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">hdulist</span> <span class="o">=</span> <span class="p">[</span><span class="n">pyfits</span><span class="o">.</span><span class="n">PrimaryHDU</span><span class="p">()]</span>
-        <span class="n">searchstr</span> <span class="o">=</span> <span class="n">searchstr</span> <span class="ow">or</span> <span class="s1">&#39;*</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">CONSTANTS</span><span class="p">[</span><span class="s1">&#39;Data&#39;</span><span class="p">][</span><span class="s1">&#39;suffix&#39;</span><span class="p">])</span>
-        <span class="n">file_list</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">searchstr</span><span class="p">)))</span>
+        <span class="n">searchstr</span> <span class="o">=</span> <span class="n">searchstr</span> <span class="ow">or</span> <span class="s2">&quot;*</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">CONSTANTS</span><span class="p">[</span><span class="s2">&quot;Data&quot;</span><span class="p">][</span><span class="s2">&quot;suffix&quot;</span><span class="p">])</span>
+        <span class="n">file_list</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">/</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">searchstr</span><span class="p">)))</span>
         <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">file_list</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="n">max_open</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">hdulist</span> <span class="o">=</span> <span class="n">hdulist</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
                 <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Loading file </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Loading file </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
             <span class="n">tmpData</span> <span class="o">=</span> <span class="n">FitsData</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">memmap</span><span class="o">=</span><span class="n">memmap</span><span class="p">)</span>
-            <span class="n">idx</span> <span class="o">=</span> <span class="n">tmpData</span><span class="o">.</span><span class="n">find_keyword_idx</span><span class="p">(</span><span class="s1">&#39;VISP_STK&#39;</span><span class="p">,</span> <span class="n">stokes</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="n">tmpData</span><span class="o">.</span><span class="n">find_keyword_idx</span><span class="p">(</span><span class="s2">&quot;VISP_STK&quot;</span><span class="p">,</span> <span class="n">stokes</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">hdulist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tmpData</span><span class="o">.</span><span class="n">hdulist</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
             <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="k">del</span> <span class="n">tmpData</span>
 
         <span class="n">hdulist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">hdulist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hdulist</span> <span class="o">=</span> <span class="n">hdulist</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">searchstr</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">/</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">searchstr</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="FitsData.init_with_ndarray"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData.init_with_ndarray">[docs]</a>    <span class="k">def</span> <span class="nf">init_with_ndarray</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">outputfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="FitsData.init_with_ndarray"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData.init_with_ndarray">[docs]</a>    <span class="k">def</span> <span class="nf">init_with_ndarray</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">outputfile</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Load data from a numpy.ndarray and construct an astropy.io.fits HDU list</span>
 
 <span class="sd">        To provide a uniform data type for all DKIST instruments the follow conventions are enforced:</span>
@@ -322,17 +388,21 @@
 <span class="sd">            If True the outputfile specified will be overwritten.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">outputfile</span><span class="p">:</span>
-            <span class="n">outputfile</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/tmp</span><span class="si">{}</span><span class="s1">.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">TMPDIR</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)),</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s1">&#39;Data&#39;</span><span class="p">][</span><span class="s1">&#39;suffix&#39;</span><span class="p">])</span>
+            <span class="n">outputfile</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">/tmp</span><span class="si">{}</span><span class="s2">.</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">TMPDIR</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)),</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s2">&quot;Data&quot;</span><span class="p">][</span><span class="s2">&quot;suffix&quot;</span><span class="p">]</span>
+            <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">is_tmp</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">tmp_file</span> <span class="o">=</span> <span class="n">outputfile</span>
 
         <span class="n">hdulist</span> <span class="o">=</span> <span class="p">[</span><span class="n">pyfits</span><span class="o">.</span><span class="n">PrimaryHDU</span><span class="p">()]</span>
-        <span class="n">hdulist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;FRMARR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">hdulist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s2">&quot;FRMARR&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
                 <span class="n">hdulist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pyfits</span><span class="o">.</span><span class="n">ImageHDU</span><span class="p">(</span><span class="n">array</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">i</span><span class="p">]))</span>
         <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;FitsData currently only supports initialization with ndarrays of shape 2 or 3&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s2">&quot;FitsData currently only supports initialization with ndarrays of shape 2 or 3&quot;</span>
+            <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">hdulist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pyfits</span><span class="o">.</span><span class="n">ImageHDU</span><span class="p">(</span><span class="n">array</span><span class="p">))</span>
 
@@ -342,7 +412,7 @@
         <span class="c1"># And then simply load the resulting file</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">load_from_file</span><span class="p">(</span><span class="n">outputfile</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="FitsData.find_keyword_idx"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData.find_keyword_idx">[docs]</a>    <span class="k">def</span> <span class="nf">find_keyword_idx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="FitsData.find_keyword_idx"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData.find_keyword_idx">[docs]</a>    <span class="k">def</span> <span class="nf">find_keyword_idx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keyword</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Return the index of the HDUs (including the PrimaryHDU) that have a specific header keyword value</span>
 
 <span class="sd">        Parameters</span>
@@ -368,7 +438,7 @@
 
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">idxs</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="FitsData.find_data_keyword_idx"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData.find_data_keyword_idx">[docs]</a>    <span class="k">def</span> <span class="nf">find_data_keyword_idx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="FitsData.find_data_keyword_idx"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData.find_data_keyword_idx">[docs]</a>    <span class="k">def</span> <span class="nf">find_data_keyword_idx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keyword</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Return the index of just the ImageHDUs that have a specific header keyword value</span>
 
 <span class="sd">        Parameters</span>
@@ -400,31 +470,42 @@
 <span class="sd">        To avoid actually loading the data we look at the required NAXIS header value. It will be 0 (False) for HDUs</span>
 <span class="sd">        with no data. There are other (maybe better?) ways to do this.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data_hdus</span> <span class="o">=</span> <span class="n">pyfits</span><span class="o">.</span><span class="n">HDUList</span><span class="p">([</span><span class="n">h</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hdulist</span> <span class="k">if</span> <span class="n">h</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;NAXIS&#39;</span><span class="p">]])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_hdus</span> <span class="o">=</span> <span class="n">pyfits</span><span class="o">.</span><span class="n">HDUList</span><span class="p">([</span><span class="n">h</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hdulist</span> <span class="k">if</span> <span class="n">h</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s2">&quot;NAXIS&quot;</span><span class="p">]])</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">hdulist</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">hdulist</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pyfits</span><span class="o">.</span><span class="n">HDUList</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Just return the internal property&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hdulist</span>
 
     <span class="nd">@hdulist</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">hdulist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">hdulist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">pyfits</span><span class="o">.</span><span class="n">HDUList</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Simply update the internal value and then make sure data_hdus gets updated too&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_hdulist</span> <span class="o">=</span> <span class="n">value</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_update_data_hdus</span><span class="p">()</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;_DataList&quot;</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Make sure the _DataList object is up to date and return it&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_list</span><span class="o">.</span><span class="n">data_hdus</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_hdus</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_list</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">headers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">size_in_mem</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Return the size of data loaded into memory in MB&quot;&quot;&quot;</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+            <span class="n">size</span> <span class="o">+=</span> <span class="n">sys</span><span class="o">.</span><span class="n">getsizeof</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">size</span> <span class="o">/</span> <span class="mi">1024</span> <span class="o">**</span> <span class="mi">3</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">headers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">pyfits</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">Header</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;A very nice convenience property to quickly access a list of the header objects&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">h</span><span class="o">.</span><span class="n">header</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hdulist</span><span class="p">]</span>
 
-<div class="viewcode-block" id="FitsData.update_header"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData.update_header">[docs]</a>    <span class="k">def</span> <span class="nf">update_header</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">hdu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="FitsData.update_header"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData.update_header">[docs]</a>    <span class="k">def</span> <span class="nf">update_header</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">keyword</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">hdu</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Update one of the header objects with a keyword, value pair.</span>
 
 <span class="sd">        I guess this method exists because, while you could just do .headers[keyword] = value, this prevents</span>
@@ -451,11 +532,13 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hdulist</span><span class="p">[</span><span class="n">hdu</span><span class="p">]</span><span class="o">.</span><span class="n">header</span>
         <span class="k">if</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">header</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">overwrite</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Trying to create </span><span class="si">{}</span><span class="s1"> in hdu </span><span class="si">{}</span><span class="s1">, but it already exists!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">keyword</span><span class="p">,</span> <span class="n">hdu</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                <span class="s2">&quot;Trying to create </span><span class="si">{}</span><span class="s2"> in hdu </span><span class="si">{}</span><span class="s2">, but it already exists!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">keyword</span><span class="p">,</span> <span class="n">hdu</span><span class="p">)</span>
+            <span class="p">)</span>
 
         <span class="n">header</span><span class="p">[</span><span class="n">keyword</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
 
-<div class="viewcode-block" id="FitsData.get_stacked_data"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData.get_stacked_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_stacked_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="FitsData.get_stacked_data"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData.get_stacked_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_stacked_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Return a ndarray stack containing data from all ImageHDU&#39;s</span>
 
 <span class="sd">        If there are a lot of ImageHDU&#39;s the resulting array might be very large. Watch out!</span>
@@ -470,7 +553,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">])</span></div>
 
-<div class="viewcode-block" id="FitsData.convert_to_float32"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData.convert_to_float32">[docs]</a>    <span class="k">def</span> <span class="nf">convert_to_float32</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nomem</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="FitsData.convert_to_float32"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData.convert_to_float32">[docs]</a>    <span class="k">def</span> <span class="nf">convert_to_float32</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nomem</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convert all of the data to numpy.float32</span>
 
 <span class="sd">        In the default form this results in a new file with a &quot;_flt32&quot; suffix, which is the read into this object to</span>
@@ -492,23 +575,74 @@
             <span class="n">d</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">nomem</span><span class="p">:</span>
-            <span class="n">newfile</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_flt32.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s1">&#39;Data&#39;</span><span class="p">][</span><span class="s1">&#39;suffix&#39;</span><span class="p">])[</span><span class="mi">0</span><span class="p">],</span>
-                                           <span class="n">CONSTANTS</span><span class="p">[</span><span class="s1">&#39;Data&#39;</span><span class="p">][</span><span class="s1">&#39;suffix&#39;</span><span class="p">])</span>
+            <span class="n">newfile</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_flt32.</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s2">&quot;Data&quot;</span><span class="p">][</span><span class="s2">&quot;suffix&quot;</span><span class="p">])[</span><span class="mi">0</span><span class="p">],</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s2">&quot;Data&quot;</span><span class="p">][</span><span class="s2">&quot;suffix&quot;</span><span class="p">]</span>
+            <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">write_out</span><span class="p">(</span><span class="n">newfile</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="n">overwrite</span><span class="p">)</span>
 
             <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">:</span>
                 <span class="k">del</span> <span class="n">d</span><span class="o">.</span><span class="n">data</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">load_from_file</span><span class="p">(</span><span class="n">newfile</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="FitsData.flush"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData.flush">[docs]</a>    <span class="k">def</span> <span class="nf">flush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Flush the current data from memory and reload memmap from the disk</span>
+<div class="viewcode-block" id="FitsData.flush_lite"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData.flush_lite">[docs]</a>    <span class="k">def</span> <span class="nf">flush_lite</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Flush only data that has been loaded into memory.</span>
+
+<span class="sd">        This function exists because if the current object is pointing to a very large set of data on disk then we might</span>
+<span class="sd">        need to clear memory but don&#39;t want to write out the *whole* object (i.e., with `.flush()`).</span>
+
+<span class="sd">        Basically this function chunks up tmp files into chunks defined by &quot;max_mem_usage_GB&quot; in the constants file.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">before_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">size_in_mem</span>
+        <span class="n">flush_hdulist</span> <span class="o">=</span> <span class="n">pyfits</span><span class="o">.</span><span class="n">HDUList</span><span class="p">([</span><span class="n">pyfits</span><span class="o">.</span><span class="n">PrimaryHDU</span><span class="p">()])</span>
+
+        <span class="n">idx_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">h</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hdulist</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">getsizeof</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">data</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1024</span><span class="p">:</span>
+                <span class="c1"># Data isn&#39;t in memory, great!</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># We&#39;ve already got the array in memory, might as well convert to ImageHDU now</span>
+            <span class="n">ih</span> <span class="o">=</span> <span class="n">pyfits</span><span class="o">.</span><span class="n">ImageHDU</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">h</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="n">h</span><span class="o">.</span><span class="n">header</span><span class="p">)</span>
+            <span class="n">flush_hdulist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ih</span><span class="p">)</span>
+
+            <span class="n">idx_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: Flushing </span><span class="si">{}</span><span class="s2"> HDUs from memory&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="nb">len</span><span class="p">(</span><span class="n">idx_list</span><span class="p">)))</span>
+        <span class="n">outputfile</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">/tmp</span><span class="si">{}</span><span class="s2">.</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">TMPDIR</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)),</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s2">&quot;Data&quot;</span><span class="p">][</span><span class="s2">&quot;suffix&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">flush_hdulist</span><span class="o">.</span><span class="n">writeto</span><span class="p">(</span><span class="n">outputfile</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tmp_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">outputfile</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">flush_hdulist</span><span class="p">:</span>
+            <span class="k">del</span> <span class="n">h</span><span class="o">.</span><span class="n">data</span>
+            <span class="k">del</span> <span class="n">h</span>
+        <span class="k">del</span> <span class="n">flush_hdulist</span>
+
+        <span class="n">flushed_hdulist</span> <span class="o">=</span> <span class="n">pyfits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">outputfile</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">idx_list</span><span class="p">):</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hdulist</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_hdulist</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">flushed_hdulist</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="k">del</span> <span class="n">tmp</span><span class="o">.</span><span class="n">data</span>
+            <span class="k">del</span> <span class="n">tmp</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_data_hdus</span><span class="p">()</span>
+        <span class="k">del</span> <span class="n">flushed_hdulist</span>
+
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;</span><span class="si">{:}</span><span class="s2">: Flushed from </span><span class="si">{:.2f}</span><span class="s2"> GB to </span><span class="si">{:.2f}</span><span class="s2"> GB&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">before_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">size_in_mem</span><span class="p">)</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="FitsData.flush"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData.flush">[docs]</a>    <span class="k">def</span> <span class="nf">flush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Flush the current data from memory and reload memmap from the disk&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_tmp</span><span class="p">:</span>
             <span class="n">outputfile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmp_file</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">outputfile</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/tmp</span><span class="si">{}</span><span class="s1">.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">TMPDIR</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)),</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s1">&#39;Data&#39;</span><span class="p">][</span><span class="s1">&#39;suffix&#39;</span><span class="p">])</span>
+            <span class="n">outputfile</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">/tmp</span><span class="si">{}</span><span class="s2">.</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">TMPDIR</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)),</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s2">&quot;Data&quot;</span><span class="p">][</span><span class="s2">&quot;suffix&quot;</span><span class="p">]</span>
+            <span class="p">)</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Flushing </span><span class="si">{}</span><span class="s1"> to </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="bp">self</span><span class="p">,</span> <span class="n">outputfile</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: Flushing </span><span class="si">{}</span><span class="s2"> to </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="bp">self</span><span class="p">,</span> <span class="n">outputfile</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">write_out</span><span class="p">(</span><span class="n">outputfile</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">:</span>
@@ -517,7 +651,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">is_tmp</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tmp_file</span> <span class="o">=</span> <span class="n">outputfile</span></div>
 
-<div class="viewcode-block" id="FitsData.write_out"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData.write_out">[docs]</a>    <span class="k">def</span> <span class="nf">write_out</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="FitsData.write_out"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData.write_out">[docs]</a>    <span class="k">def</span> <span class="nf">write_out</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Save the current object to a FITS file</span>
 
 <span class="sd">        Parameters</span>
@@ -529,7 +663,7 @@
 <span class="sd">            If True, overwrite the filename if it exists. Otherwise complain about a pre-existing file.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">out_hdu_list</span> <span class="o">=</span> <span class="n">pyfits</span><span class="o">.</span><span class="n">HDUList</span><span class="p">()</span>
-        <span class="n">loaded_hdus</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;data&#39;</span> <span class="ow">in</span> <span class="n">h</span><span class="o">.</span><span class="vm">__dict__</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hdulist</span><span class="p">]</span>
+        <span class="n">loaded_hdus</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;data&quot;</span> <span class="ow">in</span> <span class="n">h</span><span class="o">.</span><span class="vm">__dict__</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hdulist</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">h</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hdulist</span><span class="p">):</span>
             <span class="n">h</span><span class="o">.</span><span class="n">_do_not_scale_image_data</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">if</span> <span class="n">h</span><span class="o">.</span><span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -549,15 +683,19 @@
                 <span class="k">del</span> <span class="n">h</span><span class="o">.</span><span class="n">data</span>
             <span class="n">h</span><span class="o">.</span><span class="n">_do_not_scale_image_data</span> <span class="o">=</span> <span class="kc">False</span>
 
-        <span class="n">out_hdu_list</span><span class="o">.</span><span class="n">writeto</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="n">overwrite</span><span class="p">,</span> <span class="n">output_verify</span><span class="o">=</span><span class="s1">&#39;silentfix&#39;</span><span class="p">)</span></div></div>
+        <span class="n">out_hdu_list</span><span class="o">.</span><span class="n">writeto</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="n">overwrite</span><span class="p">,</span> <span class="n">output_verify</span><span class="o">=</span><span class="s2">&quot;silentfix&quot;</span><span class="p">)</span></div></div>
 
-<span class="k">class</span> <span class="nc">_DataList</span><span class="p">():</span>
+
+<span class="k">class</span> <span class="nc">_DataList</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;This class exists so that the actual data arrays in FitsData can be accessed without necessarily loading all</span>
 <span class="sd">    arrays into memory. It also uses np.squeeze to ignore the dummy 3rd dimension in a numpy view sense. Thus, the</span>
 <span class="sd">    benefits of memmaping are preserved as long as possible.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ignore_shape_check</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Thre&#39;s only one property here, a list that will eventually contain pyfits HDU objects&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">:</span> <span class="s2">&quot;FitsData&quot;</span><span class="p">,</span> <span class="n">ignore_shape_check</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Thre&#39;s only one main property here, a list that will eventually contain pyfits HDU objects</span>
+<span class="sd">        ignore_shape_check allows data with the wrong shape (i.e., no dummy dimension) to be loaded</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data_hdus</span> <span class="o">=</span> <span class="n">pyfits</span><span class="o">.</span><span class="n">HDUList</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ignore_shape_check</span> <span class="o">=</span> <span class="n">ignore_shape_check</span>
 
@@ -566,26 +704,36 @@
         <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">:</span>
             <span class="k">del</span> <span class="n">h</span><span class="o">.</span><span class="n">data</span>
 
-    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Check that the shape of the actual data is expected and then return the squeezed view of the requested data</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__delitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">[</span><span class="n">item</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Check that the shape of the actual data is expected and then return the squeezed view of the requested data&quot;&quot;&quot;</span>
         <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">[</span><span class="n">item</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignore_shape_check</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">data</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Data shape (</span><span class="si">{}</span><span class="s1">) is wrong&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Data shape (</span><span class="si">{}</span><span class="s2">) is wrong&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Just direct access to underlying array&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">size_in_mem</span> <span class="o">&gt;=</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s2">&quot;Data&quot;</span><span class="p">][</span><span class="s2">&quot;max_mem_usage_GB&quot;</span><span class="p">]:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: Max memory usage (</span><span class="si">{}</span><span class="s2"> GB) reached. Initiating flush&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">tag</span><span class="p">(),</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s2">&quot;Data&quot;</span><span class="p">][</span><span class="s2">&quot;max_mem_usage_GB&quot;</span><span class="p">]</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">flush_lite</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Needed so that we can stop using len(FitsData.data_hdus)&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">)</span>
+
 
 <div class="viewcode-block" id="DemodulationData"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.DemodulationData.html#ViSP_Pipeline.Data.DemodulationData">[docs]</a><span class="k">class</span> <span class="nc">DemodulationData</span><span class="p">(</span><span class="n">FitsData</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -601,14 +749,16 @@
 <span class="sd">        ----------</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">FitsData</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_data_list</span> <span class="o">=</span> <span class="n">_DemodulationDataList</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data_list</span> <span class="o">=</span> <span class="n">_DemodulationDataList</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_list</span><span class="o">.</span><span class="n">ignore_shape_check</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hdulist</span> <span class="o">=</span> <span class="p">[</span><span class="n">pyfits</span><span class="o">.</span><span class="n">PrimaryHDU</span><span class="p">(),</span> <span class="n">pyfits</span><span class="o">.</span><span class="n">ImageHDU</span><span class="p">(),</span> <span class="n">pyfits</span><span class="o">.</span><span class="n">ImageHDU</span><span class="p">()]</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s1">&#39;DemodulationData from </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">origin</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;DemodulationData from </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">origin</span><span class="p">)</span>
 
-<div class="viewcode-block" id="DemodulationData.init_beam_with_ndarray"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.DemodulationData.html#ViSP_Pipeline.Data.DemodulationData.init_beam_with_ndarray">[docs]</a>    <span class="k">def</span> <span class="nf">init_beam_with_ndarray</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">beam</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="DemodulationData.init_beam_with_ndarray"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.DemodulationData.html#ViSP_Pipeline.Data.DemodulationData.init_beam_with_ndarray">[docs]</a>    <span class="k">def</span> <span class="nf">init_beam_with_ndarray</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">beam</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">header</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">pyfits</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">Header</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load data from a demodulation-style numpy.ndarray and construct an astropy.io.fits HDU list</span>
 
@@ -628,20 +778,20 @@
 <span class="sd">            The ViSP beam that the specified demodulation matrix belongs to</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">beam</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]:</span>
-            <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="s1">&#39;ViSP only has beams 1 and 2!&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="s2">&quot;ViSP only has beams 1 and 2!&quot;</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">hdulist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;FRMARR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hdulist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s2">&quot;FRMARR&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">4</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;DemodulationData must have 2 or 4 dimensions&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;DemodulationData must have 2 or 4 dimensions&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The Stokes dimension of DemodulationData must have length 4&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The Stokes dimension of DemodulationData must have length 4&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">hdulist</span><span class="p">[</span><span class="n">beam</span><span class="p">]</span> <span class="o">=</span> <span class="n">pyfits</span><span class="o">.</span><span class="n">ImageHDU</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="n">header</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="DemodulationData.load_beam_from_file"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.DemodulationData.html#ViSP_Pipeline.Data.DemodulationData.load_beam_from_file">[docs]</a>    <span class="k">def</span> <span class="nf">load_beam_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fitsfile</span><span class="p">,</span> <span class="n">beam</span><span class="p">):</span>
+<div class="viewcode-block" id="DemodulationData.load_beam_from_file"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.DemodulationData.html#ViSP_Pipeline.Data.DemodulationData.load_beam_from_file">[docs]</a>    <span class="k">def</span> <span class="nf">load_beam_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fitsfile</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">beam</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load a demodulation-style FITS file from disk and assign it to the HDU corresponding to the specified beam.</span>
 
@@ -660,28 +810,28 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="n">fitsfile</span></div>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">beam1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">beam1</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;The data associated with beam 1&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">beam2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">beam2</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;The data associated with beam 2&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">beam1_header</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">beam1_header</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pyfits</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">Header</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;The header associated with beam1&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">hdulist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">header</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">beam2_header</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">beam2_header</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pyfits</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">Header</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;The header associated with beam2&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">hdulist</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">header</span></div>
 
-<span class="k">class</span> <span class="nc">_DemodulationDataList</span><span class="p">(</span><span class="n">_DataList</span><span class="p">):</span>
 
-    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">_DemodulationDataList</span><span class="p">(</span><span class="n">_DataList</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 
         <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">[</span><span class="n">item</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
 
@@ -692,12 +842,13 @@
 
         <span class="k">return</span> <span class="n">data</span>
 
+
 <div class="viewcode-block" id="CalibrationCurveData"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.CalibrationCurveData.html#ViSP_Pipeline.Data.CalibrationCurveData">[docs]</a><span class="k">class</span> <span class="nc">CalibrationCurveData</span><span class="p">(</span><span class="n">FitsData</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;CalibrationCurveData is an extension of FitsData that loads a single Calibration Curve from a directory</span>
 <span class="sd">    containing a full Set of Calibration Curves (SoCC). The user is able to specify which step of the Calibration</span>
 <span class="sd">    Sequence (CS) will be loaded and after loading this object behaves exactly like FitsData.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">CS_step</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">memmap</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">CS_step</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">memmap</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialize the object and maybe load some data.</span>
 
 <span class="sd">        Parameters</span>
@@ -718,14 +869,16 @@
 
         <span class="n">FitsData</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fitsfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">memmap</span><span class="o">=</span><span class="n">memmap</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">ref_dir</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ref_dir</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">file_list</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">CS_step</span> <span class="o">=</span> <span class="n">CS_step</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s1">&#39;CalibrationCurveData from CS step </span><span class="si">{}</span><span class="s1"> loaded from </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">CS_step</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref_dir</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;CalibrationCurveData from CS step </span><span class="si">{}</span><span class="s2"> loaded from </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">CS_step</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref_dir</span>
+        <span class="p">)</span>
 
-<div class="viewcode-block" id="CalibrationCurveData.load_from_filelist"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.CalibrationCurveData.html#ViSP_Pipeline.Data.CalibrationCurveData.load_from_filelist">[docs]</a>    <span class="k">def</span> <span class="nf">load_from_filelist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_list</span><span class="p">,</span> <span class="n">check_obj</span><span class="p">):</span>
+<div class="viewcode-block" id="CalibrationCurveData.load_from_filelist"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.CalibrationCurveData.html#ViSP_Pipeline.Data.CalibrationCurveData.load_from_filelist">[docs]</a>    <span class="k">def</span> <span class="nf">load_from_filelist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">check_obj</span><span class="p">:</span> <span class="s2">&quot;CSStep&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Load files from a list of file names</span>
 
 <span class="sd">        Each file is checked to make sure it is from the correct CS step.</span>
@@ -742,7 +895,9 @@
 
             <span class="c1"># Let&#39;s just do a double-check that the CS step is correct</span>
             <span class="k">if</span> <span class="n">CSStep</span><span class="p">(</span><span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">)</span> <span class="o">!=</span> <span class="n">check_obj</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;File </span><span class="si">{}</span><span class="s1"> is not from the correct CS step (</span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">CS_step</span><span class="p">))</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;File </span><span class="si">{}</span><span class="s2"> is not from the correct CS step (</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">CS_step</span><span class="p">)</span>
+                <span class="p">)</span>
 
             <span class="n">hdulist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pyfits</span><span class="o">.</span><span class="n">ImageHDU</span><span class="p">(</span><span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">file_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
@@ -758,7 +913,14 @@
 <span class="sd">    directory containing a full ViSP DataSet. The user is able to specify which spatial step will be loaded and after</span>
 <span class="sd">    loading this object behaves exactly like FitsData.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataset_ID</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">spatial_step</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">memmap</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">dataset_ID</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">spatial_step</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">memmap</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialize the object and maybe load some data.</span>
 
 <span class="sd">        Parameters</span>
@@ -783,18 +945,20 @@
 
         <span class="n">FitsData</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fitsfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">memmap</span><span class="o">=</span><span class="n">memmap</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">ref_dir</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ref_dir</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">file_list</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">spatial_step</span> <span class="o">=</span> <span class="n">spatial_step</span>
 
         <span class="k">if</span> <span class="n">data_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">suffix</span> <span class="o">=</span> <span class="n">suffix</span> <span class="ow">or</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s1">&#39;Data&#39;</span><span class="p">][</span><span class="s1">&#39;suffix&#39;</span><span class="p">]</span>
+            <span class="n">suffix</span> <span class="o">=</span> <span class="n">suffix</span> <span class="ow">or</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s2">&quot;Data&quot;</span><span class="p">][</span><span class="s2">&quot;suffix&quot;</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">load_from_directory</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="n">dataset_ID</span><span class="o">=</span><span class="n">dataset_ID</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s1">&#39;SlitPositionData from spatial step </span><span class="si">{}</span><span class="s1"> loaded from </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spatial_step</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref_dir</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;SlitPositionData from spatial step </span><span class="si">{}</span><span class="s2"> loaded from </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spatial_step</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref_dir</span>
+        <span class="p">)</span>
 
-<div class="viewcode-block" id="SlitPositionData.load_from_filelist"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.SlitPositionData.html#ViSP_Pipeline.Data.SlitPositionData.load_from_filelist">[docs]</a>    <span class="k">def</span> <span class="nf">load_from_filelist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_list</span><span class="p">):</span>
+<div class="viewcode-block" id="SlitPositionData.load_from_filelist"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.SlitPositionData.html#ViSP_Pipeline.Data.SlitPositionData.load_from_filelist">[docs]</a>    <span class="k">def</span> <span class="nf">load_from_filelist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
         <span class="sd">&quot;&quot;&quot;Load files from a list of file names</span>
 
 <span class="sd">        Each file is checked to make sure it is from the correct spatial step (the one that this class was initialized</span>
@@ -811,8 +975,10 @@
             <span class="n">h</span> <span class="o">=</span> <span class="n">pyfits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 
             <span class="c1"># Let&#39;s just do a double-check that the slit position is correct</span>
-            <span class="k">if</span> <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="n">S122</span><span class="p">[</span><span class="s1">&#39;CurrentSpatialStep&#39;</span><span class="p">]]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spatial_step</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;File </span><span class="si">{}</span><span class="s1"> is not from the correct spatial step (</span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">spatial_step</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="n">S122</span><span class="p">[</span><span class="s2">&quot;CurrentSpatialStep&quot;</span><span class="p">]]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spatial_step</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;File </span><span class="si">{}</span><span class="s2"> is not from the correct spatial step (</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">spatial_step</span><span class="p">)</span>
+                <span class="p">)</span>
 
             <span class="n">hdulist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pyfits</span><span class="o">.</span><span class="n">ImageHDU</span><span class="p">(</span><span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">file_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
@@ -822,7 +988,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">hdulist</span> <span class="o">=</span> <span class="p">[</span><span class="n">pyfits</span><span class="o">.</span><span class="n">PrimaryHDU</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="n">hdulist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">)]</span> <span class="o">+</span> <span class="n">hdulist</span></div>
 
-<div class="viewcode-block" id="SlitPositionData.load_from_directory"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.SlitPositionData.html#ViSP_Pipeline.Data.SlitPositionData.load_from_directory">[docs]</a>    <span class="k">def</span> <span class="nf">load_from_directory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dir</span><span class="p">,</span> <span class="n">dataset_ID</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="SlitPositionData.load_from_directory"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.SlitPositionData.html#ViSP_Pipeline.Data.SlitPositionData.load_from_directory">[docs]</a>    <span class="k">def</span> <span class="nf">load_from_directory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dataset_ID</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Load DHS-style data from a directory.</span>
 
 <span class="sd">        It is assumed that all relevant files in the directory have SPEC-0122 headers and a single HDU. In other words,</span>
@@ -841,15 +1007,17 @@
 <span class="sd">        suffix : str</span>
 <span class="sd">            Optional file mask. The full mask is DATA_DIR/\*SUFFIX. Defaults to &quot;.fits&quot;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">suffix</span> <span class="o">=</span> <span class="n">suffix</span> <span class="ow">or</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s1">&#39;Data&#39;</span><span class="p">][</span><span class="s1">&#39;suffix&#39;</span><span class="p">]</span>
-        <span class="n">file_list</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/*</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="n">suffix</span><span class="p">))</span>
+        <span class="n">suffix</span> <span class="o">=</span> <span class="n">suffix</span> <span class="ow">or</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s2">&quot;Data&quot;</span><span class="p">][</span><span class="s2">&quot;suffix&quot;</span><span class="p">]</span>
+        <span class="n">file_list</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">/*</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="n">suffix</span><span class="p">))</span>
         <span class="n">hdulist</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">file_list</span><span class="p">:</span>
             <span class="n">h</span> <span class="o">=</span> <span class="n">pyfits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="n">S122</span><span class="p">[</span><span class="s1">&#39;InstrumentProgramTask&#39;</span><span class="p">]]</span> <span class="o">==</span> <span class="s1">&#39;Observation&#39;</span> <span class="ow">and</span> \
-                    <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="n">S122</span><span class="p">[</span><span class="s1">&#39;CurrentSpatialStep&#39;</span><span class="p">]]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">spatial_step</span> <span class="ow">and</span> \
-                    <span class="p">(</span><span class="n">dataset_ID</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span> <span class="ow">or</span> <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="n">S122</span><span class="p">[</span><span class="s1">&#39;DataSetParametersID&#39;</span><span class="p">]]</span> <span class="o">==</span> <span class="n">dataset_ID</span><span class="p">):</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="n">S122</span><span class="p">[</span><span class="s2">&quot;InstrumentProgramTask&quot;</span><span class="p">]]</span> <span class="o">==</span> <span class="s2">&quot;Observation&quot;</span>
+                <span class="ow">and</span> <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="n">S122</span><span class="p">[</span><span class="s2">&quot;CurrentSpatialStep&quot;</span><span class="p">]]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">spatial_step</span>
+                <span class="ow">and</span> <span class="p">(</span><span class="n">dataset_ID</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="ow">or</span> <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="n">S122</span><span class="p">[</span><span class="s2">&quot;DataSetParametersID&quot;</span><span class="p">]]</span> <span class="o">==</span> <span class="n">dataset_ID</span><span class="p">)</span>
+            <span class="p">):</span>
                 <span class="n">hdulist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pyfits</span><span class="o">.</span><span class="n">ImageHDU</span><span class="p">(</span><span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">))</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">file_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 
@@ -861,20 +1029,22 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">hdulist</span> <span class="o">=</span> <span class="n">hdulist</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ref_dir</span> <span class="o">=</span> <span class="n">data_dir</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="c1">#TODO: This says PolCal, which is wrong. Actually, should this method even be here?</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Did not find any PolCal images from spatial step </span><span class="si">{}</span><span class="s1"> within </span><span class="si">{}</span><span class="s1">/*</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span>
-                                                                                                 <span class="bp">self</span><span class="o">.</span><span class="n">spatial_step</span><span class="p">,</span>
-                                                                                                 <span class="n">data_dir</span><span class="p">,</span> <span class="n">suffix</span><span class="p">))</span></div></div>
+            <span class="c1"># TODO: This says PolCal, which is wrong. Actually, should this method even be here?</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: Did not find any PolCal images from spatial step </span><span class="si">{}</span><span class="s2"> within </span><span class="si">{}</span><span class="s2">/*</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">tag</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">spatial_step</span><span class="p">,</span> <span class="n">data_dir</span><span class="p">,</span> <span class="n">suffix</span>
+                <span class="p">)</span>
+            <span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="DataSetData"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.DataSetData.html#ViSP_Pipeline.Data.DataSetData">[docs]</a><span class="k">class</span> <span class="nc">DataSetData</span><span class="p">():</span>
+<div class="viewcode-block" id="DataSetData"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.DataSetData.html#ViSP_Pipeline.Data.DataSetData">[docs]</a><span class="k">class</span> <span class="nc">DataSetData</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;DataSetData is designed to handle the aggregation of a bunch of files that belong to a single ViSP data set.</span>
 <span class="sd">    A data set is generally the set of spectra of all spatial positions of the ViSP slit. This class reads all files in</span>
 <span class="sd">    a directory and populates a dictionary that maps spatial position to filename. It can then create and return</span>
 <span class="sd">    instances of the SlitPositionClass based on this dictionary. In this way the entire directory only needs to be read</span>
 <span class="sd">    once, which saves a lot of time.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataset_ID</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">dataset_ID</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialize a few parameters and read the directory, if specified.</span>
 
 <span class="sd">        Parameters</span>
@@ -894,16 +1064,16 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">dataset_ID</span> <span class="o">=</span> <span class="n">dataset_ID</span>
 
         <span class="k">if</span> <span class="n">data_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">suffix</span> <span class="o">=</span> <span class="n">suffix</span> <span class="ow">or</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s1">&#39;Data&#39;</span><span class="p">][</span><span class="s1">&#39;suffix&#39;</span><span class="p">]</span>
+            <span class="n">suffix</span> <span class="o">=</span> <span class="n">suffix</span> <span class="ow">or</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s2">&quot;Data&quot;</span><span class="p">][</span><span class="s2">&quot;suffix&quot;</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">read_directory</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">,</span> <span class="n">dataset_ID</span><span class="o">=</span><span class="n">dataset_ID</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset_ID</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s1">&#39;DataSetData from dir </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_dir</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset_ID</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;DataSetData from dir </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_dir</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s1">&#39;DataSetData for dataset </span><span class="si">{}</span><span class="s1"> from dir </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataset_ID</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_dir</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s2">&quot;DataSetData for dataset </span><span class="si">{}</span><span class="s2"> from dir </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataset_ID</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_dir</span><span class="p">)</span>
 
-<div class="viewcode-block" id="DataSetData.read_directory"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.DataSetData.html#ViSP_Pipeline.Data.DataSetData.read_directory">[docs]</a>    <span class="k">def</span> <span class="nf">read_directory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dir</span><span class="p">,</span> <span class="n">dataset_ID</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="DataSetData.read_directory"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.DataSetData.html#ViSP_Pipeline.Data.DataSetData.read_directory">[docs]</a>    <span class="k">def</span> <span class="nf">read_directory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dataset_ID</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Read all files in a directory and populate a dictionary mapping spatial step to filename</span>
 
 <span class="sd">        Parameters</span>
@@ -918,14 +1088,16 @@
 <span class="sd">        suffix : str</span>
 <span class="sd">            Optional file mask. The full mask is DATA_DIR/\*SUFFIX. Defaults to &quot;.fits&quot;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">suffix</span> <span class="o">=</span> <span class="n">suffix</span> <span class="ow">or</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s1">&#39;Data&#39;</span><span class="p">][</span><span class="s1">&#39;suffix&#39;</span><span class="p">]</span>
-        <span class="n">file_list</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/*</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="n">suffix</span><span class="p">))</span>
+        <span class="n">suffix</span> <span class="o">=</span> <span class="n">suffix</span> <span class="ow">or</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s2">&quot;Data&quot;</span><span class="p">][</span><span class="s2">&quot;suffix&quot;</span><span class="p">]</span>
+        <span class="n">file_list</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">/*</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="n">suffix</span><span class="p">))</span>
+        <span class="n">task_dict</span> <span class="o">=</span> <span class="n">TASK_DATA_DICTS</span><span class="p">[</span><span class="s2">&quot;Observation&quot;</span><span class="p">]</span>
 
         <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">file_list</span><span class="p">:</span>
             <span class="n">h</span> <span class="o">=</span> <span class="n">pyfits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="n">S122</span><span class="p">[</span><span class="s1">&#39;InstrumentProgramTask&#39;</span><span class="p">]]</span> <span class="o">==</span> <span class="s1">&#39;Observation&#39;</span> <span class="ow">and</span> \
-                    <span class="p">(</span><span class="n">dataset_ID</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span> <span class="ow">or</span> <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="n">S122</span><span class="p">[</span><span class="s1">&#39;DataSetParametersID&#39;</span><span class="p">]]</span> <span class="o">==</span> <span class="n">dataset_ID</span><span class="p">):</span>
-                <span class="n">spatial_pos</span> <span class="o">=</span> <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="n">S122</span><span class="p">[</span><span class="s1">&#39;CurrentSpatialStep&#39;</span><span class="p">]]</span>
+            <span class="k">if</span> <span class="nb">all</span><span class="p">([</span><span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="n">S122</span><span class="p">[</span><span class="n">k</span><span class="p">]]</span> <span class="ow">in</span> <span class="n">task_dict</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">task_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span> <span class="ow">and</span> <span class="p">(</span>
+                <span class="n">dataset_ID</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="ow">or</span> <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="n">S122</span><span class="p">[</span><span class="s2">&quot;DataSetParametersID&quot;</span><span class="p">]]</span> <span class="o">==</span> <span class="n">dataset_ID</span>
+            <span class="p">):</span>
+                <span class="n">spatial_pos</span> <span class="o">=</span> <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="n">S122</span><span class="p">[</span><span class="s2">&quot;CurrentSpatialStep&quot;</span><span class="p">]]</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">spatial_pos_dict</span><span class="p">[</span><span class="n">spatial_pos</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
                 <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
@@ -934,7 +1106,7 @@
             <span class="n">h</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
             <span class="k">del</span> <span class="n">h</span></div>
 
-<div class="viewcode-block" id="DataSetData.get_slit_pos_data"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.DataSetData.html#ViSP_Pipeline.Data.DataSetData.get_slit_pos_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_slit_pos_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spatial_pos</span><span class="p">):</span>
+<div class="viewcode-block" id="DataSetData.get_slit_pos_data"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.DataSetData.html#ViSP_Pipeline.Data.DataSetData.get_slit_pos_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_slit_pos_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spatial_pos</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SlitPositionData</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Initialize a SlitPositionData object and populate its HDUlist with the files corresponding to the specified</span>
 <span class="sd">        spatial step</span>
 
@@ -949,28 +1121,29 @@
 <span class="sd">            The object containing all the data for the specified spatial step</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">spatial_pos</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">spatial_pos_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> cannot find slit position </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spatial_pos</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> cannot find slit position </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spatial_pos</span><span class="p">))</span>
         <span class="n">SPD</span> <span class="o">=</span> <span class="n">SlitPositionData</span><span class="p">(</span><span class="n">spatial_step</span><span class="o">=</span><span class="n">spatial_pos</span><span class="p">)</span>
         <span class="n">SPD</span><span class="o">.</span><span class="n">load_from_filelist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spatial_pos_dict</span><span class="p">[</span><span class="n">spatial_pos</span><span class="p">])</span>
 
         <span class="k">return</span> <span class="n">SPD</span></div>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">spatial_positions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">spatial_positions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;The list of spatial steps found in the data directory&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spatial_pos_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">num_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">num_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;The total number of unique spatial steps found&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spatial_pos_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span></div>
 
-<div class="viewcode-block" id="SoCCData"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.SoCCData.html#ViSP_Pipeline.Data.SoCCData">[docs]</a><span class="k">class</span> <span class="nc">SoCCData</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;SoCCData performs 2 functions: First, it separates and sorts Calibration Sequence (CS) steps found among raw</span>
-<span class="sd">     data in a directory. Secondly, it can initialize and produce a `CalibrationCurveData` object at a requested CS</span>
-<span class="sd">     step.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="SoCCData"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.SoCCData.html#ViSP_Pipeline.Data.SoCCData">[docs]</a><span class="k">class</span> <span class="nc">SoCCData</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;SoCCData performs 2 functions: First, it separates and sorts Calibration Sequence (CS) steps found among raw</span>
+<span class="sd">    data in a directory. Secondly, it can initialize and produce a `CalibrationCurveData` object at a requested CS</span>
+<span class="sd">    step.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialize properties and maybe scan a directory for CS steps.</span>
 
 <span class="sd">        Parameters</span>
@@ -986,13 +1159,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data_dir</span> <span class="o">=</span> <span class="n">data_dir</span>
 
         <span class="k">if</span> <span class="n">data_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">suffix</span> <span class="o">=</span> <span class="n">suffix</span> <span class="ow">or</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s1">&#39;Data&#39;</span><span class="p">][</span><span class="s1">&#39;suffix&#39;</span><span class="p">]</span>
+            <span class="n">suffix</span> <span class="o">=</span> <span class="n">suffix</span> <span class="ow">or</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s2">&quot;Data&quot;</span><span class="p">][</span><span class="s2">&quot;suffix&quot;</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">read_directory</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s1">&#39;SoCCData loaded from directory </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_dir</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;SoCCData loaded from directory </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_dir</span><span class="p">)</span>
 
-<div class="viewcode-block" id="SoCCData.read_directory"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.SoCCData.html#ViSP_Pipeline.Data.SoCCData.read_directory">[docs]</a>    <span class="k">def</span> <span class="nf">read_directory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dir</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="SoCCData.read_directory"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.SoCCData.html#ViSP_Pipeline.Data.SoCCData.read_directory">[docs]</a>    <span class="k">def</span> <span class="nf">read_directory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Read all files in a directory and assign all files a CS step identifier. Then sort the unique CS steps and</span>
 <span class="sd">        populate a dictionary that maps step number to a list of files corresponding to that step.</span>
 
@@ -1004,13 +1177,19 @@
 <span class="sd">        suffix : str</span>
 <span class="sd">            File mask. The full mask will be data_dir/*SUFFIX</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">suffix</span> <span class="o">=</span> <span class="n">suffix</span> <span class="ow">or</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s1">&#39;Data&#39;</span><span class="p">][</span><span class="s1">&#39;suffix&#39;</span><span class="p">]</span>
-        <span class="n">file_list</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/*</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="n">suffix</span><span class="p">))</span>
+        <span class="n">suffix</span> <span class="o">=</span> <span class="n">suffix</span> <span class="ow">or</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s2">&quot;Data&quot;</span><span class="p">][</span><span class="s2">&quot;suffix&quot;</span><span class="p">]</span>
+        <span class="n">file_list</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">/*</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="n">suffix</span><span class="p">))</span>
+        <span class="c1"># TODO: Use defaultdict here</span>
         <span class="n">tmp_dict</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">file_list</span><span class="p">:</span>
             <span class="n">h</span> <span class="o">=</span> <span class="n">pyfits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="n">S122</span><span class="p">[</span><span class="s1">&#39;InstrumentProgramTask&#39;</span><span class="p">]]</span> <span class="o">!=</span> <span class="s1">&#39;PolCal&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="n">S122</span><span class="p">[</span><span class="n">k</span><span class="p">]]</span> <span class="ow">in</span> <span class="n">TASK_DATA_DICTS</span><span class="p">[</span><span class="s2">&quot;PolCal&quot;</span><span class="p">][</span><span class="n">k</span><span class="p">]</span>
+                    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">TASK_DATA_DICTS</span><span class="p">[</span><span class="s2">&quot;PolCal&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+                <span class="p">]</span>
+            <span class="p">):</span>
                 <span class="k">continue</span>
             <span class="n">CSs</span> <span class="o">=</span> <span class="n">CSStep</span><span class="p">(</span><span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">)</span>
             <span class="k">try</span><span class="p">:</span>
@@ -1026,7 +1205,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">CS_step_file_dict</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp_dict</span><span class="p">[</span><span class="n">sorted_steps</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">CS_step_obj_dict</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">sorted_steps</span><span class="p">[</span><span class="n">i</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="SoCCData.get_CC_data"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.SoCCData.html#ViSP_Pipeline.Data.SoCCData.get_CC_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_CC_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">CS_step</span><span class="p">):</span>
+<div class="viewcode-block" id="SoCCData.get_CC_data"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.SoCCData.html#ViSP_Pipeline.Data.SoCCData.get_CC_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_CC_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">CS_step</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CalibrationCurveData</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Initialize a `CalibrationCurveData` object for the requested CS step</span>
 
 <span class="sd">        Parameters</span>
@@ -1040,7 +1219,7 @@
 <span class="sd">            Object containing data/metadata for the requested CS step</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">CS_step</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">CS_step_file_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> cannot find CS step </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">CS_step</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> cannot find CS step </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">CS_step</span><span class="p">))</span>
         <span class="n">CCD</span> <span class="o">=</span> <span class="n">CalibrationCurveData</span><span class="p">(</span><span class="n">CS_step</span><span class="o">=</span><span class="n">CS_step</span><span class="p">)</span>
         <span class="n">CCD</span><span class="o">.</span><span class="n">load_from_filelist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">CS_step_file_dict</span><span class="p">[</span><span class="n">CS_step</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">CS_step_obj_dict</span><span class="p">[</span><span class="n">CS_step</span><span class="p">])</span>
         <span class="n">CCD</span><span class="o">.</span><span class="n">ref_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_dir</span>
@@ -1048,11 +1227,12 @@
         <span class="k">return</span> <span class="n">CCD</span></div>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">num_CS_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">num_CS_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;The total number of CS steps found&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">CS_step_obj_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span></div>
 
-<div class="viewcode-block" id="CSStep"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.CSStep.html#ViSP_Pipeline.Data.CSStep">[docs]</a><span class="k">class</span> <span class="nc">CSStep</span><span class="p">():</span>
+
+<div class="viewcode-block" id="CSStep"><a class="viewcode-back" href="../../api/ViSP_Pipeline.Data.CSStep.html#ViSP_Pipeline.Data.CSStep">[docs]</a><span class="k">class</span> <span class="nc">CSStep</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;This class allows for an easy way to quickly compare SPEC-0122 style headers to determine if they come from the</span>
 <span class="sd">    same Calibration Sequence (CS) step. Each step in a CS is defined by the configuration of the GOS, namely the</span>
 <span class="sd">    status of the polarizer and retarder (in or out) and the angle of each. Because some CS schemes call for some</span>
@@ -1067,7 +1247,7 @@
 <span class="sd">    conflicts with repeated CS steps are avoided.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">header</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">header</span><span class="p">:</span> <span class="n">pyfits</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">Header</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialize and read the GOS configuration and time from a SPEC-0122 FITS header.</span>
 
 <span class="sd">        Parameters</span>
@@ -1076,42 +1256,44 @@
 <span class="sd">            Object containing a SPEC-0122 compliant header</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pol_in</span> <span class="o">=</span> <span class="n">header</span><span class="p">[</span><span class="n">S122</span><span class="p">[</span><span class="s1">&#39;GOSPolarizer&#39;</span><span class="p">]]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pol_theta</span> <span class="o">=</span> <span class="n">header</span><span class="p">[</span><span class="n">S122</span><span class="p">[</span><span class="s1">&#39;PolarizerAngle&#39;</span><span class="p">]]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ret_in</span> <span class="o">=</span> <span class="n">header</span><span class="p">[</span><span class="n">S122</span><span class="p">[</span><span class="s1">&#39;GOSRetarder&#39;</span><span class="p">]]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ret_theta</span> <span class="o">=</span> <span class="n">header</span><span class="p">[</span><span class="n">S122</span><span class="p">[</span><span class="s1">&#39;RetarderAngle&#39;</span><span class="p">]]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dark_in</span> <span class="o">=</span> <span class="n">header</span><span class="p">[</span><span class="n">S122</span><span class="p">[</span><span class="s1">&#39;GOSLevel0&#39;</span><span class="p">]]</span> <span class="o">==</span> <span class="s1">&#39;Dark&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">obs_time</span> <span class="o">=</span> <span class="n">Time</span><span class="p">(</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;DATE-OBS&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pol_in</span> <span class="o">=</span> <span class="n">header</span><span class="p">[</span><span class="n">S122</span><span class="p">[</span><span class="s2">&quot;GOSPolarizer&quot;</span><span class="p">]]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pol_theta</span> <span class="o">=</span> <span class="n">header</span><span class="p">[</span><span class="n">S122</span><span class="p">[</span><span class="s2">&quot;PolarizerAngle&quot;</span><span class="p">]]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ret_in</span> <span class="o">=</span> <span class="n">header</span><span class="p">[</span><span class="n">S122</span><span class="p">[</span><span class="s2">&quot;GOSRetarder&quot;</span><span class="p">]]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ret_theta</span> <span class="o">=</span> <span class="n">header</span><span class="p">[</span><span class="n">S122</span><span class="p">[</span><span class="s2">&quot;RetarderAngle&quot;</span><span class="p">]]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dark_in</span> <span class="o">=</span> <span class="n">header</span><span class="p">[</span><span class="n">S122</span><span class="p">[</span><span class="s2">&quot;GOSLevel0&quot;</span><span class="p">]]</span> <span class="o">==</span> <span class="s2">&quot;Dark&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">obs_time</span> <span class="o">=</span> <span class="n">Time</span><span class="p">(</span><span class="n">header</span><span class="p">[</span><span class="s2">&quot;DATE-OBS&quot;</span><span class="p">])</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s1">&#39;CS step with Pol = </span><span class="si">{}</span><span class="s1">:</span><span class="si">{}</span><span class="s1">, Ret = </span><span class="si">{}</span><span class="s1">:</span><span class="si">{}</span><span class="s1">, Dark = </span><span class="si">{}</span><span class="s1">. Taken at </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pol_in</span><span class="p">,</span>
-                                                                                      <span class="bp">self</span><span class="o">.</span><span class="n">pol_theta</span><span class="p">,</span>
-                                                                                      <span class="bp">self</span><span class="o">.</span><span class="n">ret_in</span><span class="p">,</span>
-                                                                                      <span class="bp">self</span><span class="o">.</span><span class="n">ret_theta</span><span class="p">,</span>
-                                                                                      <span class="bp">self</span><span class="o">.</span><span class="n">dark_in</span><span class="p">,</span>
-                                                                                      <span class="bp">self</span><span class="o">.</span><span class="n">obs_time</span><span class="o">.</span><span class="n">fits</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;CS step with Pol = </span><span class="si">{}</span><span class="s2">:</span><span class="si">{}</span><span class="s2">, Ret = </span><span class="si">{}</span><span class="s2">:</span><span class="si">{}</span><span class="s2">, Dark = </span><span class="si">{}</span><span class="s2">. Taken at </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pol_in</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pol_theta</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ret_in</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ret_theta</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dark_in</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">obs_time</span><span class="o">.</span><span class="n">fits</span><span class="p">,</span>
+        <span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Two steps are equal if they have the same GOS configuration and are taken within some package-defined time</span>
 <span class="sd">        of each other.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">CSStep</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">False</span>
 
-        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;pol_in&#39;</span><span class="p">,</span> <span class="s1">&#39;pol_theta&#39;</span><span class="p">,</span> <span class="s1">&#39;ret_in&#39;</span><span class="p">,</span> <span class="s1">&#39;ret_theta&#39;</span><span class="p">,</span> <span class="s1">&#39;dark_in&#39;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;pol_in&quot;</span><span class="p">,</span> <span class="s2">&quot;pol_theta&quot;</span><span class="p">,</span> <span class="s2">&quot;ret_in&quot;</span><span class="p">,</span> <span class="s2">&quot;ret_theta&quot;</span><span class="p">,</span> <span class="s2">&quot;dark_in&quot;</span><span class="p">]:</span>
             <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
                 <span class="k">return</span> <span class="kc">False</span>
 
         <span class="n">tdelt</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">obs_time</span> <span class="o">-</span> <span class="n">other</span><span class="o">.</span><span class="n">obs_time</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">tdelt</span><span class="o">.</span><span class="n">sec</span> <span class="o">&gt;</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s1">&#39;Data&#39;</span><span class="p">][</span><span class="s1">&#39;max_CS_step_time_sec&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">tdelt</span><span class="o">.</span><span class="n">sec</span> <span class="o">&gt;</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s2">&quot;Data&quot;</span><span class="p">][</span><span class="s2">&quot;max_CS_step_time_sec&quot;</span><span class="p">]:</span>
             <span class="k">return</span> <span class="kc">False</span>
 
         <span class="k">return</span> <span class="kc">True</span>
 
-    <span class="k">def</span> <span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;CSStep&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Only based on time&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">obs_time</span> <span class="o">&lt;</span> <span class="n">other</span><span class="o">.</span><span class="n">obs_time</span>
 
-    <span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Only based on GSO configuration so that all objects from the same CS step hash the same&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">hash</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">pol_in</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pol_theta</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ret_in</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ret_theta</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dark_in</span><span class="p">))</span></div>
 
@@ -1123,21 +1305,21 @@
 <span class="sd">    behaves exactly like `FitsData`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">memmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">memmap</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialize the empty object and maybe load some data.&quot;&quot;&quot;</span>
 
         <span class="n">FitsData</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fitsfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">memmap</span><span class="o">=</span><span class="n">memmap</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">ref_dir</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dataset_ID</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ref_dir</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dataset_ID</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">file_list</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="n">data_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">load_from_dir</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> loaded from </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref_dir</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> loaded from </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref_dir</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">load_from_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dir</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">maxopen</span><span class="o">=</span><span class="mi">300</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">load_from_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">maxopen</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Load DHS-style data from a directory.</span>
 
 <span class="sd">        It is assumed that all relevant files in the directory have SPEC-0122 headers and a single HDU. In other words,</span>
@@ -1153,9 +1335,9 @@
 <span class="sd">            Optional file mask. The full mask is DATA_DIR/*SUFFIX. Defaults to &quot;.fits&quot;</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">suffix</span> <span class="o">=</span> <span class="n">suffix</span> <span class="ow">or</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s1">&#39;Data&#39;</span><span class="p">][</span><span class="s1">&#39;suffix&#39;</span><span class="p">]</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Loading </span><span class="si">{}</span><span class="s1"> data from </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">data_dir</span><span class="p">))</span>
-        <span class="n">file_list</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/*</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="n">suffix</span><span class="p">))</span>
+        <span class="n">suffix</span> <span class="o">=</span> <span class="n">suffix</span> <span class="ow">or</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s2">&quot;Data&quot;</span><span class="p">][</span><span class="s2">&quot;suffix&quot;</span><span class="p">]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: Loading </span><span class="si">{}</span><span class="s2"> data from </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">data_dir</span><span class="p">))</span>
+        <span class="n">file_list</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">/*</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="n">suffix</span><span class="p">))</span>
         <span class="n">hdulist</span> <span class="o">=</span> <span class="p">[</span><span class="n">pyfits</span><span class="o">.</span><span class="n">PrimaryHDU</span><span class="p">()]</span>
 
         <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
@@ -1176,27 +1358,33 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">hdulist</span> <span class="o">=</span> <span class="n">pyfits</span><span class="o">.</span><span class="n">HDUList</span><span class="p">(</span><span class="n">hdulist</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ref_dir</span> <span class="o">=</span> <span class="n">data_dir</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: Did not find any </span><span class="si">{}</span><span class="s1"> images with </span><span class="si">{}</span><span class="s1">/*</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
-                                                                                        <span class="n">data_dir</span><span class="p">,</span> <span class="n">suffix</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
+                <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: Did not find any </span><span class="si">{}</span><span class="s2"> images with </span><span class="si">{}</span><span class="s2">/*</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">tag</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">data_dir</span><span class="p">,</span> <span class="n">suffix</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
 
 
 <span class="c1">############################</span>
 <span class="c1"># Here we define a separate _TaskData class for each type of InstrumentProgramTask (DKIST004) we&#39;ll need. Any additions</span>
 <span class="c1"># can simply be added to this list.</span>
-<span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Dark&#39;</span><span class="p">,</span> <span class="s1">&#39;SolarGain&#39;</span><span class="p">,</span> <span class="s1">&#39;Alignment&#39;</span><span class="p">,</span> <span class="s1">&#39;LampGain&#39;</span><span class="p">]:</span>
+<span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;Dark&quot;</span><span class="p">,</span> <span class="s2">&quot;SolarGain&quot;</span><span class="p">,</span> <span class="s2">&quot;Alignment&quot;</span><span class="p">,</span> <span class="s2">&quot;LampGain&quot;</span><span class="p">]:</span>
 
-    <span class="n">new_class_name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">Data&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">new_class_name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">Data&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
     <span class="n">docstring</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span><span class="si">{0}</span><span class="s2"> is an extension of `FitData` designed to only hold data associated with </span><span class="si">{1}</span><span class="s2">. It inherits all of the</span>
-<span class="s2">functionality of `FitsData` and defines an extra method that loads all data from a directory who&#39;s headers match the </span>
-<span class="s2">following:</span><span class="se">\n</span><span class="s2">&quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">new_class_name</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-    <span class="n">docstring</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="si">{:&gt;10}</span><span class="s1">  </span><span class="si">{}</span><span class="se">\n\t</span><span class="si">{:&gt;10}</span><span class="s1">  </span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;Key&#39;</span><span class="p">,</span> <span class="s1">&#39;Value&#39;</span><span class="p">,</span> <span class="s1">&#39;---&#39;</span><span class="p">,</span> <span class="s1">&#39;-----&#39;</span><span class="p">)</span>
+<span class="s2">functionality of `FitsData` and defines an extra method that loads all data from a directory who&#39;s headers match the</span>
+<span class="s2">following:</span><span class="se">\n</span><span class="s2">&quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">new_class_name</span><span class="p">,</span> <span class="n">name</span>
+    <span class="p">)</span>
+    <span class="n">docstring</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="si">{:&gt;10}</span><span class="s2">  </span><span class="si">{}</span><span class="se">\n\t</span><span class="si">{:&gt;10}</span><span class="s2">  </span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;Key&quot;</span><span class="p">,</span> <span class="s2">&quot;Value&quot;</span><span class="p">,</span> <span class="s2">&quot;---&quot;</span><span class="p">,</span> <span class="s2">&quot;-----&quot;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">TASK_DATA_DICTS</span><span class="p">[</span><span class="n">name</span><span class="p">]:</span>
-        <span class="n">docstring</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="si">{:&gt;10}</span><span class="s1">  </span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">S122</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">TASK_DATA_DICTS</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="n">k</span><span class="p">])</span>
-
+        <span class="n">docstring</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="si">{:&gt;10}</span><span class="s2">  </span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">S122</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">TASK_DATA_DICTS</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="n">k</span><span class="p">])</span>
 
     <span class="c1"># This is some deep python-fu. type() is a metaclass that creates classes based on a BaseClass and dictionary of</span>
     <span class="c1"># attributes</span>
-    <span class="n">new_class</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">new_class_name</span><span class="p">,</span> <span class="p">(</span><span class="n">_TaskData</span><span class="p">,),</span> <span class="p">{</span><span class="s1">&#39;task_dict&#39;</span><span class="p">:</span> <span class="n">TASK_DATA_DICTS</span><span class="p">[</span><span class="n">name</span><span class="p">],</span> <span class="s1">&#39;__doc__&#39;</span><span class="p">:</span> <span class="n">docstring</span><span class="p">})</span>
+    <span class="n">new_class</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span>
+        <span class="n">new_class_name</span><span class="p">,</span> <span class="p">(</span><span class="n">_TaskData</span><span class="p">,),</span> <span class="p">{</span><span class="s2">&quot;task_dict&quot;</span><span class="p">:</span> <span class="n">TASK_DATA_DICTS</span><span class="p">[</span><span class="n">name</span><span class="p">],</span> <span class="s2">&quot;__doc__&quot;</span><span class="p">:</span> <span class="n">docstring</span><span class="p">}</span>
+    <span class="p">)</span>
 
     <span class="c1"># Then we set the new class as one of this module&#39;s attributes</span>
     <span class="nb">setattr</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="vm">__name__</span><span class="p">],</span> <span class="n">new_class_name</span><span class="p">,</span> <span class="n">new_class</span><span class="p">)</span>
@@ -1217,7 +1405,7 @@
     </div>
    
     <div class="right-footer">
-      Last updated on 22 Jan 2021.
+      Last updated on 06 Jul 2021.
     </div>
     <div class="centre-footer">
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1

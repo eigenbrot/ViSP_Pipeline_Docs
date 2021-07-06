@@ -1,0 +1,285 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ViSP_Pipeline.PolarimetricUtils &#8212; ViSP_Pipeline v1.0.0</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,600,700" type="text/css" />
+    <link rel="stylesheet" href="../../_static/dkist.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../../_static/favico.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="col-md-3 navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="http://nso.edu"><img src="../../_static/img/NSOlogo.gif">
+        </a>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav hidden">
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">ViSP Pipeline Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../config_file.html">Configuration File Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../walkthrough.html">Data Reduction Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../IPA_access.html">Instrument Partner Testing Access</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../data_warning.html">A Word About Data, RAM, and Disk Space</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../API.html">Reference/API</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+          </ul>
+          
+            <ul class="nav navbar-nav navbar-left">
+              <li><a href="http://dkist.nso.edu/">DKIST</a></li>
+            </ul>
+          
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+
+    <div class="col-md-3"><div id="side-logo" >
+            <a href="http://dkist.nso.edu">
+                <img src="../../_static/img/DKISTLogo-Medium.jpg">
+            </a>
+        </div><div id="sidebar" class="bs-sidenav" role="complementary">
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">ViSP Pipeline Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../config_file.html">Configuration File Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../walkthrough.html">Data Reduction Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../IPA_access.html">Instrument Partner Testing Access</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../data_warning.html">A Word About Data, RAM, and Disk Space</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../API.html">Reference/API</a></li>
+</ul>
+
+            
+        </div>
+    </div>
+
+    <div class="body col-md-9 content" role="main">
+      
+  <h1>Source code for ViSP_Pipeline.PolarimetricUtils</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span> <span class="k">as</span> <span class="n">pyfits</span>
+<span class="kn">from</span> <span class="nn">astropy.time</span> <span class="kn">import</span> <span class="n">Time</span>
+<span class="kn">from</span> <span class="nn">PAC_Pipeline.M12</span> <span class="kn">import</span> <span class="n">ContinuumPolarization</span>
+
+<span class="kn">from</span> <span class="nn">ViSP_Pipeline</span> <span class="kn">import</span> <span class="n">Data</span>
+<span class="kn">from</span> <span class="nn">ViSP_Pipeline</span> <span class="kn">import</span> <span class="n">ScienceCalibration</span>
+<span class="kn">from</span> <span class="nn">ViSP_Pipeline</span> <span class="kn">import</span> <span class="n">TelescopePolCalibration</span>
+<span class="kn">from</span> <span class="nn">ViSP_Pipeline.data</span> <span class="kn">import</span> <span class="n">CONSTANTS</span>
+<span class="kn">from</span> <span class="nn">ViSP_Pipeline.data</span> <span class="kn">import</span> <span class="n">S122</span>
+<span class="kn">from</span> <span class="nn">ViSP_Pipeline.tag</span> <span class="kn">import</span> <span class="n">tag</span>
+
+
+<div class="viewcode-block" id="report_continuum_xtalk"><a class="viewcode-back" href="../../api/ViSP_Pipeline.PolarimetricUtils.report_continuum_xtalk.html#ViSP_Pipeline.PolarimetricUtils.report_continuum_xtalk">[docs]</a><span class="k">def</span> <span class="nf">report_continuum_xtalk</span><span class="p">(</span><span class="n">fitsData</span><span class="p">:</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">,</span> <span class="n">cont_lims</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]):</span>
+    <span class="sd">&quot;&quot;&quot;Determine the cross-talk from both Q and U to I in a continuum region and update PA&amp;C database</span>
+
+<span class="sd">    For our purposes cross-talk is simply defined as the ratio of [QU] to I in a specified wavelength region. After</span>
+<span class="sd">    this ratio has been computed the median is computed over all spatial positions.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    fitsData : Data.FitsData</span>
+<span class="sd">        Object containing reduced ViSP Stokes data</span>
+
+<span class="sd">    cont_lims : list</span>
+<span class="sd">        2-element list containing the high and low pixel limits of a continuum region in the provided data</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        Q/I cross-talk</span>
+
+<span class="sd">    float</span>
+<span class="sd">        U/I cross-talk</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">I_idx</span> <span class="o">=</span> <span class="n">fitsData</span><span class="o">.</span><span class="n">find_data_keyword_idx</span><span class="p">(</span><span class="s2">&quot;VISP_STK&quot;</span><span class="p">,</span> <span class="s2">&quot;I&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">Q_idx</span> <span class="o">=</span> <span class="n">fitsData</span><span class="o">.</span><span class="n">find_data_keyword_idx</span><span class="p">(</span><span class="s2">&quot;VISP_STK&quot;</span><span class="p">,</span> <span class="s2">&quot;Q&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">U_idx</span> <span class="o">=</span> <span class="n">fitsData</span><span class="o">.</span><span class="n">find_data_keyword_idx</span><span class="p">(</span><span class="s2">&quot;VISP_STK&quot;</span><span class="p">,</span> <span class="s2">&quot;U&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">I</span> <span class="o">=</span> <span class="n">fitsData</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">I_idx</span><span class="p">][:,</span> <span class="n">cont_lims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">:</span> <span class="n">cont_lims</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="n">Q</span> <span class="o">=</span> <span class="n">fitsData</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">Q_idx</span><span class="p">][:,</span> <span class="n">cont_lims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">:</span> <span class="n">cont_lims</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="n">U</span> <span class="o">=</span> <span class="n">fitsData</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">U_idx</span><span class="p">][:,</span> <span class="n">cont_lims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">:</span> <span class="n">cont_lims</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+
+    <span class="n">i2q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">Q</span> <span class="o">/</span> <span class="n">I</span><span class="p">)</span>
+    <span class="n">i2u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">U</span> <span class="o">/</span> <span class="n">I</span><span class="p">)</span>
+
+    <span class="n">ContinuumPolarization</span><span class="o">.</span><span class="n">update_xtalk_database</span><span class="p">(</span>
+        <span class="n">i2q</span><span class="p">,</span> <span class="n">i2u</span><span class="p">,</span> <span class="s2">&quot;VISP&quot;</span><span class="p">,</span> <span class="n">Time</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">mjd</span><span class="p">,</span> <span class="n">fitsData</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">S122</span><span class="p">[</span><span class="s2">&quot;Wavelength&quot;</span><span class="p">]]</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="save_M12_map_frame"><a class="viewcode-back" href="../../api/ViSP_Pipeline.PolarimetricUtils.save_M12_map_frame.html#ViSP_Pipeline.PolarimetricUtils.save_M12_map_frame">[docs]</a><span class="k">def</span> <span class="nf">save_M12_map_frame</span><span class="p">(</span>
+    <span class="n">fitsData</span><span class="p">:</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">,</span> <span class="n">telescope_db</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">line_lims</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">output</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Extract a wavelength region and save data to disk</span>
+
+<span class="sd">    This is used to produce a truncated (in wavelength) version of a single ViSP slit position. It was designed to save</span>
+<span class="sd">    these truncated data for future use by PA&amp;C modules that determine M12 mirror parameters.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    fitsData : Data.FitsData</span>
+<span class="sd">        Reduced ViSP Stokes data. This should probably be data that has NOT had an inverse M12 Mueller matrix applied</span>
+
+<span class="sd">    line_lims : list</span>
+<span class="sd">        2-element list containing the high and low pixel limits of the region to extract. This should probably be a</span>
+<span class="sd">        region with high polarization signal.</span>
+
+<span class="sd">    output : str</span>
+<span class="sd">        Location to save the file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">teleCal</span> <span class="o">=</span> <span class="n">TelescopePolCalibration</span><span class="o">.</span><span class="n">generate_telescope_pol_calibration</span><span class="p">(</span>
+        <span class="n">fitsData</span><span class="p">,</span> <span class="n">telescope_db</span><span class="p">,</span> <span class="n">M12</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">include_parallactic</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>
+    <span class="n">M12Data</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">ScienceCalibration</span><span class="o">.</span><span class="n">telescope_pol_correction</span><span class="p">(</span><span class="n">fitsData</span><span class="p">,</span> <span class="n">teleCal</span><span class="p">)</span>
+
+    <span class="n">hdulist</span> <span class="o">=</span> <span class="n">pyfits</span><span class="o">.</span><span class="n">HDUList</span><span class="p">([</span><span class="n">pyfits</span><span class="o">.</span><span class="n">PrimaryHDU</span><span class="p">(</span><span class="n">header</span><span class="o">=</span><span class="n">fitsData</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="mi">0</span><span class="p">])])</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;Q&quot;</span><span class="p">,</span> <span class="s2">&quot;U&quot;</span><span class="p">,</span> <span class="s2">&quot;V&quot;</span><span class="p">]):</span>
+        <span class="n">hdulist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">pyfits</span><span class="o">.</span><span class="n">ImageHDU</span><span class="p">(</span>
+                <span class="n">data</span><span class="o">=</span><span class="n">M12Data</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">][:,</span> <span class="n">line_lims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">:</span> <span class="n">line_lims</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
+                <span class="n">header</span><span class="o">=</span><span class="n">M12Data</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">hdulist</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s2">&quot;VISP_STK&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">s</span>
+
+    <span class="n">hdulist</span><span class="o">.</span><span class="n">writeto</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">hdulist</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">del</span> <span class="n">hdulist</span>
+    <span class="k">del</span> <span class="n">M12Data</span></div>
+
+
+<div class="viewcode-block" id="extract_M12_map"><a class="viewcode-back" href="../../api/ViSP_Pipeline.PolarimetricUtils.extract_M12_map.html#ViSP_Pipeline.PolarimetricUtils.extract_M12_map">[docs]</a><span class="k">def</span> <span class="nf">extract_M12_map</span><span class="p">(</span><span class="n">M12dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Aggregate a collection of individual Stokes data files into a single 4-dimensional map</span>
+
+<span class="sd">    The individual files should correspond to ViSP slit positions and should have all 4 Stokes parameters. The resulting</span>
+<span class="sd">    file will have 4 ImageHDUs, corresponding to the 4 Stokes vectors. Each ImageHDU will have shape (X, S, W) where</span>
+<span class="sd">    X is the original spatial dimension of the ViSP data, S is the number of slit positions, and W is the wavelength</span>
+<span class="sd">    dimension.</span>
+
+<span class="sd">    The output file is written to M12dir/full_maps.fits</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    M12dir : str</span>
+<span class="sd">        Location of directory containing individual files for each slit position. These files are very likely the result</span>
+<span class="sd">        of save_M12_map_frame.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">hdulist</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;Q&quot;</span><span class="p">,</span> <span class="s2">&quot;U&quot;</span><span class="p">,</span> <span class="s2">&quot;V&quot;</span><span class="p">]:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: loading map for Stokes </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">s</span><span class="p">))</span>
+        <span class="nb">map</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">()</span>
+        <span class="nb">map</span><span class="o">.</span><span class="n">load_polarimetric_fitsData</span><span class="p">(</span><span class="n">M12dir</span><span class="p">,</span> <span class="s2">&quot;M12*.</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">CONSTANTS</span><span class="p">[</span><span class="s2">&quot;Data&quot;</span><span class="p">][</span><span class="s2">&quot;suffix&quot;</span><span class="p">]),</span> <span class="n">s</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="nb">map</span><span class="o">.</span><span class="n">get_stacked_data</span><span class="p">(),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">hdulist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pyfits</span><span class="o">.</span><span class="n">ImageHDU</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="nb">map</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+    <span class="n">hdulist</span> <span class="o">=</span> <span class="n">pyfits</span><span class="o">.</span><span class="n">HDUList</span><span class="p">([</span><span class="n">pyfits</span><span class="o">.</span><span class="n">PrimaryHDU</span><span class="p">(</span><span class="n">header</span><span class="o">=</span><span class="n">hdulist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">)]</span> <span class="o">+</span> <span class="n">hdulist</span><span class="p">)</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">M12dir</span> <span class="o">+</span> <span class="s2">&quot;/full_maps.</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">CONSTANTS</span><span class="p">[</span><span class="s2">&quot;Data&quot;</span><span class="p">][</span><span class="s2">&quot;suffix&quot;</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: writing full map to </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">(),</span> <span class="n">output</span><span class="p">))</span>
+    <span class="n">hdulist</span><span class="o">.</span><span class="n">writeto</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">hdulist</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">del</span> <span class="n">hdulist</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <div class="left-footer">
+         &copy; 2021, Arthur Eigenbrot
+       <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png" /></a>
+    </div>
+   
+    <div class="right-footer">
+      Last updated on 06 Jul 2021.
+    </div>
+    <div class="centre-footer">
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>run_PAC_CUpar &#8212; ViSP_Pipeline v0.21.0</title>
+    <title>run_PAC_CUpar &#8212; ViSP_Pipeline v1.0.0</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -138,11 +138,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../data_warning.html">A Word About Data, RAM, and Disk Space</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../API.html">Reference/API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ViSPPipeline">ViSP_Pipeline.ViSPPipeline Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ViSPPolCalPipeline">ViSP_Pipeline.ViSPPolCalPipeline Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ScienceCalibration">ViSP_Pipeline.ScienceCalibration Module</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.InstrumentPolCalibration">ViSP_Pipeline.InstrumentPolCalibration Module</a><ul class="current">
-<li class="toctree-l3 current"><a class="reference internal" href="../API.html#id3">Functions</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.InstrumentPolCalibration.command_line.html">command_line</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../API.html#id2">Functions</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.InstrumentPolCalibration.extract_macropixels.html">extract_macropixels</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.InstrumentPolCalibration.generate_instrument_pol_calibration.html">generate_instrument_pol_calibration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.InstrumentPolCalibration.main.html">main</a></li>
@@ -155,8 +153,14 @@
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.InstrumentPolCalibration.upsample_CU_parameters.html">upsample_CU_parameters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.InstrumentPolCalibration.upsample_demodulation.html">upsample_demodulation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.InstrumentPolCalibration.write_reduced_CS_step.html">write_reduced_CS_step</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.SolarGainCalibration">ViSP_Pipeline.SolarGainCalibration Module</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../API.html#id3">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../API.html#id4">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../API.html#id5">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../API.html#id6">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../API.html#id7">Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.Data">ViSP_Pipeline.Data Module</a></li>
@@ -175,7 +179,7 @@
 <h1>run_PAC_CUpar<a class="headerlink" href="#run-pac-cupar" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt id="ViSP_Pipeline.InstrumentPolCalibration.run_PAC_CUpar">
-<code class="sig-prename descclassname">ViSP_Pipeline.InstrumentPolCalibration.</code><code class="sig-name descname">run_PAC_CUpar</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">run_dir</span></em>, <em class="sig-param"><span class="n">telescope_db</span><span class="o">=</span><span class="default_value">'telescope_db.txt'</span></em>, <em class="sig-param"><span class="n">threads</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">overwrite</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/InstrumentPolCalibration.html#run_PAC_CUpar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.InstrumentPolCalibration.run_PAC_CUpar" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">ViSP_Pipeline.InstrumentPolCalibration.</code><code class="sig-name descname">run_PAC_CUpar</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">run_dir</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em>, <em class="sig-param"><span class="n">telescope_db</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span> <span class="o">=</span> <span class="default_value">'telescope_db.txt'</span></em>, <em class="sig-param"><span class="n">fit_mode</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span> <span class="o">=</span> <span class="default_value">'baseline'</span></em>, <em class="sig-param"><span class="n">init_set</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span> <span class="o">=</span> <span class="default_value">'VSAR'</span></em>, <em class="sig-param"><span class="n">threads</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a></span> <span class="o">=</span> <span class="default_value">1</span></em>, <em class="sig-param"><span class="n">overwrite</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)">None</a><a class="reference internal" href="../_modules/ViSP_Pipeline/InstrumentPolCalibration.html#run_PAC_CUpar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.InstrumentPolCalibration.run_PAC_CUpar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Take a ViSP reduced set of Calibration Sequence data and compute a fit to the CU parameters</p>
 <p>See the PACPipeline for more details.</p>
 <dl class="field-list simple">
@@ -184,6 +188,10 @@
 <dt><strong>run_dir</strong><span class="classifier">str</span></dt><dd><p>Location of the processed, macropixel’d ViSP data associated with a single Calibration Sequence (CS).</p>
 </dd>
 <dt><strong>telescope_db</strong><span class="classifier">str</span></dt><dd><p>Location of the telescope parameter database</p>
+</dd>
+<dt><strong>fit_mode</strong><span class="classifier">str</span></dt><dd><p>Name of the set of fitting switches to use</p>
+</dd>
+<dt><strong>init_set</strong><span class="classifier">str</span></dt><dd><p>Name of the set of initial values for the CU parameters to use</p>
 </dd>
 <dt><strong>threads</strong><span class="classifier">int</span></dt><dd><p>Maximum number of cpus to use when fitting CU parameters. If number is odd then fewer than the full amount
 will be used.</p>
@@ -210,7 +218,7 @@ will be used.</p>
     </div>
    
     <div class="right-footer">
-      Last updated on 22 Jan 2021.
+      Last updated on 06 Jul 2021.
     </div>
     <div class="centre-footer">
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1

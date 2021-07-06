@@ -1,0 +1,406 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ViSP_Pipeline.LampGainCalibration &#8212; ViSP_Pipeline v1.0.0</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,600,700" type="text/css" />
+    <link rel="stylesheet" href="../../_static/dkist.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <link rel="shortcut icon" href="../../_static/favico.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="col-md-3 navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="http://nso.edu"><img src="../../_static/img/NSOlogo.gif">
+        </a>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav hidden">
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">ViSP Pipeline Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../config_file.html">Configuration File Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../walkthrough.html">Data Reduction Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../IPA_access.html">Instrument Partner Testing Access</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../data_warning.html">A Word About Data, RAM, and Disk Space</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../API.html">Reference/API</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+          </ul>
+          
+            <ul class="nav navbar-nav navbar-left">
+              <li><a href="http://dkist.nso.edu/">DKIST</a></li>
+            </ul>
+          
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+
+    <div class="col-md-3"><div id="side-logo" >
+            <a href="http://dkist.nso.edu">
+                <img src="../../_static/img/DKISTLogo-Medium.jpg">
+            </a>
+        </div><div id="sidebar" class="bs-sidenav" role="complementary">
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">ViSP Pipeline Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../config_file.html">Configuration File Format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../walkthrough.html">Data Reduction Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../IPA_access.html">Instrument Partner Testing Access</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../data_warning.html">A Word About Data, RAM, and Disk Space</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../API.html">Reference/API</a></li>
+</ul>
+
+            
+        </div>
+    </div>
+
+    <div class="body col-md-9 content" role="main">
+      
+  <h1>Source code for ViSP_Pipeline.LampGainCalibration</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">ViSP_Pipeline</span> <span class="kn">import</span> <span class="n">Data</span>
+<span class="kn">from</span> <span class="nn">ViSP_Pipeline</span> <span class="kn">import</span> <span class="n">generic</span>
+<span class="kn">from</span> <span class="nn">ViSP_Pipeline.data</span> <span class="kn">import</span> <span class="n">CONSTANTS</span>
+<span class="kn">from</span> <span class="nn">ViSP_Pipeline.data</span> <span class="kn">import</span> <span class="n">S122</span>
+<span class="kn">from</span> <span class="nn">ViSP_Pipeline.data</span> <span class="kn">import</span> <span class="n">TASK_DATA_DICTS</span>
+<span class="kn">from</span> <span class="nn">ViSP_Pipeline.tag</span> <span class="kn">import</span> <span class="n">tag</span>
+
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../api/ViSP_Pipeline.LampGainCalibration.main.html#ViSP_Pipeline.LampGainCalibration.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span>
+    <span class="n">lamp_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">outpre</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">dark_cal</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">dark_cal_err</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">gen_err</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">]]:</span>
+    <span class="sd">&quot;&quot;&quot;Run a raw data through the Gain Calibration pipeline</span>
+
+<span class="sd">    If a Dark Calibration is specified then it will be used to dark correct the data.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    lamp_dir : str</span>
+<span class="sd">        Location of the directory containing the raw lamp data to use</span>
+
+<span class="sd">    outpre : str</span>
+<span class="sd">        The filename prefix of the resulting Calibration object and associated uncertainty. Their names will be</span>
+<span class="sd">        OUTPRE.fits and OUTPRE_err.fits.</span>
+
+<span class="sd">    dark_cal : Data.FitsData</span>
+<span class="sd">        A valid Dark Calibration</span>
+
+<span class="sd">    dark_cal_err : Data.FitsData</span>
+<span class="sd">        Uncertainties associated with dark_cal</span>
+
+<span class="sd">    gen_err : bool</span>
+<span class="sd">        If True then pixel-uncertainties will be generated from the raw data</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Data.FitsData</span>
+<span class="sd">        A processed Gain Calibration</span>
+
+<span class="sd">    Data.FitsData</span>
+<span class="sd">        Object containing the uncertainties associated with the previous output</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">gainData</span> <span class="o">=</span> <span class="n">Data</span><span class="o">.</span><span class="n">LampGainData</span><span class="p">(</span><span class="n">lamp_dir</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">gen_err</span><span class="p">:</span>
+        <span class="n">errData</span> <span class="o">=</span> <span class="n">generic</span><span class="o">.</span><span class="n">generate_noise_frame</span><span class="p">(</span><span class="n">gainData</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">errData</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">validate_gain_task_data</span><span class="p">(</span><span class="n">gainData</span><span class="p">,</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s2">&quot;LampGainCalibration&quot;</span><span class="p">][</span><span class="s2">&quot;min_lampgain_frames&quot;</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">dark_cal</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: doing Dark Correction&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
+        <span class="n">generic</span><span class="o">.</span><span class="n">dark_correction</span><span class="p">(</span><span class="n">gainData</span><span class="p">,</span> <span class="n">dark_cal</span><span class="p">,</span> <span class="n">errData</span><span class="p">,</span> <span class="n">dark_cal_err</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: averaging data&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
+    <span class="n">avgData</span><span class="p">,</span> <span class="n">avgErr</span> <span class="o">=</span> <span class="n">generic</span><span class="o">.</span><span class="n">average_FitsData</span><span class="p">(</span><span class="n">gainData</span><span class="p">,</span> <span class="n">errData</span><span class="o">=</span><span class="n">errData</span><span class="p">,</span> <span class="n">preserve_modulator</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: normalizing data&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
+    <span class="n">normalize_gain</span><span class="p">(</span><span class="n">avgData</span><span class="p">,</span> <span class="n">avgErr</span><span class="p">)</span>
+
+    <span class="n">validate_lamp_gain_calibration</span><span class="p">(</span><span class="n">avgErr</span><span class="p">,</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s2">&quot;LampGainCalibration&quot;</span><span class="p">][</span><span class="s2">&quot;max_lampgain_noise&quot;</span><span class="p">])</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: generating Lamp Gain Calibration&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="p">()))</span>
+    <span class="n">lamp_gain_calibration</span><span class="p">,</span> <span class="n">lamp_gain_calibration_err</span> <span class="o">=</span> <span class="n">generate_lamp_gain_calibration</span><span class="p">(</span>
+        <span class="n">avgData</span><span class="p">,</span> <span class="n">avgErr</span><span class="p">,</span> <span class="n">outpre</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">lamp_gain_calibration</span><span class="p">,</span> <span class="n">lamp_gain_calibration_err</span></div>
+
+
+<div class="viewcode-block" id="validate_gain_task_data"><a class="viewcode-back" href="../../api/ViSP_Pipeline.LampGainCalibration.validate_gain_task_data.html#ViSP_Pipeline.LampGainCalibration.validate_gain_task_data">[docs]</a><span class="k">def</span> <span class="nf">validate_gain_task_data</span><span class="p">(</span><span class="n">gainData</span><span class="p">:</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">,</span> <span class="n">min_gain_frames</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Confirm that the gain data form a consistent set, there are enough gain frames, and are from a Gain task.</span>
+
+<span class="sd">    If any of these conditions are not met, an error is raised.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    gainData : Data.FitsData</span>
+<span class="sd">        The raw frame data object to validate</span>
+
+<span class="sd">    min_gain_frames : int</span>
+<span class="sd">        The minimum number of gain frames required to produce a valid Lamp Gain Calibration object</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="n">gainData</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">S122</span><span class="p">[</span><span class="s2">&quot;InstrumentProgramTask&quot;</span><span class="p">]]</span>
+        <span class="ow">not</span> <span class="ow">in</span> <span class="n">TASK_DATA_DICTS</span><span class="p">[</span><span class="s2">&quot;LampGain&quot;</span><span class="p">][</span><span class="s2">&quot;InstrumentProgramTask&quot;</span><span class="p">]</span>
+    <span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Instrument task is not Gain. (is </span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">gainData</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">S122</span><span class="p">[</span><span class="s2">&quot;InstrumentProgramTask&quot;</span><span class="p">]]</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">gainData</span><span class="o">.</span><span class="n">data</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">min_gain_frames</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Not enough lamp gain frames to compute acceptable Calibration Object&quot;</span><span class="p">)</span>
+
+    <span class="n">IP0</span> <span class="o">=</span> <span class="n">gainData</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">S122</span><span class="p">[</span><span class="s2">&quot;InstrumentProgramID&quot;</span><span class="p">]]</span>
+    <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">gainData</span><span class="o">.</span><span class="n">data_hdus</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">h</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="n">S122</span><span class="p">[</span><span class="s2">&quot;InstrumentProgramID&quot;</span><span class="p">]]</span> <span class="o">!=</span> <span class="n">IP0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Not all lamp gain frames have the same IP ID&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="normalize_gain"><a class="viewcode-back" href="../../api/ViSP_Pipeline.LampGainCalibration.normalize_gain.html#ViSP_Pipeline.LampGainCalibration.normalize_gain">[docs]</a><span class="k">def</span> <span class="nf">normalize_gain</span><span class="p">(</span><span class="n">avgData</span><span class="p">:</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">,</span> <span class="n">avgErr</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Normalize each beam of each modulator state to a unity mean</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    avgData : Data.FitsData</span>
+<span class="sd">        The data to be normalized</span>
+
+<span class="sd">    avgErr : Data.FitsData</span>
+<span class="sd">        An associated uncertainty object</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># TODO: This function removes any intensity variations between mod states. Just want to make sure this is the</span>
+    <span class="c1"># correct thing to do. (I think it is in a _Lamp_ gain).</span>
+    <span class="n">pivot</span> <span class="o">=</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s2">&quot;Data&quot;</span><span class="p">][</span><span class="s2">&quot;beam_border&quot;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">avgData</span><span class="o">.</span><span class="n">data</span><span class="p">)):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">avgData</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">avg1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">data</span><span class="p">[:</span><span class="n">pivot</span><span class="p">,</span> <span class="p">:])</span>
+        <span class="n">avg2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">pivot</span><span class="p">:,</span> <span class="p">:])</span>
+        <span class="n">data</span><span class="p">[:</span><span class="n">pivot</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:</span><span class="n">pivot</span><span class="p">,</span> <span class="p">:]</span> <span class="o">/</span> <span class="n">avg1</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">pivot</span><span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">pivot</span><span class="p">:,</span> <span class="p">:]</span> <span class="o">/</span> <span class="n">avg2</span>
+        <span class="k">if</span> <span class="n">avgErr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">e_data</span> <span class="o">=</span> <span class="n">avgErr</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">e_data</span><span class="p">[:</span><span class="n">pivot</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">e_data</span><span class="p">[:</span><span class="n">pivot</span><span class="p">,</span> <span class="p">:]</span> <span class="o">/</span> <span class="n">avg1</span>
+            <span class="n">e_data</span><span class="p">[</span><span class="n">pivot</span><span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">e_data</span><span class="p">[</span><span class="n">pivot</span><span class="p">:,</span> <span class="p">:]</span> <span class="o">/</span> <span class="n">avg2</span></div>
+
+
+<div class="viewcode-block" id="validate_lamp_gain_calibration"><a class="viewcode-back" href="../../api/ViSP_Pipeline.LampGainCalibration.validate_lamp_gain_calibration.html#ViSP_Pipeline.LampGainCalibration.validate_lamp_gain_calibration">[docs]</a><span class="k">def</span> <span class="nf">validate_lamp_gain_calibration</span><span class="p">(</span><span class="n">avgErr</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">],</span> <span class="n">max_noise</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Confirm that the Gain Calibration object does not have any out-of-range values.</span>
+
+<span class="sd">    If problems are detected an error is raised.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    avgErr : Data.FitsData or None</span>
+<span class="sd">        Uncertainties associated with avgData</span>
+
+<span class="sd">    max_noise : float</span>
+<span class="sd">        The maximum allowable value in the uncertainty frame.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">avgErr</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">avgErr</span><span class="o">.</span><span class="n">data</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">avgErr</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">&gt;</span> <span class="n">max_noise</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;LampGain Calibration Object noise is too high&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="generate_lamp_gain_calibration"><a class="viewcode-back" href="../../api/ViSP_Pipeline.LampGainCalibration.generate_lamp_gain_calibration.html#ViSP_Pipeline.LampGainCalibration.generate_lamp_gain_calibration">[docs]</a><span class="k">def</span> <span class="nf">generate_lamp_gain_calibration</span><span class="p">(</span>
+    <span class="n">avgData</span><span class="p">:</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">,</span> <span class="n">avgErr</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">],</span> <span class="n">outpre</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">]]:</span>
+    <span class="sd">&quot;&quot;&quot;Simply write the calibration to a file&quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">obj</span><span class="p">,</span> <span class="n">post</span><span class="p">,</span> <span class="n">origin</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">avgData</span><span class="p">,</span> <span class="n">avgErr</span><span class="p">],</span>
+        <span class="p">[</span><span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s2">&quot;Data&quot;</span><span class="p">][</span><span class="s2">&quot;suffix&quot;</span><span class="p">],</span> <span class="s2">&quot;_err.&quot;</span> <span class="o">+</span> <span class="n">CONSTANTS</span><span class="p">[</span><span class="s2">&quot;Data&quot;</span><span class="p">][</span><span class="s2">&quot;suffix&quot;</span><span class="p">]],</span>
+        <span class="p">[</span><span class="s2">&quot;LampGainCalibraiton&quot;</span><span class="p">,</span> <span class="s2">&quot;LampGainCalibration Uncertainty&quot;</span><span class="p">],</span>
+    <span class="p">):</span>
+        <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">outname</span> <span class="o">=</span> <span class="n">outpre</span> <span class="o">+</span> <span class="n">post</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">write_out</span><span class="p">(</span><span class="n">outname</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="n">origin</span>
+
+    <span class="k">return</span> <span class="n">avgData</span><span class="p">,</span> <span class="n">avgErr</span></div>
+
+
+<span class="k">def</span> <span class="nf">command_line</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">argparse</span>
+    <span class="kn">import</span> <span class="nn">os</span>
+    <span class="kn">import</span> <span class="nn">sys</span>
+    <span class="kn">from</span> <span class="nn">ViSP_Pipeline.ViSPPipeline</span> <span class="kn">import</span> <span class="n">ensure_fits</span><span class="p">,</span> <span class="n">strip_fits</span>
+
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Run the ViSP Pipeline&#39;s Lamp Gain Calibration module (i.e., generate a lamp gain frame). &quot;</span>
+        <span class="s2">&quot;This is a direct hook into LampGainCalibration.main() and all keyword options are exposed as &quot;</span>
+        <span class="s2">&quot;command line options.&quot;</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;lamp_dir&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Location of directory holding raw Lamp Gain frames&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;output&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of FITS output file. A </span><span class="si">{}</span><span class="s2"> suffix will be enforced&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">CONSTANTS</span><span class="p">[</span><span class="s2">&quot;Data&quot;</span><span class="p">][</span><span class="s2">&quot;suffix&quot;</span><span class="p">]</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-D&quot;</span><span class="p">,</span> <span class="s2">&quot;--dark-cal&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Location of previously computed Dark Calibration FITS file&quot;</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-d&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--dark-cal-err&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;FITS file containing errors on provided Dark. &quot;</span>
+        <span class="s2">&quot;This doesn&#39;t do anything unless -E is also set.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-f&quot;</span><span class="p">,</span> <span class="s2">&quot;--force&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Overwrite output if it already exists&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-E&quot;</span><span class="p">,</span> <span class="s2">&quot;--gen-err&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Also generate a sigma uncertainty frame&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span>
+    <span class="p">)</span>
+
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">lamp_dir</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">lamp_dir</span><span class="p">)):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Input directory </span><span class="si">{}</span><span class="s2"> does not exist!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">lamp_dir</span><span class="p">))</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="p">[</span><span class="n">args</span><span class="o">.</span><span class="n">dark_cal</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">dark_cal_err</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">f</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;File </span><span class="si">{}</span><span class="s2"> does not exist!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">output_file</span> <span class="o">=</span> <span class="n">ensure_fits</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output_file</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">force</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Output file </span><span class="si">{}</span><span class="s2"> already exists. Use -f to override&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">output_file</span><span class="p">))</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">func_args</span> <span class="o">=</span> <span class="p">[</span><span class="n">args</span><span class="o">.</span><span class="n">lamp_dir</span><span class="p">,</span> <span class="n">strip_fits</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)]</span>
+    <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;dark_cal&quot;</span><span class="p">:</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">dark_cal</span><span class="p">)</span> <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">dark_cal</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">&quot;dark_cal_err&quot;</span><span class="p">:</span> <span class="n">Data</span><span class="o">.</span><span class="n">FitsData</span><span class="p">(</span><span class="n">ensure_fits</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">dark_cal_err</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">dark_cal_err</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">&quot;gen_err&quot;</span><span class="p">:</span> <span class="n">args</span><span class="o">.</span><span class="n">gen_err</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="s2">&quot;Calling LampGainCalibration.main</span><span class="se">\n\t</span><span class="s2">with args: </span><span class="si">{}</span><span class="se">\n\t</span><span class="s2"> and kwargs: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">func_args</span><span class="p">,</span> <span class="n">kwargs</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="n">main</span><span class="p">(</span><span class="o">*</span><span class="n">func_args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <div class="left-footer">
+         &copy; 2021, Arthur Eigenbrot
+       <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png" /></a>
+    </div>
+   
+    <div class="right-footer">
+      Last updated on 06 Jul 2021.
+    </div>
+    <div class="centre-footer">
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1
+    </div>
+  </div>
+</footer>
+  </body>
+</html>

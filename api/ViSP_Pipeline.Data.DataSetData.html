@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DataSetData &#8212; ViSP_Pipeline v0.21.0</title>
+    <title>DataSetData &#8212; ViSP_Pipeline v1.0.0</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -138,7 +138,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../data_warning.html">A Word About Data, RAM, and Disk Space</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../API.html">Reference/API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ViSPPipeline">ViSP_Pipeline.ViSPPipeline Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ViSPPolCalPipeline">ViSP_Pipeline.ViSPPolCalPipeline Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ScienceCalibration">ViSP_Pipeline.ScienceCalibration Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.InstrumentPolCalibration">ViSP_Pipeline.InstrumentPolCalibration Module</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.Data">ViSP_Pipeline.Data Module</a><ul class="current">
@@ -174,7 +173,7 @@
 <h1>DataSetData<a class="headerlink" href="#datasetdata" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="ViSP_Pipeline.Data.DataSetData">
-<em class="property">class </em><code class="sig-prename descclassname">ViSP_Pipeline.Data.</code><code class="sig-name descname">DataSetData</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_dir</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">dataset_ID</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">suffix</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#DataSetData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.DataSetData" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">ViSP_Pipeline.Data.</code><code class="sig-name descname">DataSetData</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_dir</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">dataset_ID</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span> <span class="o">=</span> <span class="default_value">''</span></em>, <em class="sig-param"><span class="n">suffix</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span> <span class="o">=</span> <span class="default_value">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#DataSetData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.DataSetData" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>DataSetData is designed to handle the aggregation of a bunch of files that belong to a single ViSP data set.
 A data set is generally the set of spectra of all spatial positions of the ViSP slit. This class reads all files in
@@ -241,7 +240,7 @@ string to just load all data sets.</p>
 <p class="rubric">Methods Documentation</p>
 <dl class="py method">
 <dt id="ViSP_Pipeline.Data.DataSetData.get_slit_pos_data">
-<code class="sig-name descname">get_slit_pos_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">spatial_pos</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#DataSetData.get_slit_pos_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.DataSetData.get_slit_pos_data" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_slit_pos_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">spatial_pos</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="ViSP_Pipeline.Data.SlitPositionData.html#ViSP_Pipeline.Data.SlitPositionData" title="ViSP_Pipeline.Data.SlitPositionData">ViSP_Pipeline.Data.SlitPositionData</a><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#DataSetData.get_slit_pos_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.DataSetData.get_slit_pos_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize a SlitPositionData object and populate its HDUlist with the files corresponding to the specified
 spatial step</p>
 <dl class="field-list simple">
@@ -262,7 +261,7 @@ spatial step</p>
 
 <dl class="py method">
 <dt id="ViSP_Pipeline.Data.DataSetData.read_directory">
-<code class="sig-name descname">read_directory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_dir</span></em>, <em class="sig-param"><span class="n">dataset_ID</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">suffix</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#DataSetData.read_directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.DataSetData.read_directory" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">read_directory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_dir</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em>, <em class="sig-param"><span class="n">dataset_ID</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span> <span class="o">=</span> <span class="default_value">''</span></em>, <em class="sig-param"><span class="n">suffix</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span> <span class="o">=</span> <span class="default_value">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#DataSetData.read_directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.DataSetData.read_directory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read all files in a directory and populate a dictionary mapping spatial step to filename</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -296,7 +295,7 @@ string to just load all data sets.</p>
     </div>
    
     <div class="right-footer">
-      Last updated on 22 Jan 2021.
+      Last updated on 06 Jul 2021.
     </div>
     <div class="centre-footer">
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1

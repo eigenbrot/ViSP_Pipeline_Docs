@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SlitPositionData &#8212; ViSP_Pipeline v0.21.0</title>
+    <title>SlitPositionData &#8212; ViSP_Pipeline v1.0.0</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -138,7 +138,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../data_warning.html">A Word About Data, RAM, and Disk Space</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../API.html">Reference/API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ViSPPipeline">ViSP_Pipeline.ViSPPipeline Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ViSPPolCalPipeline">ViSP_Pipeline.ViSPPolCalPipeline Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ScienceCalibration">ViSP_Pipeline.ScienceCalibration Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.InstrumentPolCalibration">ViSP_Pipeline.InstrumentPolCalibration Module</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.Data">ViSP_Pipeline.Data Module</a><ul class="current">
@@ -174,7 +173,7 @@
 <h1>SlitPositionData<a class="headerlink" href="#slitpositiondata" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="ViSP_Pipeline.Data.SlitPositionData">
-<em class="property">class </em><code class="sig-prename descclassname">ViSP_Pipeline.Data.</code><code class="sig-name descname">SlitPositionData</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_dir</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">dataset_ID</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">spatial_step</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">suffix</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">memmap</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#SlitPositionData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.SlitPositionData" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">ViSP_Pipeline.Data.</code><code class="sig-name descname">SlitPositionData</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_dir</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">dataset_ID</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span> <span class="o">=</span> <span class="default_value">''</span></em>, <em class="sig-param"><span class="n">spatial_step</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a></span> <span class="o">=</span> <span class="default_value">0</span></em>, <em class="sig-param"><span class="n">suffix</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span> <span class="o">=</span> <span class="default_value">''</span></em>, <em class="sig-param"><span class="n">memmap</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#SlitPositionData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.SlitPositionData" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData" title="ViSP_Pipeline.Data.FitsData"><code class="xref py py-class docutils literal notranslate"><span class="pre">ViSP_Pipeline.Data.FitsData</span></code></a></p>
 <p>SlitPositionData is an extension of FitsData that loads a single ViSP slit position (i.e. spatial step) from a
 directory containing a full ViSP DataSet. The user is able to specify which spatial step will be loaded and after
@@ -216,7 +215,7 @@ figure it out for you (recommended).</p>
 <p class="rubric">Methods Documentation</p>
 <dl class="py method">
 <dt id="ViSP_Pipeline.Data.SlitPositionData.load_from_directory">
-<code class="sig-name descname">load_from_directory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_dir</span></em>, <em class="sig-param"><span class="n">dataset_ID</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">suffix</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#SlitPositionData.load_from_directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.SlitPositionData.load_from_directory" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">load_from_directory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_dir</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em>, <em class="sig-param"><span class="n">dataset_ID</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span> <span class="o">=</span> <span class="default_value">''</span></em>, <em class="sig-param"><span class="n">suffix</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span> <span class="o">=</span> <span class="default_value">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#SlitPositionData.load_from_directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.SlitPositionData.load_from_directory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load DHS-style data from a directory.</p>
 <p>It is assumed that all relevant files in the directory have SPEC-0122 headers and a single HDU. In other words,
 each file is exactly one SysOutput. Only files whose InstrumentProgramTask (DKIST004) is ‘Observation’ and whose
@@ -238,7 +237,7 @@ all data sets.</p>
 
 <dl class="py method">
 <dt id="ViSP_Pipeline.Data.SlitPositionData.load_from_filelist">
-<code class="sig-name descname">load_from_filelist</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_list</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#SlitPositionData.load_from_filelist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.SlitPositionData.load_from_filelist" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">load_from_filelist</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_list</span><span class="p">:</span> <span class="n">List<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#SlitPositionData.load_from_filelist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.SlitPositionData.load_from_filelist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load files from a list of file names</p>
 <p>Each file is checked to make sure it is from the correct spatial step (the one that this class was initialized
 with), but no checks are made against program task or dataset ID.</p>
@@ -269,7 +268,7 @@ with), but no checks are made against program task or dataset ID.</p>
     </div>
    
     <div class="right-footer">
-      Last updated on 22 Jan 2021.
+      Last updated on 06 Jul 2021.
     </div>
     <div class="centre-footer">
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1

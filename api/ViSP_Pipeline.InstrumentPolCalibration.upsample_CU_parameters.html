@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>upsample_CU_parameters &#8212; ViSP_Pipeline v0.21.0</title>
+    <title>upsample_CU_parameters &#8212; ViSP_Pipeline v1.0.0</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -138,11 +138,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../data_warning.html">A Word About Data, RAM, and Disk Space</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../API.html">Reference/API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ViSPPipeline">ViSP_Pipeline.ViSPPipeline Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ViSPPolCalPipeline">ViSP_Pipeline.ViSPPolCalPipeline Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ScienceCalibration">ViSP_Pipeline.ScienceCalibration Module</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.InstrumentPolCalibration">ViSP_Pipeline.InstrumentPolCalibration Module</a><ul class="current">
-<li class="toctree-l3 current"><a class="reference internal" href="../API.html#id3">Functions</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.InstrumentPolCalibration.command_line.html">command_line</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../API.html#id2">Functions</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.InstrumentPolCalibration.extract_macropixels.html">extract_macropixels</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.InstrumentPolCalibration.generate_instrument_pol_calibration.html">generate_instrument_pol_calibration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.InstrumentPolCalibration.main.html">main</a></li>
@@ -155,8 +153,14 @@
 <li class="toctree-l4 current"><a class="current reference internal" href="#">upsample_CU_parameters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.InstrumentPolCalibration.upsample_demodulation.html">upsample_demodulation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ViSP_Pipeline.InstrumentPolCalibration.write_reduced_CS_step.html">write_reduced_CS_step</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.SolarGainCalibration">ViSP_Pipeline.SolarGainCalibration Module</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../API.html#id3">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../API.html#id4">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../API.html#id5">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../API.html#id6">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../API.html#id7">Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.Data">ViSP_Pipeline.Data Module</a></li>
@@ -175,7 +179,7 @@
 <h1>upsample_CU_parameters<a class="headerlink" href="#upsample-cu-parameters" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt id="ViSP_Pipeline.InstrumentPolCalibration.upsample_CU_parameters">
-<code class="sig-prename descclassname">ViSP_Pipeline.InstrumentPolCalibration.</code><code class="sig-name descname">upsample_CU_parameters</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">CuData</span></em>, <em class="sig-param"><span class="n">newx</span></em>, <em class="sig-param"><span class="n">newy</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/InstrumentPolCalibration.html#upsample_CU_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.InstrumentPolCalibration.upsample_CU_parameters" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">ViSP_Pipeline.InstrumentPolCalibration.</code><code class="sig-name descname">upsample_CU_parameters</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">CuData</span><span class="p">:</span> <span class="n"><a class="reference internal" href="ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData" title="ViSP_Pipeline.Data.FitsData">ViSP_Pipeline.Data.FitsData</a></span></em>, <em class="sig-param"><span class="n">newx</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a></span></em>, <em class="sig-param"><span class="n">newy</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData" title="ViSP_Pipeline.Data.FitsData">ViSP_Pipeline.Data.FitsData</a><a class="reference internal" href="../_modules/ViSP_Pipeline/InstrumentPolCalibration.html#upsample_CU_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.InstrumentPolCalibration.upsample_CU_parameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>Take CU parameters fit to a subsample of the ViSP frame and upsample to some new sampling</p>
 <p>Up-sampling is done using nearest-neighbor interpolation in such a way to ensure that each macropixel (i.e. bin)
 is equally represented in the upsampled data. The exception to this is when there is not an integer multiple between
@@ -218,7 +222,7 @@ number of parameters.</p>
     </div>
    
     <div class="right-footer">
-      Last updated on 22 Jan 2021.
+      Last updated on 06 Jul 2021.
     </div>
     <div class="centre-footer">
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1

@@ -7,19 +7,48 @@ Reference/API
    :skip: glob
    :skip: command_line
 
-.. automodapi:: ViSP_Pipeline.ViSPPolCalPipeline
-   :headings: #^
-   :skip: tag
-   :skip: command_line
-
 .. automodapi:: ViSP_Pipeline.ScienceCalibration
    :headings: #^
    :skip: tag
+   :skip: command_line
+   :skip: command_line_list
+   :skip: is_mp
 
 .. automodapi:: ViSP_Pipeline.InstrumentPolCalibration
    :headings: #^
    :skip: glob
    :skip: tag
+   :skip: command_line
+
+.. automodapi:: ViSP_Pipeline.SolarGainCalibration
+   :heading: #^
+   :skip: glob
+   :skip: tag
+   :skip: command_line
+
+.. automodapi:: ViSP_Pipeline.LampGainCalibration
+   :heading: #^
+   :skip: glob
+   :skip: tag
+   :skip: command_line
+
+.. automodapi:: ViSP_Pipeline.DarkCalibration
+   :heading: #^
+   :skip: glob
+   :skip: tag
+   :skip: command_line
+
+.. automodapi:: ViSP_Pipeline.TelescopePolCalibration
+   :heading: #^
+   :skip: glob
+   :skip: tag
+   :skip: command_line
+
+.. automodapi:: ViSP_Pipeline.PolarimetricUtils
+   :heading: #^
+   :skip: glob
+   :skip: tag
+   :skip: command_line
 
 .. automodapi:: ViSP_Pipeline.Data
    :headings: #^

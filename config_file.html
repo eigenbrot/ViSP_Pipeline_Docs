@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Configuration File Format &#8212; ViSP_Pipeline v0.21.0</title>
+    <title>Configuration File Format &#8212; ViSP_Pipeline v1.0.0</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
@@ -176,6 +176,10 @@ etc.) is determined from the <code class="xref py py-obj docutils literal notran
 on the first run of the pipeline. Once these objects have been created a lot of time can be saved by reusing them for
 any other science runs that have the same setup. It is also possible to regenerate only a subset of the intermediate
 Calibration Objects by simply pointing the corresponding option to a file that doesn’t exist.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If any of the *_cal options are set to either “False” or “None” then that particular calibration step will be skipped</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">raw_sci_dir</dt>
 <dd class="field-odd"><p>Path to the directory containing raw ViSP frames to be reduced. Note that <em>all</em> slit positions found in
@@ -247,6 +251,9 @@ folder or use the <code class="docutils literal notranslate"><span class="pre">s
 <dt class="field-odd"><em>tmp_dir</em></dt>
 <dd class="field-odd"><p>Directory to use for intermediate, temporary files. If not specified it will default to wherever the Level-1 Science Products are saved (see <code class="docutils literal notranslate"><span class="pre">output_prefix</span></code>).</p>
 </dd>
+<dt class="field-even"><em>skip_cal_verification</em></dt>
+<dd class="field-even"><p>If True then any “*_cal” objects provided will not be verified that they are valid for use on the provided science data. Useful if you just want to run the damn thing.</p>
+</dd>
 </dl>
 </div>
 <div class="section" id="darkcalibration">
@@ -305,7 +312,8 @@ directory must contain solar gain frames or an error will be thrown.</p>
 <dd class="field-odd"><p><strong>(int)</strong> The number of separate processes to use when reducing the CS data</p>
 </dd>
 <dt class="field-even"><em>telescope_db</em></dt>
-<dd class="field-even"><p>Path to the file containing telescope mirror parameters as a function of time and wavelength</p>
+<dd class="field-even"><p>Path to the file containing telescope mirror parameters as a function of time and wavelength. This
+file is also used for generating the telescope model when reducing Science data.</p>
 </dd>
 </dl>
 </div>
@@ -360,7 +368,7 @@ directory must contain solar gain frames or an error will be thrown.</p>
     </div>
    
     <div class="right-footer">
-      Last updated on 22 Jan 2021.
+      Last updated on 06 Jul 2021.
     </div>
     <div class="centre-footer">
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1

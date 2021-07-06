@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LampGainData &#8212; ViSP_Pipeline v0.21.0</title>
+    <title>LampGainData &#8212; ViSP_Pipeline v1.0.0</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -138,7 +138,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../data_warning.html">A Word About Data, RAM, and Disk Space</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../API.html">Reference/API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ViSPPipeline">ViSP_Pipeline.ViSPPipeline Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ViSPPolCalPipeline">ViSP_Pipeline.ViSPPolCalPipeline Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ScienceCalibration">ViSP_Pipeline.ScienceCalibration Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.InstrumentPolCalibration">ViSP_Pipeline.InstrumentPolCalibration Module</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.Data">ViSP_Pipeline.Data Module</a><ul class="current">
@@ -174,17 +173,17 @@
 <h1>LampGainData<a class="headerlink" href="#lampgaindata" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="ViSP_Pipeline.Data.LampGainData">
-<em class="property">class </em><code class="sig-prename descclassname">ViSP_Pipeline.Data.</code><code class="sig-name descname">LampGainData</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_dir</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">memmap</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ViSP_Pipeline.Data.LampGainData" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">ViSP_Pipeline.Data.</code><code class="sig-name descname">LampGainData</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_dir</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">memmap</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ViSP_Pipeline.Data.LampGainData" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ViSP_Pipeline.Data._TaskData</span></code></p>
 <p>LampGainData is an extension of <code class="xref py py-obj docutils literal notranslate"><span class="pre">FitData</span></code> designed to only hold data associated with LampGain. It inherits all of the
-functionality of <a class="reference internal" href="ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData" title="ViSP_Pipeline.Data.FitsData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FitsData</span></code></a> and defines an extra method that loads all data from a directory who’s headers match the 
+functionality of <a class="reference internal" href="ViSP_Pipeline.Data.FitsData.html#ViSP_Pipeline.Data.FitsData" title="ViSP_Pipeline.Data.FitsData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FitsData</span></code></a> and defines an extra method that loads all data from a directory who’s headers match the
 following:</p>
 <blockquote>
 <div><blockquote>
 <div><p>Key  Value
 —  —–</p>
 </div></blockquote>
-<p>DKIST004  Gain
+<p>DKIST004  [‘Gain’, ‘gain’]
 PAC__002  Lamp
 PAC__003  On</p>
 </div></blockquote>
@@ -204,7 +203,7 @@ PAC__003  On</p>
 <p class="rubric">Attributes Documentation</p>
 <dl class="py attribute">
 <dt id="ViSP_Pipeline.Data.LampGainData.task_dict">
-<code class="sig-name descname">task_dict</code><em class="property"> = {'GOSLampStatus': 'On', 'GOSLevel3': 'Lamp', 'InstrumentProgramTask': 'Gain'}</em><a class="headerlink" href="#ViSP_Pipeline.Data.LampGainData.task_dict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">task_dict</code><em class="property"> = {'GOSLampStatus': 'On', 'GOSLevel3': 'Lamp', 'InstrumentProgramTask': ['Gain', 'gain']}</em><a class="headerlink" href="#ViSP_Pipeline.Data.LampGainData.task_dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -224,7 +223,7 @@ PAC__003  On</p>
     </div>
    
     <div class="right-footer">
-      Last updated on 22 Jan 2021.
+      Last updated on 06 Jul 2021.
     </div>
     <div class="centre-footer">
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1

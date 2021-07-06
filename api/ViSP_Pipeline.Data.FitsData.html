@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FitsData &#8212; ViSP_Pipeline v0.21.0</title>
+    <title>FitsData &#8212; ViSP_Pipeline v1.0.0</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -138,7 +138,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../data_warning.html">A Word About Data, RAM, and Disk Space</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../API.html">Reference/API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ViSPPipeline">ViSP_Pipeline.ViSPPipeline Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ViSPPolCalPipeline">ViSP_Pipeline.ViSPPolCalPipeline Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.ScienceCalibration">ViSP_Pipeline.ScienceCalibration Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.InstrumentPolCalibration">ViSP_Pipeline.InstrumentPolCalibration Module</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../API.html#module-ViSP_Pipeline.Data">ViSP_Pipeline.Data Module</a><ul class="current">
@@ -174,7 +173,7 @@
 <h1>FitsData<a class="headerlink" href="#fitsdata" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="ViSP_Pipeline.Data.FitsData">
-<em class="property">class </em><code class="sig-prename descclassname">ViSP_Pipeline.Data.</code><code class="sig-name descname">FitsData</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fitsfile</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">memmap</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ignore_shape_check</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#FitsData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.FitsData" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">ViSP_Pipeline.Data.</code><code class="sig-name descname">FitsData</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fitsfile</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">memmap</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ignore_shape_check</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#FitsData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.FitsData" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>FitsData is a basically a wrapper for astropy.io.fits, with some extra methods and properties to aid the
 reduction of DKIST data.</p>
@@ -191,6 +190,8 @@ permanently save the data use the .write_out() method.</p>
 <dt><strong>fitsfile</strong><span class="classifier">str</span></dt><dd><p>If supplied, the path to a FITS file that will be loaded into the object.</p>
 </dd>
 <dt><strong>memmap</strong><span class="classifier">bool or None</span></dt><dd><p>Whether to use astropy.io.fits’ memmap functionality. Set to None to let astropy figure it out for you.</p>
+</dd>
+<dt><strong>ignore_shape_check</strong><span class="classifier">bool</span></dt><dd><p>If True then a dummy dimension will not be enforced on read</p>
 </dd>
 </dl>
 </dd>
@@ -211,6 +212,9 @@ permanently save the data use the .write_out() method.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="#ViSP_Pipeline.Data.FitsData.headers" title="ViSP_Pipeline.Data.FitsData.headers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">headers</span></code></a></p></td>
 <td><p>A very nice convenience property to quickly access a list of the header objects</p></td>
 </tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ViSP_Pipeline.Data.FitsData.size_in_mem" title="ViSP_Pipeline.Data.FitsData.size_in_mem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">size_in_mem</span></code></a></p></td>
+<td><p>Return the size of data loaded into memory in MB</p></td>
+</tr>
 </tbody>
 </table>
 <p class="rubric">Methods Summary</p>
@@ -223,14 +227,20 @@ permanently save the data use the .write_out() method.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="#ViSP_Pipeline.Data.FitsData.convert_to_float32" title="ViSP_Pipeline.Data.FitsData.convert_to_float32"><code class="xref py py-obj docutils literal notranslate"><span class="pre">convert_to_float32</span></code></a>([nomem, overwrite])</p></td>
 <td><p>Convert all of the data to numpy.float32</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ViSP_Pipeline.Data.FitsData.find_data_keyword_idx" title="ViSP_Pipeline.Data.FitsData.find_data_keyword_idx"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_data_keyword_idx</span></code></a>(keyword, value)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ViSP_Pipeline.Data.FitsData.copy" title="ViSP_Pipeline.Data.FitsData.copy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy</span></code></a>()</p></td>
+<td><p>Create a copy of this object</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ViSP_Pipeline.Data.FitsData.find_data_keyword_idx" title="ViSP_Pipeline.Data.FitsData.find_data_keyword_idx"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_data_keyword_idx</span></code></a>(keyword, value)</p></td>
 <td><p>Return the index of just the ImageHDUs that have a specific header keyword value</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ViSP_Pipeline.Data.FitsData.find_keyword_idx" title="ViSP_Pipeline.Data.FitsData.find_keyword_idx"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_keyword_idx</span></code></a>(keyword, value)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ViSP_Pipeline.Data.FitsData.find_keyword_idx" title="ViSP_Pipeline.Data.FitsData.find_keyword_idx"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_keyword_idx</span></code></a>(keyword, value)</p></td>
 <td><p>Return the index of the HDUs (including the PrimaryHDU) that have a specific header keyword value</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ViSP_Pipeline.Data.FitsData.flush" title="ViSP_Pipeline.Data.FitsData.flush"><code class="xref py py-obj docutils literal notranslate"><span class="pre">flush</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ViSP_Pipeline.Data.FitsData.flush" title="ViSP_Pipeline.Data.FitsData.flush"><code class="xref py py-obj docutils literal notranslate"><span class="pre">flush</span></code></a>()</p></td>
 <td><p>Flush the current data from memory and reload memmap from the disk</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ViSP_Pipeline.Data.FitsData.flush_lite" title="ViSP_Pipeline.Data.FitsData.flush_lite"><code class="xref py py-obj docutils literal notranslate"><span class="pre">flush_lite</span></code></a>()</p></td>
+<td><p>Flush only data that has been loaded into memory.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#ViSP_Pipeline.Data.FitsData.get_stacked_data" title="ViSP_Pipeline.Data.FitsData.get_stacked_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_stacked_data</span></code></a>()</p></td>
 <td><p>Return a ndarray stack containing data from all ImageHDU’s</p></td>
@@ -274,10 +284,16 @@ permanently save the data use the .write_out() method.</p>
 <dd><p>A very nice convenience property to quickly access a list of the header objects</p>
 </dd></dl>
 
+<dl class="py attribute">
+<dt id="ViSP_Pipeline.Data.FitsData.size_in_mem">
+<code class="sig-name descname">size_in_mem</code><a class="headerlink" href="#ViSP_Pipeline.Data.FitsData.size_in_mem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the size of data loaded into memory in MB</p>
+</dd></dl>
+
 <p class="rubric">Methods Documentation</p>
 <dl class="py method">
 <dt id="ViSP_Pipeline.Data.FitsData.convert_to_float32">
-<code class="sig-name descname">convert_to_float32</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">nomem</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">overwrite</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#FitsData.convert_to_float32"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.FitsData.convert_to_float32" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">convert_to_float32</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">nomem</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">overwrite</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#FitsData.convert_to_float32"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.FitsData.convert_to_float32" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert all of the data to numpy.float32</p>
 <p>In the default form this results in a new file with a “_flt32” suffix, which is the read into this object to
 keep the data out of memory.</p>
@@ -297,8 +313,14 @@ method. Importantly, this method will NEVER overwrite the original FITS file.</p
 </dd></dl>
 
 <dl class="py method">
+<dt id="ViSP_Pipeline.Data.FitsData.copy">
+<code class="sig-name descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#ViSP_Pipeline.Data.FitsData" title="ViSP_Pipeline.Data.FitsData">ViSP_Pipeline.Data.FitsData</a><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#FitsData.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.FitsData.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a copy of this object</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="ViSP_Pipeline.Data.FitsData.find_data_keyword_idx">
-<code class="sig-name descname">find_data_keyword_idx</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">keyword</span></em>, <em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#FitsData.find_data_keyword_idx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.FitsData.find_data_keyword_idx" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">find_data_keyword_idx</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">keyword</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em>, <em class="sig-param"><span class="n">value</span><span class="p">:</span> <span class="n">Union<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)">float</a><span class="p">, </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a><span class="p">, </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)">numpy.ndarray</a><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#FitsData.find_data_keyword_idx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.FitsData.find_data_keyword_idx" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the index of just the ImageHDUs that have a specific header keyword value</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -320,7 +342,7 @@ method. Importantly, this method will NEVER overwrite the original FITS file.</p
 
 <dl class="py method">
 <dt id="ViSP_Pipeline.Data.FitsData.find_keyword_idx">
-<code class="sig-name descname">find_keyword_idx</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">keyword</span></em>, <em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#FitsData.find_keyword_idx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.FitsData.find_keyword_idx" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">find_keyword_idx</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">keyword</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em>, <em class="sig-param"><span class="n">value</span><span class="p">:</span> <span class="n">Union<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)">float</a><span class="p">, </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a><span class="p">, </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)">numpy.ndarray</a><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#FitsData.find_keyword_idx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.FitsData.find_keyword_idx" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the index of the HDUs (including the PrimaryHDU) that have a specific header keyword value</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -347,8 +369,17 @@ method. Importantly, this method will NEVER overwrite the original FITS file.</p
 </dd></dl>
 
 <dl class="py method">
+<dt id="ViSP_Pipeline.Data.FitsData.flush_lite">
+<code class="sig-name descname">flush_lite</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#FitsData.flush_lite"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.FitsData.flush_lite" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flush only data that has been loaded into memory.</p>
+<p>This function exists because if the current object is pointing to a very large set of data on disk then we might
+need to clear memory but don’t want to write out the <em>whole</em> object (i.e., with <a class="reference internal" href="#ViSP_Pipeline.Data.FitsData.flush" title="ViSP_Pipeline.Data.FitsData.flush"><code class="xref py py-obj docutils literal notranslate"><span class="pre">flush()</span></code></a>).</p>
+<p>Basically this function chunks up tmp files into chunks defined by “max_mem_usage_GB” in the constants file.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="ViSP_Pipeline.Data.FitsData.get_stacked_data">
-<code class="sig-name descname">get_stacked_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#FitsData.get_stacked_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.FitsData.get_stacked_data" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_stacked_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)">numpy.ndarray</a><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#FitsData.get_stacked_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.FitsData.get_stacked_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a ndarray stack containing data from all ImageHDU’s</p>
 <p>If there are a lot of ImageHDU’s the resulting array might be very large. Watch out!</p>
 <p>If the dimensionality of the data in the individual ImageHDU’s is not the same bad things will happen.</p>
@@ -364,7 +395,7 @@ method. Importantly, this method will NEVER overwrite the original FITS file.</p
 
 <dl class="py method">
 <dt id="ViSP_Pipeline.Data.FitsData.init_with_ndarray">
-<code class="sig-name descname">init_with_ndarray</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">array</span></em>, <em class="sig-param"><span class="n">outputfile</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">overwrite</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#FitsData.init_with_ndarray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.FitsData.init_with_ndarray" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">init_with_ndarray</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">array</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.21)">numpy.ndarray</a></span></em>, <em class="sig-param"><span class="n">outputfile</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">overwrite</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#FitsData.init_with_ndarray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.FitsData.init_with_ndarray" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load data from a numpy.ndarray and construct an astropy.io.fits HDU list</p>
 <p>To provide a uniform data type for all DKIST instruments the follow conventions are enforced:</p>
 <ol class="arabic simple">
@@ -394,7 +425,7 @@ will be created.</p>
 
 <dl class="py method">
 <dt id="ViSP_Pipeline.Data.FitsData.load_from_directory">
-<code class="sig-name descname">load_from_directory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">directory</span></em>, <em class="sig-param"><span class="n">searchstr</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">max_open</span><span class="o">=</span><span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">datahdu</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">memmap</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#FitsData.load_from_directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.FitsData.load_from_directory" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">load_from_directory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">directory</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em>, <em class="sig-param"><span class="n">searchstr</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span> <span class="o">=</span> <span class="default_value">''</span></em>, <em class="sig-param"><span class="n">max_open</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a></span> <span class="o">=</span> <span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">datahdu</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a></span> <span class="o">=</span> <span class="default_value">0</span></em>, <em class="sig-param"><span class="n">memmap</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#FitsData.load_from_directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.FitsData.load_from_directory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load a series of FITS files from a directory.</p>
 <p>Each separate file will become a single HDU in this object’s data_hdus. A blank PrimaryHDU is provided.</p>
 <dl class="field-list simple">
@@ -420,7 +451,7 @@ have been loaded.</p>
 
 <dl class="py method">
 <dt id="ViSP_Pipeline.Data.FitsData.load_from_file">
-<code class="sig-name descname">load_from_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fitsfile</span></em>, <em class="sig-param"><span class="n">memmap</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#FitsData.load_from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.FitsData.load_from_file" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">load_from_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fitsfile</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em>, <em class="sig-param"><span class="n">memmap</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#FitsData.load_from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.FitsData.load_from_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load data/metadata from a FITS file and make the resulting HDU list accessable to the rest of the class</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -436,7 +467,7 @@ have been loaded.</p>
 
 <dl class="py method">
 <dt id="ViSP_Pipeline.Data.FitsData.load_polarimetric_fitsData">
-<code class="sig-name descname">load_polarimetric_fitsData</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">directory</span></em>, <em class="sig-param"><span class="n">searchstr</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">stokes</span><span class="o">=</span><span class="default_value">'I'</span></em>, <em class="sig-param"><span class="n">max_open</span><span class="o">=</span><span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">memmap</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#FitsData.load_polarimetric_fitsData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.FitsData.load_polarimetric_fitsData" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">load_polarimetric_fitsData</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">directory</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em>, <em class="sig-param"><span class="n">searchstr</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span> <span class="o">=</span> <span class="default_value">''</span></em>, <em class="sig-param"><span class="n">stokes</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span> <span class="o">=</span> <span class="default_value">'I'</span></em>, <em class="sig-param"><span class="n">max_open</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a></span> <span class="o">=</span> <span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">memmap</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#FitsData.load_polarimetric_fitsData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.FitsData.load_polarimetric_fitsData" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load a single Stokes component from all files in a directory.</p>
 <p>Each separate file will become a single HDU in this object’s data_hdus. A blank PrimaryHDU is provided.</p>
 <p>This basically exactly the same as <a class="reference internal" href="#ViSP_Pipeline.Data.FitsData.load_from_directory" title="ViSP_Pipeline.Data.FitsData.load_from_directory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_from_directory</span></code></a>, but with smart handling of the datahdu parameter.</p>
@@ -463,7 +494,7 @@ have been loaded.</p>
 
 <dl class="py method">
 <dt id="ViSP_Pipeline.Data.FitsData.update_header">
-<code class="sig-name descname">update_header</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">keyword</span></em>, <em class="sig-param"><span class="n">value</span></em>, <em class="sig-param"><span class="n">hdu</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">overwrite</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#FitsData.update_header"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.FitsData.update_header" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">update_header</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">keyword</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em>, <em class="sig-param"><span class="n">value</span><span class="p">:</span> <span class="n">Union<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)">float</a><span class="p">, </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a><span class="p">, </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">hdu</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a></span> <span class="o">=</span> <span class="default_value">0</span></em>, <em class="sig-param"><span class="n">overwrite</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#FitsData.update_header"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.FitsData.update_header" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update one of the header objects with a keyword, value pair.</p>
 <p>I guess this method exists because, while you could just do .headers[keyword] = value, this prevents
 overwriting existing keywords. iono, use your best judgement.</p>
@@ -491,7 +522,7 @@ overwriting existing keywords. iono, use your best judgement.</p>
 
 <dl class="py method">
 <dt id="ViSP_Pipeline.Data.FitsData.write_out">
-<code class="sig-name descname">write_out</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">overwrite</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#FitsData.write_out"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.FitsData.write_out" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">write_out</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span></em>, <em class="sig-param"><span class="n">overwrite</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ViSP_Pipeline/Data.html#FitsData.write_out"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ViSP_Pipeline.Data.FitsData.write_out" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save the current object to a FITS file</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -522,7 +553,7 @@ overwriting existing keywords. iono, use your best judgement.</p>
     </div>
    
     <div class="right-footer">
-      Last updated on 22 Jan 2021.
+      Last updated on 06 Jul 2021.
     </div>
     <div class="centre-footer">
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1

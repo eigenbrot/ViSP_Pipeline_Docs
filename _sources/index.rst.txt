@@ -14,9 +14,8 @@ The rest can be handled by pip:
 
 Usage
 -----
-In its current
-form the pipeline is a stand-alone program that relies on a user-editable configuration file. This file can be generated
-with:
+In its current form the pipeline is a stand-alone program that relies on a user-editable configuration file.
+This file can be generated with:
 
 .. code-block:: console
 
